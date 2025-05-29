@@ -21,9 +21,9 @@ const Index = () => {
             <Dashboard />
             {/* Demo link to job overview */}
             <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <h3 className="font-medium text-blue-900 mb-2">Demo Job Overview</h3>
+              <h3 className="font-medium text-blue-900 mb-2">Job Overview Demo</h3>
               <p className="text-sm text-blue-700 mb-3">
-                Click below to view the new responsive Job Overview page
+                Experience the new responsive Job Overview workspace with real-time updates, task management, and timeline tracking.
               </p>
               <Link to="/jobs/demo-job-123/overview">
                 <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
