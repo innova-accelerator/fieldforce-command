@@ -1,323 +1,309 @@
+
 import React, { useState } from 'react';
-import { Calendar, ChevronLeft, ChevronRight, MapPin, Clock, User } from 'lucide-react';
+import { Calendar, Clock, User, MapPin, Phone, Mail } from 'lucide-react';
 import { mockJobs, mockAssociates } from '../data/mockData';
-import { Job } from '../types/job';
-import { Associate } from '../types';
 
 const Scheduling = () => {
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [viewMode, setViewMode] = useState<'month' | 'week' | 'day'>('week');
-  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
-  
-  const jobs = mockJobs.filter(job => job.scheduledDate);
-  const associates = mockAssociates;
+  const [jobs] = useState(mockJobs);
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [selectedJob, setSelectedJob] = useState<string | null>(null);
 
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString('en-US', { 
-      month: 'long', 
-      year: 'numeric',
-      day: viewMode === 'day' ? 'numeric' : undefined
+  const scheduledJobs = jobs.filter(job => 
+    job.scheduled_date && new Date(job.scheduled_date).toDateString() === selectedDate.toDateString()
+  );
+
+  const formatTime = (dateString: string) => {
+    return new Date(dateString).toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit'
     });
   };
 
-  const getWeekDays = (date: Date) => {
-    const week = [];
-    const startOfWeek = new Date(date);
-    startOfWeek.setDate(date.getDate() - date.getDay());
-    
-    for (let i = 0; i < 7; i++) {
-      const day = new Date(startOfWeek);
-      day.setDate(startOfWeek.getDate() + i);
-      week.push(day);
-    }
-    return week;
-  };
-
-  const navigateDate = (direction: 'prev' | 'next') => {
-    const newDate = new Date(currentDate);
-    if (viewMode === 'month') {
-      newDate.setMonth(newDate.getMonth() + (direction === 'next' ? 1 : -1));
-    } else if (viewMode === 'week') {
-      newDate.setDate(newDate.getDate() + (direction === 'next' ? 7 : -7));
-    } else {
-      newDate.setDate(newDate.getDate() + (direction === 'next' ? 1 : -1));
-    }
-    setCurrentDate(newDate);
-  };
-
-  const getJobsForDate = (date: Date) => {
-    return jobs.filter(job => 
-      job.scheduledDate && 
-      new Date(job.scheduledDate).toDateString() === date.toDateString()
-    );
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'scheduled': return 'bg-yellow-500';
-      case 'in-progress': return 'bg-purple-500';
-      case 'completed': return 'bg-green-500';
-      default: return 'bg-blue-500';
+      case 'New': return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'Scheduled': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'In Progress': return 'bg-purple-100 text-purple-800 border-purple-200';
+      case 'Completed': return 'bg-green-100 text-green-800 border-green-200';
+      default: return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
 
-  const JobCard = ({ job, compact = false }: { job: Job; compact?: boolean }) => (
+  const JobCard = ({ job }: { job: any }) => (
     <div 
-      className={`${getStatusColor(job.status)} text-white p-2 rounded mb-1 cursor-pointer hover:opacity-80 transition-opacity ${
-        compact ? 'text-xs' : 'text-sm'
+      className={`bg-white rounded-lg shadow-sm border p-4 cursor-pointer transition-all hover:shadow-md ${
+        selectedJob === job.id ? 'ring-2 ring-blue-500' : ''
       }`}
-      onClick={() => setSelectedJob(job)}
+      onClick={() => setSelectedJob(selectedJob === job.id ? null : job.id)}
     >
-      <div className="font-medium truncate">{job.name}</div>
-      {!compact && (
-        <>
-          <div className="text-xs opacity-90 truncate">{job.customerName}</div>
-          <div className="flex items-center text-xs opacity-90 mt-1">
-            <Clock className="h-3 w-3 mr-1" />
-            {job.estimatedDuration || 0}h
+      <div className="flex items-start justify-between mb-3">
+        <div className="flex-1">
+          <h3 className="font-semibold text-gray-900 mb-1">{job.name}</h3>
+          <p className="text-sm text-gray-600">{job.customerName}</p>
+        </div>
+        <div className="flex flex-col items-end space-y-1">
+          {job.scheduled_date && (
+            <span className="text-sm font-medium text-blue-600">
+              {formatTime(job.scheduled_date)}
+            </span>
+          )}
+          <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getStatusColor(job.status)}`}>
+            {job.status}
+          </span>
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <div className="flex items-center text-sm text-gray-600">
+          <MapPin className="h-4 w-4 mr-2 flex-shrink-0" />
+          <span className="truncate">{job.location}</span>
+        </div>
+        
+        <div className="flex items-center text-sm text-gray-600">
+          <Clock className="h-4 w-4 mr-2 flex-shrink-0" />
+          <span>{job.estimated_duration || 0}h estimated duration</span>
+        </div>
+
+        {job.assigned_person_id && (
+          <div className="flex items-center text-sm text-gray-600">
+            <User className="h-4 w-4 mr-2 flex-shrink-0" />
+            <span>Assigned to team member</span>
           </div>
-        </>
+        )}
+      </div>
+
+      {selectedJob === job.id && (
+        <div className="mt-4 pt-4 border-t space-y-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <h4 className="font-medium text-gray-900 mb-2">Contact Information</h4>
+              <div className="space-y-1">
+                <div className="flex items-center text-sm text-gray-600">
+                  <User className="h-3 w-3 mr-2" />
+                  {job.contact_name}
+                </div>
+                <div className="flex items-center text-sm text-gray-600">
+                  <Phone className="h-3 w-3 mr-2" />
+                  <a href={`tel:${job.contact_phone}`} className="text-blue-600 hover:underline">
+                    {job.contact_phone}
+                  </a>
+                </div>
+                <div className="flex items-center text-sm text-gray-600">
+                  <Mail className="h-3 w-3 mr-2" />
+                  <a href={`mailto:${job.contact_email}`} className="text-blue-600 hover:underline">
+                    {job.contact_email}
+                  </a>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <h4 className="font-medium text-gray-900 mb-2">Schedule Details</h4>
+              <div className="space-y-1 text-sm text-gray-600">
+                <div>Start: {job.start_date ? new Date(job.start_date).toLocaleDateString() : 'Not set'}</div>
+                <div>End: {job.end_date ? new Date(job.end_date).toLocaleDateString() : 'Not set'}</div>
+                <div>Duration: {job.estimated_duration || 0} hours</div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex flex-wrap gap-2 mt-3">
+            <button className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors">
+              Edit Schedule
+            </button>
+            <button className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded hover:bg-gray-200 transition-colors">
+              View Details
+            </button>
+            <button className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition-colors">
+              Mark Complete
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );
 
-  const WeekView = () => {
-    const weekDays = getWeekDays(currentDate);
-    const timeSlots = Array.from({ length: 24 }, (_, i) => i);
+  // Generate calendar days for the current month
+  const generateCalendarDays = () => {
+    const today = new Date();
+    const currentMonth = today.getMonth();
+    const currentYear = today.getFullYear();
+    const firstDay = new Date(currentYear, currentMonth, 1);
+    const lastDay = new Date(currentYear, currentMonth + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDayOfWeek = firstDay.getDay();
 
-    return (
-      <div className="grid grid-cols-8 gap-1 h-full">
-        {/* Time column */}
-        <div className="col-span-1">
-          <div className="h-12 border-b border-gray-200"></div>
-          {timeSlots.map(hour => (
-            <div key={hour} className="h-12 border-b border-gray-200 text-xs text-gray-500 p-1">
-              {hour === 0 ? '12 AM' : hour <= 12 ? `${hour} AM` : `${hour - 12} PM`}
-            </div>
-          ))}
-        </div>
-
-        {/* Day columns */}
-        {weekDays.map((day, dayIndex) => (
-          <div key={dayIndex} className="col-span-1">
-            <div className="h-12 border-b border-gray-200 p-2 text-center">
-              <div className="text-sm font-medium text-gray-900">
-                {day.toLocaleDateString('en-US', { weekday: 'short' })}
-              </div>
-              <div className="text-lg font-bold text-gray-900">
-                {day.getDate()}
-              </div>
-            </div>
-            <div className="relative">
-              {timeSlots.map(hour => (
-                <div key={hour} className="h-12 border-b border-gray-200 border-r border-gray-200 p-1">
-                  {hour === 9 && getJobsForDate(day).map(job => (
-                    <JobCard key={job.id} job={job} compact />
-                  ))}
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-    );
-  };
-
-  const MonthView = () => {
-    const year = currentDate.getFullYear();
-    const month = currentDate.getMonth();
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    const startDate = new Date(firstDay);
-    startDate.setDate(startDate.getDate() - startDate.getDay());
-    
     const days = [];
-    const current = new Date(startDate);
     
-    while (current <= lastDay || days.length < 42) {
-      days.push(new Date(current));
-      current.setDate(current.getDate() + 1);
+    // Add empty cells for days before the first day of the month
+    for (let i = 0; i < startingDayOfWeek; i++) {
+      days.push(null);
     }
-
-    return (
-      <div className="grid grid-cols-7 gap-1 h-full">
-        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-          <div key={day} className="p-2 text-center font-medium text-gray-700 border-b border-gray-200">
-            {day}
-          </div>
-        ))}
-        {days.map((day, index) => {
-          const dayJobs = getJobsForDate(day);
-          const isCurrentMonth = day.getMonth() === month;
-          
-          return (
-            <div 
-              key={index} 
-              className={`min-h-24 p-1 border-b border-r border-gray-200 ${
-                isCurrentMonth ? 'bg-white' : 'bg-gray-50'
-              }`}
-            >
-              <div className={`text-sm ${isCurrentMonth ? 'text-gray-900' : 'text-gray-400'}`}>
-                {day.getDate()}
-              </div>
-              <div className="mt-1 space-y-1">
-                {dayJobs.slice(0, 2).map(job => (
-                  <JobCard key={job.id} job={job} compact />
-                ))}
-                {dayJobs.length > 2 && (
-                  <div className="text-xs text-gray-500">+{dayJobs.length - 2} more</div>
-                )}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    );
+    
+    // Add days of the month
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(currentYear, currentMonth, day);
+      const jobsOnDay = jobs.filter(job => 
+        job.scheduled_date && new Date(job.scheduled_date).toDateString() === date.toDateString()
+      );
+      days.push({ date, jobsCount: jobsOnDay.length });
+    }
+    
+    return days;
   };
 
-  const DayView = () => {
-    const dayJobs = getJobsForDate(currentDate);
-    const timeSlots = Array.from({ length: 24 }, (_, i) => i);
-
-    return (
-      <div className="grid grid-cols-4 gap-4 h-full">
-        <div className="col-span-3">
-          <div className="space-y-1">
-            {timeSlots.map(hour => (
-              <div key={hour} className="flex border-b border-gray-200">
-                <div className="w-20 p-2 text-sm text-gray-500">
-                  {hour === 0 ? '12 AM' : hour <= 12 ? `${hour} AM` : `${hour - 12} PM`}
-                </div>
-                <div className="flex-1 p-2 min-h-12">
-                  {hour === 9 && dayJobs.map(job => (
-                    <JobCard key={job.id} job={job} />
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-        
-        <div className="col-span-1 bg-gray-50 p-4 rounded-lg">
-          <h3 className="font-medium text-gray-900 mb-3">Available Associates</h3>
-          <div className="space-y-2">
-            {associates.filter(a => a.availability === 'available').map(associate => (
-              <div key={associate.id} className="bg-white p-3 rounded border">
-                <div className="font-medium text-sm">{associate.name}</div>
-                <div className="text-xs text-gray-600 flex items-center mt-1">
-                  <MapPin className="h-3 w-3 mr-1" />
-                  {associate.location.address}
-                </div>
-                <div className="text-xs text-gray-600 mt-1">
-                  {associate.skills.slice(0, 2).join(', ')}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  const JobDetailsModal = ({ job, onClose }: { job: Job; onClose: () => void }) => (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
-        <div className="p-6 border-b border-gray-200">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">{job.name}</h2>
-            <button
-              onClick={onClose}
-              className="text-gray-400 hover:text-gray-600"
-            >
-              ×
-            </button>
-          </div>
-        </div>
-        
-        <div className="p-6 space-y-4">
-          <div>
-            <label className="text-sm font-medium text-gray-500">Customer</label>
-            <p className="text-gray-900">{job.customerName}</p>
-          </div>
-          <div>
-            <label className="text-sm font-medium text-gray-500">Location</label>
-            <p className="text-gray-900">{job.location}</p>
-          </div>
-          <div>
-            <label className="text-sm font-medium text-gray-500">Assigned To</label>
-            <p className="text-gray-900">{job.assignedToName || 'Unassigned'}</p>
-          </div>
-          <div>
-            <label className="text-sm font-medium text-gray-500">Scheduled</label>
-            <p className="text-gray-900">{job.scheduledDate ? new Date(job.scheduledDate).toLocaleDateString() : 'Not scheduled'}</p>
-          </div>
-          <div>
-            <label className="text-sm font-medium text-gray-500">Duration</label>
-            <p className="text-gray-900">{job.estimatedDuration || 0} hours</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  const calendarDays = generateCalendarDays();
+  const today = new Date();
 
   return (
-    <div className="p-6 h-full flex flex-col">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-        <div className="flex items-center space-x-4">
-          <h1 className="text-2xl font-bold text-gray-900">Schedule</h1>
-          <div className="flex items-center space-x-2">
-            <button
-              onClick={() => navigateDate('prev')}
-              className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg"
-            >
-              <ChevronLeft className="h-5 w-5" />
-            </button>
-            <span className="text-lg font-medium text-gray-900 min-w-48 text-center">
-              {formatDate(currentDate)}
-            </span>
-            <button
-              onClick={() => navigateDate('next')}
-              className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg"
-            >
-              <ChevronRight className="h-5 w-5" />
-            </button>
+    <div className="p-6 max-w-7xl mx-auto">
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">Schedule Management</h1>
+        <p className="text-gray-600">Manage job schedules and assignments</p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Calendar */}
+        <div className="bg-white rounded-lg shadow-sm border p-6">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">
+            {today.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+          </h2>
+          
+          <div className="grid grid-cols-7 gap-1 mb-2">
+            {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
+              <div key={day} className="text-center text-xs font-medium text-gray-500 py-2">
+                {day}
+              </div>
+            ))}
           </div>
-        </div>
-        
-        <div className="flex items-center space-x-2 mt-4 sm:mt-0">
-          <div className="flex rounded-lg border border-gray-300 overflow-hidden">
-            {(['month', 'week', 'day'] as const).map((mode) => (
+          
+          <div className="grid grid-cols-7 gap-1">
+            {calendarDays.map((day, index) => (
               <button
-                key={mode}
-                onClick={() => setViewMode(mode)}
-                className={`px-4 py-2 text-sm font-medium capitalize ${
-                  viewMode === mode
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-white text-gray-700 hover:bg-gray-50'
-                }`}
+                key={index}
+                onClick={() => day && setSelectedDate(day.date)}
+                className={`
+                  aspect-square flex flex-col items-center justify-center text-sm relative
+                  ${!day ? 'invisible' : ''}
+                  ${day && day.date.toDateString() === selectedDate.toDateString() 
+                    ? 'bg-blue-600 text-white' 
+                    : 'hover:bg-gray-100 text-gray-700'
+                  }
+                  ${day && day.date.toDateString() === today.toDateString() 
+                    ? 'ring-2 ring-blue-200' 
+                    : ''
+                  }
+                  rounded transition-colors
+                `}
               >
-                {mode}
+                {day && (
+                  <>
+                    <span>{day.date.getDate()}</span>
+                    {day.jobsCount > 0 && (
+                      <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                        {day.jobsCount}
+                      </span>
+                    )}
+                  </>
+                )}
               </button>
             ))}
           </div>
         </div>
+
+        {/* Scheduled Jobs for Selected Date */}
+        <div className="lg:col-span-2">
+          <div className="bg-white rounded-lg shadow-sm border p-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">
+              Jobs for {formatDate(selectedDate)}
+            </h2>
+            
+            {scheduledJobs.length === 0 ? (
+              <div className="text-center py-8">
+                <Calendar className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+                <p className="text-gray-500">No jobs scheduled for this date</p>
+                <button className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+                  Schedule a Job
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {scheduledJobs.map((job) => (
+                  <JobCard key={job.id} job={job} />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
-      {/* Calendar View */}
-      <div className="flex-1 bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-        {viewMode === 'month' && <MonthView />}
-        {viewMode === 'week' && <WeekView />}
-        {viewMode === 'day' && <DayView />}
+      {/* Quick Stats */}
+      <div className="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="bg-white rounded-lg shadow-sm border p-4">
+          <div className="flex items-center">
+            <Calendar className="h-8 w-8 text-blue-600" />
+            <div className="ml-3">
+              <p className="text-sm font-medium text-gray-600">Today's Jobs</p>
+              <p className="text-lg font-semibold text-gray-900">
+                {jobs.filter(job => 
+                  job.scheduled_date && new Date(job.scheduled_date).toDateString() === today.toDateString()
+                ).length}
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <div className="bg-white rounded-lg shadow-sm border p-4">
+          <div className="flex items-center">
+            <Clock className="h-8 w-8 text-green-600" />
+            <div className="ml-3">
+              <p className="text-sm font-medium text-gray-600">This Week</p>
+              <p className="text-lg font-semibold text-gray-900">
+                {jobs.filter(job => {
+                  if (!job.scheduled_date) return false;
+                  const jobDate = new Date(job.scheduled_date);
+                  const weekStart = new Date(today);
+                  weekStart.setDate(today.getDate() - today.getDay());
+                  const weekEnd = new Date(weekStart);
+                  weekEnd.setDate(weekStart.getDate() + 6);
+                  return jobDate >= weekStart && jobDate <= weekEnd;
+                }).length}
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <div className="bg-white rounded-lg shadow-sm border p-4">
+          <div className="flex items-center">
+            <User className="h-8 w-8 text-purple-600" />
+            <div className="ml-3">
+              <p className="text-sm font-medium text-gray-600">Available Techs</p>
+              <p className="text-lg font-semibold text-gray-900">{mockAssociates.length}</p>
+            </div>
+          </div>
+        </div>
+        
+        <div className="bg-white rounded-lg shadow-sm border p-4">
+          <div className="flex items-center">
+            <MapPin className="h-8 w-8 text-orange-600" />
+            <div className="ml-3">
+              <p className="text-sm font-medium text-gray-600">Locations</p>
+              <p className="text-lg font-semibold text-gray-900">
+                {new Set(jobs.map(job => job.location)).size}
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
-
-      {/* Job Details Modal */}
-      {selectedJob && (
-        <JobDetailsModal
-          job={selectedJob}
-          onClose={() => setSelectedJob(null)}
-        />
-      )}
     </div>
   );
 };

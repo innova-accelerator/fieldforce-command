@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { CheckSquare, Plus } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
@@ -10,7 +11,7 @@ import { Job, Task, TimelineEntry } from '../../../types/job';
 
 interface ChecklistProps {
   tasks: Task[];
-  onAddTask: (task: Omit<Task, 'id' | 'job_id' | 'complete' | 'created_at' | 'updated_at'>) => void;
+  onAddTask: (task: Omit<Task, 'id' | 'job_id' | 'created_at' | 'updated_at'>) => void;
   onUpdateTask: (taskId: string, updates: Partial<Task>) => void;
   onTimelineUpdate: (entry: Omit<TimelineEntry, 'timestamp' | 'id' | 'job_id' | 'created_at'>) => void;
 }
@@ -27,10 +28,7 @@ const Checklist: React.FC<ChecklistProps> = ({ tasks, onAddTask, onUpdateTask, o
         label: newTaskLabel,
         due_date: newTaskDueDate || undefined,
         priority: newTaskPriority,
-        complete: false,
-        job_id: '', // Will be set by parent
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
+        complete: false
       });
 
       onTimelineUpdate({

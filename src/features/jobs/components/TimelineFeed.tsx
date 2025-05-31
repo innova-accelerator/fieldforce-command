@@ -125,7 +125,7 @@ const TimelineFeed: React.FC<TimelineFeedProps> = ({ timeline }) => {
       <div className="space-y-3">
         {displayedTimeline.map((entry) => (
           <div 
-            key={`${entry.timestamp}-${entry.author}-${entry.type}`}
+            key={`${entry.timestamp}-${entry.author_id}-${entry.type}`}
             className={`border-l-4 pl-4 pb-3 ${getEntryColor(entry.type)}`}
           >
             <div className="flex items-start justify-between gap-2 mb-1">
@@ -140,7 +140,7 @@ const TimelineFeed: React.FC<TimelineFeedProps> = ({ timeline }) => {
                   {formatTimestamp(entry.timestamp)}
                 </div>
                 <div className="text-xs text-gray-600 font-medium">
-                  {entry.author}
+                  {entry.author_id || 'System'}
                 </div>
               </div>
             </div>

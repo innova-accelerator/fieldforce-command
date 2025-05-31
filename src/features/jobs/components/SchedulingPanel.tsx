@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Calendar, Clock, User, Plus } from 'lucide-react';
 import { Button } from '../../../components/ui/button';
@@ -9,14 +10,14 @@ import { Job, Associate, TimelineEntry } from '../../../types/job';
 interface SchedulingPanelProps {
   job: Job;
   onUpdate: (updates: Partial<Job>) => void;
-  onTimelineUpdate: (entry: Omit<TimelineEntry, 'timestamp'>) => void;
+  onTimelineUpdate: (entry: Omit<TimelineEntry, 'timestamp' | 'id' | 'job_id' | 'created_at'>) => void;
 }
 
 // Mock available associates - in real app, fetch from API
 const availableAssociates: Associate[] = [
-  { id: 'tech-3', name: 'Mike Davis', avatarUrl: '/placeholder.svg' },
-  { id: 'tech-4', name: 'Lisa Chen', avatarUrl: '/placeholder.svg' },
-  { id: 'tech-5', name: 'David Brown', avatarUrl: '/placeholder.svg' }
+  { id: 'tech-3', name: 'Mike Davis', email: 'mike@company.com', user_id: 'user-1', availability: 'available', created_at: '2024-01-01T00:00:00Z', updated_at: '2024-01-01T00:00:00Z' },
+  { id: 'tech-4', name: 'Lisa Chen', email: 'lisa@company.com', user_id: 'user-1', availability: 'available', created_at: '2024-01-01T00:00:00Z', updated_at: '2024-01-01T00:00:00Z' },
+  { id: 'tech-5', name: 'David Brown', email: 'david@company.com', user_id: 'user-1', availability: 'available', created_at: '2024-01-01T00:00:00Z', updated_at: '2024-01-01T00:00:00Z' }
 ];
 
 const SchedulingPanel: React.FC<SchedulingPanelProps> = ({ 
@@ -184,7 +185,6 @@ const SchedulingPanel: React.FC<SchedulingPanelProps> = ({
                   className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
                 >
                   <Avatar className="h-8 w-8">
-                    <AvatarImage src={associate.avatarUrl} />
                     <AvatarFallback>
                       {associate.name.split(' ').map(n => n[0]).join('')}
                     </AvatarFallback>
