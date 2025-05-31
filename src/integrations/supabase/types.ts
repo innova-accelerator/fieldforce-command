@@ -9,16 +9,611 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      activities: {
+        Row: {
+          associate_id: string | null
+          created_at: string | null
+          customer_id: string | null
+          description: string | null
+          id: string
+          job_id: string | null
+          timestamp: string | null
+          title: string
+          type: Database["public"]["Enums"]["activity_type"]
+          user_id: string
+        }
+        Insert: {
+          associate_id?: string | null
+          created_at?: string | null
+          customer_id?: string | null
+          description?: string | null
+          id?: string
+          job_id?: string | null
+          timestamp?: string | null
+          title: string
+          type: Database["public"]["Enums"]["activity_type"]
+          user_id: string
+        }
+        Update: {
+          associate_id?: string | null
+          created_at?: string | null
+          customer_id?: string | null
+          description?: string | null
+          id?: string
+          job_id?: string | null
+          timestamp?: string | null
+          title?: string
+          type?: Database["public"]["Enums"]["activity_type"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "activities_associate_id_fkey"
+            columns: ["associate_id"]
+            isOneToOne: false
+            referencedRelation: "associates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "activities_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "activities_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "activities_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      associates: {
+        Row: {
+          availability:
+            | Database["public"]["Enums"]["associate_availability"]
+            | null
+          certifications: string[] | null
+          completed_jobs: number | null
+          created_at: string | null
+          email: string | null
+          hourly_rate: number | null
+          id: string
+          joined_at: string | null
+          location_address: string | null
+          location_lat: number | null
+          location_lng: number | null
+          name: string
+          phone: string | null
+          rating: number | null
+          skills: string[] | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          availability?:
+            | Database["public"]["Enums"]["associate_availability"]
+            | null
+          certifications?: string[] | null
+          completed_jobs?: number | null
+          created_at?: string | null
+          email?: string | null
+          hourly_rate?: number | null
+          id?: string
+          joined_at?: string | null
+          location_address?: string | null
+          location_lat?: number | null
+          location_lng?: number | null
+          name: string
+          phone?: string | null
+          rating?: number | null
+          skills?: string[] | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          availability?:
+            | Database["public"]["Enums"]["associate_availability"]
+            | null
+          certifications?: string[] | null
+          completed_jobs?: number | null
+          created_at?: string | null
+          email?: string | null
+          hourly_rate?: number | null
+          id?: string
+          joined_at?: string | null
+          location_address?: string | null
+          location_lat?: number | null
+          location_lng?: number | null
+          name?: string
+          phone?: string | null
+          rating?: number | null
+          skills?: string[] | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "associates_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      customers: {
+        Row: {
+          address: string | null
+          company: string | null
+          created_at: string | null
+          email: string | null
+          id: string
+          last_contact: string | null
+          name: string
+          notes: string | null
+          phone: string | null
+          status: Database["public"]["Enums"]["customer_status"] | null
+          total_jobs: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          address?: string | null
+          company?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          last_contact?: string | null
+          name: string
+          notes?: string | null
+          phone?: string | null
+          status?: Database["public"]["Enums"]["customer_status"] | null
+          total_jobs?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          address?: string | null
+          company?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          last_contact?: string | null
+          name?: string
+          notes?: string | null
+          phone?: string | null
+          status?: Database["public"]["Enums"]["customer_status"] | null
+          total_jobs?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customers_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      jobs: {
+        Row: {
+          assigned_person_id: string | null
+          assigned_techs: string[] | null
+          contact_email: string | null
+          contact_name: string | null
+          contact_phone: string | null
+          created_at: string | null
+          customer_id: string | null
+          description: string | null
+          end_date: string | null
+          estimated_duration: number | null
+          id: string
+          is_favorite: boolean | null
+          location: string | null
+          name: string
+          notes: string[] | null
+          organization_id: string | null
+          phase: string | null
+          priority: Database["public"]["Enums"]["job_priority"] | null
+          scheduled_date: string | null
+          start_date: string | null
+          status: Database["public"]["Enums"]["job_status"] | null
+          tags: string[] | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          assigned_person_id?: string | null
+          assigned_techs?: string[] | null
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          created_at?: string | null
+          customer_id?: string | null
+          description?: string | null
+          end_date?: string | null
+          estimated_duration?: number | null
+          id?: string
+          is_favorite?: boolean | null
+          location?: string | null
+          name: string
+          notes?: string[] | null
+          organization_id?: string | null
+          phase?: string | null
+          priority?: Database["public"]["Enums"]["job_priority"] | null
+          scheduled_date?: string | null
+          start_date?: string | null
+          status?: Database["public"]["Enums"]["job_status"] | null
+          tags?: string[] | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          assigned_person_id?: string | null
+          assigned_techs?: string[] | null
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          created_at?: string | null
+          customer_id?: string | null
+          description?: string | null
+          end_date?: string | null
+          estimated_duration?: number | null
+          id?: string
+          is_favorite?: boolean | null
+          location?: string | null
+          name?: string
+          notes?: string[] | null
+          organization_id?: string | null
+          phase?: string | null
+          priority?: Database["public"]["Enums"]["job_priority"] | null
+          scheduled_date?: string | null
+          start_date?: string | null
+          status?: Database["public"]["Enums"]["job_status"] | null
+          tags?: string[] | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "jobs_assigned_person_id_fkey"
+            columns: ["assigned_person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jobs_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jobs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jobs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organizations: {
+        Row: {
+          additional_info: string | null
+          address: string | null
+          category: string | null
+          city: string | null
+          created_at: string | null
+          email: string | null
+          facebook: string | null
+          id: string
+          linkedin: string | null
+          name: string
+          phone: string | null
+          relation: Database["public"]["Enums"]["organization_relation"] | null
+          state: string | null
+          twitter: string | null
+          updated_at: string | null
+          user_id: string
+          website: string | null
+          zipcode: string | null
+        }
+        Insert: {
+          additional_info?: string | null
+          address?: string | null
+          category?: string | null
+          city?: string | null
+          created_at?: string | null
+          email?: string | null
+          facebook?: string | null
+          id?: string
+          linkedin?: string | null
+          name: string
+          phone?: string | null
+          relation?: Database["public"]["Enums"]["organization_relation"] | null
+          state?: string | null
+          twitter?: string | null
+          updated_at?: string | null
+          user_id: string
+          website?: string | null
+          zipcode?: string | null
+        }
+        Update: {
+          additional_info?: string | null
+          address?: string | null
+          category?: string | null
+          city?: string | null
+          created_at?: string | null
+          email?: string | null
+          facebook?: string | null
+          id?: string
+          linkedin?: string | null
+          name?: string
+          phone?: string | null
+          relation?: Database["public"]["Enums"]["organization_relation"] | null
+          state?: string | null
+          twitter?: string | null
+          updated_at?: string | null
+          user_id?: string
+          website?: string | null
+          zipcode?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organizations_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      people: {
+        Row: {
+          additional_info: string | null
+          address: string | null
+          birthday: string | null
+          cell_number: string | null
+          city: string | null
+          created_at: string | null
+          email: string | null
+          facebook: string | null
+          first_name: string
+          id: string
+          last_name: string
+          linkedin: string | null
+          office_number: string | null
+          organization_id: string | null
+          phone_alt: string | null
+          state: string | null
+          title: string | null
+          twitter: string | null
+          updated_at: string | null
+          user_id: string
+          zipcode: string | null
+        }
+        Insert: {
+          additional_info?: string | null
+          address?: string | null
+          birthday?: string | null
+          cell_number?: string | null
+          city?: string | null
+          created_at?: string | null
+          email?: string | null
+          facebook?: string | null
+          first_name: string
+          id?: string
+          last_name: string
+          linkedin?: string | null
+          office_number?: string | null
+          organization_id?: string | null
+          phone_alt?: string | null
+          state?: string | null
+          title?: string | null
+          twitter?: string | null
+          updated_at?: string | null
+          user_id: string
+          zipcode?: string | null
+        }
+        Update: {
+          additional_info?: string | null
+          address?: string | null
+          birthday?: string | null
+          cell_number?: string | null
+          city?: string | null
+          created_at?: string | null
+          email?: string | null
+          facebook?: string | null
+          first_name?: string
+          id?: string
+          last_name?: string
+          linkedin?: string | null
+          office_number?: string | null
+          organization_id?: string | null
+          phone_alt?: string | null
+          state?: string | null
+          title?: string | null
+          twitter?: string | null
+          updated_at?: string | null
+          user_id?: string
+          zipcode?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "people_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "people_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string | null
+          email: string
+          first_name: string | null
+          id: string
+          last_name: string | null
+          role: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          first_name?: string | null
+          id: string
+          last_name?: string | null
+          role?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          role?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      tasks: {
+        Row: {
+          complete: boolean | null
+          created_at: string | null
+          due_date: string | null
+          id: string
+          job_id: string
+          label: string
+          priority: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          complete?: boolean | null
+          created_at?: string | null
+          due_date?: string | null
+          id?: string
+          job_id: string
+          label: string
+          priority?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          complete?: boolean | null
+          created_at?: string | null
+          due_date?: string | null
+          id?: string
+          job_id?: string
+          label?: string
+          priority?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tasks_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      timeline_entries: {
+        Row: {
+          author_id: string | null
+          content: string
+          created_at: string | null
+          id: string
+          job_id: string
+          timestamp: string | null
+          type: Database["public"]["Enums"]["timeline_type"]
+        }
+        Insert: {
+          author_id?: string | null
+          content: string
+          created_at?: string | null
+          id?: string
+          job_id: string
+          timestamp?: string | null
+          type: Database["public"]["Enums"]["timeline_type"]
+        }
+        Update: {
+          author_id?: string | null
+          content?: string
+          created_at?: string | null
+          id?: string
+          job_id?: string
+          timestamp?: string | null
+          type?: Database["public"]["Enums"]["timeline_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "timeline_entries_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "timeline_entries_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_admin: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      activity_type: "note" | "call" | "email" | "job_completed" | "job_created"
+      associate_availability: "available" | "busy" | "offline"
+      customer_status: "active" | "inactive"
+      job_priority: "Low" | "Medium" | "High" | "Urgent"
+      job_status:
+        | "New"
+        | "Scheduled"
+        | "In Progress"
+        | "Completed"
+        | "Cancelled"
+      organization_relation: "Unknown" | "Vendor" | "Partner" | "Other"
+      timeline_type: "note" | "status" | "assignment" | "scheduling"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -133,6 +728,14 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      activity_type: ["note", "call", "email", "job_completed", "job_created"],
+      associate_availability: ["available", "busy", "offline"],
+      customer_status: ["active", "inactive"],
+      job_priority: ["Low", "Medium", "High", "Urgent"],
+      job_status: ["New", "Scheduled", "In Progress", "Completed", "Cancelled"],
+      organization_relation: ["Unknown", "Vendor", "Partner", "Other"],
+      timeline_type: ["note", "status", "assignment", "scheduling"],
+    },
   },
 } as const

@@ -2,50 +2,55 @@
 export interface Job {
   id: string;
   name: string;
-  title?: string; // Keep for backward compatibility, will be removed later
-  customerName: string;
-  client?: string; // Keep for backward compatibility, will be removed later
   description: string;
-  clientId: string;
-  organizationId: string;
+  customer_id: string;
+  organization_id: string;
+  assigned_person_id?: string;
   location: string;
   phase: string;
   status: 'New' | 'Scheduled' | 'In Progress' | 'Completed' | 'Cancelled';
   priority: 'Low' | 'Medium' | 'High' | 'Urgent';
-  startDate: string;
-  endDate: string;
-  scheduledDate?: string;
-  estimatedDuration?: number;
-  assignedPersonId?: string;
-  assignedToName?: string; // Keep for backward compatibility
-  assignedTechs: string[];
-  contactInfo: {
-    name: string;
-    phone: string;
-    email: string;
-  };
+  start_date: string;
+  end_date: string;
+  scheduled_date?: string;
+  estimated_duration?: number;
+  assigned_techs: string[];
+  contact_name: string;
+  contact_phone: string;
+  contact_email: string;
   tags: string[];
-  isFavorite: boolean;
-  tasks: Task[];
+  is_favorite: boolean;
   notes: string[];
+  tasks: Task[];
   timeline: TimelineEntry[];
-  createdAt: string;
-  updatedAt: string;
+  created_at: string;
+  updated_at: string;
+  user_id: string;
+  
+  // Computed fields for backward compatibility
+  customerName?: string;
+  assignedPersonName?: string;
 }
 
 export interface Task {
   id: string;
+  job_id: string;
   label: string;
   complete: boolean;
-  dueDate?: string;
+  due_date?: string;
   priority?: 'low' | 'medium' | 'high';
+  created_at: string;
+  updated_at: string;
 }
 
 export interface TimelineEntry {
+  id: string;
+  job_id: string;
   timestamp: string;
   type: 'note' | 'status' | 'assignment' | 'scheduling';
   content: string;
-  author: string;
+  author_id?: string;
+  created_at: string;
 }
 
 export interface Associate {

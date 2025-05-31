@@ -1,114 +1,127 @@
 
 import { supabase } from '@/integrations/supabase/client';
-import { Job, Task, TimelineEntry, Associate } from '@/types/job';
-
-// Mock data for development - easily replaceable with real API calls
-const mockJob: Job = {
-  id: 'job-123',
-  name: 'HVAC System Installation',
-  description: 'Complete HVAC system installation for commercial building including ductwork, units, and controls.',
-  customerName: 'ABC Corporation',
-  phase: 'In Progress',
-  status: 'In Progress',
-  priority: 'High',
-  startDate: new Date('2024-01-15').toISOString(),
-  endDate: new Date('2024-01-30').toISOString(),
-  assignedPersonId: 'person-1',
-  organizationId: 'org-1',
-  scheduledDate: new Date('2024-01-15').toISOString(),
-  estimatedDuration: 8,
-  location: '123 Business Ave, Suite 100, City, State 12345',
-  isFavorite: false,
-  assignedTechs: [
-    'tech-1',
-    'tech-2'
-  ],
-  tasks: [
-    { id: 'task-1', label: 'Site survey completed', complete: true, dueDate: '2024-01-10' },
-    { id: 'task-2', label: 'Equipment procurement', complete: true, dueDate: '2024-01-12' },
-    { id: 'task-3', label: 'Installation phase 1', complete: false, dueDate: '2024-01-16' },
-    { id: 'task-4', label: 'System testing', complete: false, dueDate: '2024-01-25' }
-  ],
-  notes: [
-    'Initial assessment completed - all requirements confirmed',
-    'Client requested additional ventilation in conference room',
-    'Equipment delivery scheduled for January 14th'
-  ],
-  timeline: [
-    { 
-      timestamp: '2024-01-15T10:30:00Z', 
-      type: 'status', 
-      content: 'Job status changed to In Progress',
-      author: 'John Smith'
-    },
-    { 
-      timestamp: '2024-01-14T15:45:00Z', 
-      type: 'note', 
-      content: 'Equipment delivery confirmed for tomorrow morning',
-      author: 'Sarah Johnson'
-    },
-    { 
-      timestamp: '2024-01-14T09:20:00Z', 
-      type: 'assignment', 
-      content: 'Sarah Johnson assigned to installation team',
-      author: 'Project Manager'
-    },
-    { 
-      timestamp: '2024-01-12T14:15:00Z', 
-      type: 'note', 
-      content: 'Site survey completed. Ready for equipment procurement.',
-      author: 'John Smith'
-    },
-    { 
-      timestamp: '2024-01-10T11:30:00Z', 
-      type: 'status', 
-      content: 'Job created and assigned to team',
-      author: 'Admin'
-    }
-  ],
-  contactInfo: {
-    name: 'Mike Wilson',
-    phone: '(555) 123-4567',
-    email: 'mike.wilson@abccorp.com'
-  },
-  clientId: '1',
-  tags: ['HVAC', 'Installation'],
-  assignedToName: 'John Smith',
-  createdAt: new Date('2024-01-10').toISOString(),
-  updatedAt: new Date('2024-01-15').toISOString()
-};
+import { Job, Task, TimelineEntry } from '@/types/job';
 
 export const fetchJob = async (jobId: string): Promise<Job> => {
-  // Simulate API call delay
-  await new Promise(resolve => setTimeout(resolve, 500));
-  
-  // In real implementation, this would be:
-  // const { data, error } = await supabase
-  //   .from('jobs')
-  //   .select('*')
-  //   .eq('id', jobId)
-  //   .single();
-  // 
-  // if (error) throw error;
-  // return data;
-  
-  return { ...mockJob, id: jobId };
+  const { data: job, error } = await supabase
+    .from('jobs')
+    .select(`
+      *,
+      tasks (*),
+      timeline_entries (*),
+      customers (name),
+      people (first_name, last_name)
+    `)
+    .eq('id', jobId)
+    .single();
+
+  if (error) throw error;
+
+  // Transform the data to match our Job interface
+  const transformedJob: Job = {
+    ...job,
+    tasks: job.tasks || [],
+    timeline: job.timeline_entries || [],
+    customerName: job.customers?.name,
+    assignedPersonName: job.people ? `${job.people.first_name} ${job.people.last_name}` : undefined,
+  };
+
+  return transformedJob;
 };
 
 export const updateJob = async (jobId: string, updates: Partial<Job>): Promise<Job> => {
-  // Simulate API call delay
-  await new Promise(resolve => setTimeout(resolve, 300));
-  
-  // In real implementation, this would be:
-  // const { data, error } = await supabase
-  //   .from('jobs')
-  //   .update(updates)
-  //   .eq('id', jobId)
-  //   .select()
-  //   .single();
-  // 
-  // if (error) throw error;
-  // return data;
-  
-  return { ...mockJob, ...updates, id: jobId, updatedAt: new Date().toISOString() };
+  // Remove computed fields before updating
+  const { tasks, timeline, customerName, assignedPersonName, ...dbUpdates } = updates;
+
+  const { data: updatedJob, error } = await supabase
+    .from('jobs')
+    .update(dbUpdates)
+    .eq('id', jobId)
+    .select(`
+      *,
+      tasks (*),
+      timeline_entries (*),
+      customers (name),
+      people (first_name, last_name)
+    `)
+    .single();
+
+  if (error) throw error;
+
+  // Handle tasks updates if provided
+  if (tasks) {
+    for (const task of tasks) {
+      if (task.id && task.id.startsWith('task-')) {
+        // This is a new task, insert it
+        const { id, ...taskData } = task;
+        await supabase
+          .from('tasks')
+          .insert({ ...taskData, job_id: jobId });
+      } else if (task.id) {
+        // This is an existing task, update it
+        const { id, ...taskData } = task;
+        await supabase
+          .from('tasks')
+          .update(taskData)
+          .eq('id', id);
+      }
+    }
+  }
+
+  // Handle timeline updates if provided
+  if (timeline) {
+    for (const entry of timeline) {
+      if (!entry.id) {
+        // This is a new timeline entry, insert it
+        await supabase
+          .from('timeline_entries')
+          .insert({ ...entry, job_id: jobId });
+      }
+    }
+  }
+
+  // Transform the response
+  const transformedJob: Job = {
+    ...updatedJob,
+    tasks: updatedJob.tasks || [],
+    timeline: updatedJob.timeline_entries || [],
+    customerName: updatedJob.customers?.name,
+    assignedPersonName: updatedJob.people ? `${updatedJob.people.first_name} ${updatedJob.people.last_name}` : undefined,
+  };
+
+  return transformedJob;
+};
+
+export const createJob = async (jobData: Partial<Job>): Promise<Job> => {
+  // Remove computed fields before creating
+  const { tasks, timeline, customerName, assignedPersonName, ...dbData } = jobData;
+
+  // Get current user
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('User not authenticated');
+
+  const { data: newJob, error } = await supabase
+    .from('jobs')
+    .insert({ ...dbData, user_id: user.id })
+    .select(`
+      *,
+      tasks (*),
+      timeline_entries (*),
+      customers (name),
+      people (first_name, last_name)
+    `)
+    .single();
+
+  if (error) throw error;
+
+  // Transform the response
+  const transformedJob: Job = {
+    ...newJob,
+    tasks: newJob.tasks || [],
+    timeline: newJob.timeline_entries || [],
+    customerName: newJob.customers?.name,
+    assignedPersonName: newJob.people ? `${newJob.people.first_name} ${newJob.people.last_name}` : undefined,
+  };
+
+  return transformedJob;
 };

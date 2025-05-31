@@ -2,48 +2,45 @@
 export interface CreateJobRequest {
   name: string;
   description: string;
-  clientId: string;
-  organizationId: string;
+  customer_id: string;
+  organization_id: string;
+  assigned_person_id?: string;
   location: string;
   phase: string;
   status: 'New' | 'Scheduled' | 'In Progress' | 'Completed' | 'Cancelled';
   priority: 'Low' | 'Medium' | 'High' | 'Urgent';
-  startDate: string;
-  endDate: string;
-  assignedPersonId: string;
-  assignedTechs: string[];
-  contactInfo: {
-    name: string;
-    phone: string;
-    email: string;
-  };
+  start_date: string;
+  end_date: string;
+  assigned_techs: string[];
+  contact_name: string;
+  contact_phone: string;
+  contact_email: string;
   tags: string[];
-  isFavorite: boolean;
+  is_favorite: boolean;
 }
 
 export interface JobResponse {
   id: string;
   name: string;
   description: string;
-  clientId: string;
-  organizationId: string;
+  customer_id: string;
+  organization_id: string;
+  assigned_person_id?: string;
   location: string;
   phase: string;
   status: string;
   priority: string;
-  startDate: string;
-  endDate: string;
-  assignedPersonId: string;
-  assignedTechs: string[];
-  contactInfo: {
-    name: string;
-    phone: string;
-    email: string;
-  };
+  start_date: string;
+  end_date: string;
+  assigned_techs: string[];
+  contact_name: string;
+  contact_phone: string;
+  contact_email: string;
   tags: string[];
-  isFavorite: boolean;
-  createdAt: string;
-  updatedAt: string;
+  is_favorite: boolean;
+  created_at: string;
+  updated_at: string;
+  user_id: string;
 }
 
 export const jobsApi = {
