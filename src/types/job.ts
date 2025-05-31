@@ -1,39 +1,27 @@
 
 export interface Job {
   id: string;
-  title: string; // Display title for the job
-  name: string; // Job name
-  description: string; // Made required to match usage
-  status: 'new' | 'in-progress' | 'completed' | 'cancelled';
-  priority: 'low' | 'medium' | 'high' | 'urgent';
-  startDate?: Date;
-  endDate?: Date;
-  assignedPersonId?: string;
-  organizationId?: string;
-  createdAt: Date;
-  
-  // Additional properties for job overview functionality
-  client: string;
-  phase: string;
+  name: string;
+  description: string;
+  clientId: string;
+  organizationId: string;
   location: string;
-  isFavorite?: boolean;
-  tasks: Task[];
-  notes: string[];
-  timeline: TimelineEntry[];
-  assignedTechs: Associate[];
+  phase: string;
+  status: 'New' | 'Scheduled' | 'In Progress' | 'Completed' | 'Cancelled';
+  priority: 'Low' | 'Medium' | 'High' | 'Urgent';
+  startDate: string;
+  endDate: string;
+  assignedPersonId?: string;
+  assignedTechs: string[];
   contactInfo: {
     name: string;
     phone: string;
     email: string;
   };
-  
-  // Properties used by existing components
-  customerId?: string;
-  customerName?: string;
-  estimatedDuration?: number;
-  scheduledDate?: Date;
-  tags?: string[];
-  assignedToName?: string; // Added missing property
+  tags: string[];
+  isFavorite: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Task {

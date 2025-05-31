@@ -167,23 +167,9 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onProjectCreate
     }
   };
 
-  const handleInputChange = (field: keyof CreateJobRequest, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: '' }));
-    }
-  };
-
-  const handleContactInfoChange = (field: keyof CreateJobRequest['contactInfo'], value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      contactInfo: { ...prev.contactInfo, [field]: value }
-    }));
-  };
-
   const handleTagsChange = (value: string) => {
     const tags = value.split(',').map(tag => tag.trim()).filter(Boolean);
-    handleInputChange('tags', tags);
+    setFormData(prev => ({ ...prev, tags }));
   };
 
   const handleTechToggle = (personId: string, checked: boolean) => {
@@ -215,33 +201,30 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onProjectCreate
           )}
 
           <div className="md:col-span-2">
-            <Label htmlFor="name">Project Name</Label>
+            <Label htmlFor="projectName">Project Name</Label>
             <Input
-              id="name"
+              id="projectName"
               value={formData.name}
-              onChange={(e) => handleInputChange('name', e.target.value)}
+              onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
               placeholder="Enter project name"
             />
           </div>
           
           <div className="md:col-span-2">
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="projectDescription">Description</Label>
             <Textarea
-              id="description"
+              id="projectDescription"
               value={formData.description}
-              onChange={(e) => handleInputChange('description', e.target.value)}
+              onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
               placeholder="Project description..."
               rows={3}
             />
           </div>
           
           <div className="md:col-span-2">
-            <Label htmlFor="clientId">Client (Person)</Label>
-            <Select 
-              onValueChange={handleClientChange}
-              disabled={loadingPeople}
-            >
-              <SelectTrigger>
+            <Label htmlFor="clientSelect">Client (Person)</Label>
+            <Select onValueChange={handleClientChange} disabled={loadingPeople}>
+              <SelectTrigger id="clientSelect">
                 <SelectValue placeholder={loadingPeople ? "Loading..." : "Select client"} />
               </SelectTrigger>
               <SelectContent>
@@ -256,9 +239,9 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onProjectCreate
           </div>
           
           <div className="md:col-span-2">
-            <Label htmlFor="organizationId">Organization</Label>
+            <Label htmlFor="organizationDisplay">Organization</Label>
             <Input
-              id="organizationId"
+              id="organizationDisplay"
               value={selectedClient ? `${selectedClient.organizationId} (Auto-populated)` : ''}
               disabled
               placeholder="Will be auto-populated when client is selected"
@@ -266,19 +249,19 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onProjectCreate
           </div>
           
           <div>
-            <Label htmlFor="location">Location</Label>
+            <Label htmlFor="projectLocation">Location</Label>
             <Input
-              id="location"
+              id="projectLocation"
               value={formData.location}
-              onChange={(e) => handleInputChange('location', e.target.value)}
+              onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
               placeholder="Project location"
             />
           </div>
           
           <div>
-            <Label htmlFor="phase">Phase</Label>
-            <Select onValueChange={(value) => handleInputChange('phase', value)}>
-              <SelectTrigger>
+            <Label htmlFor="projectPhase">Phase</Label>
+            <Select onValueChange={(value) => setFormData(prev => ({ ...prev, phase: value }))}>
+              <SelectTrigger id="projectPhase">
                 <SelectValue placeholder="Select phase" />
               </SelectTrigger>
               <SelectContent>
@@ -290,9 +273,9 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onProjectCreate
           </div>
           
           <div>
-            <Label htmlFor="status">Status</Label>
-            <Select onValueChange={(value) => handleInputChange('status', value)} defaultValue="New">
-              <SelectTrigger>
+            <Label htmlFor="projectStatus">Status</Label>
+            <Select onValueChange={(value) => setFormData(prev => ({ ...prev, status: value as any }))} defaultValue="New">
+              <SelectTrigger id="projectStatus">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -304,9 +287,9 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onProjectCreate
           </div>
           
           <div>
-            <Label htmlFor="priority">Priority</Label>
-            <Select onValueChange={(value) => handleInputChange('priority', value)} defaultValue="Medium">
-              <SelectTrigger>
+            <Label htmlFor="projectPriority">Priority</Label>
+            <Select onValueChange={(value) => setFormData(prev => ({ ...prev, priority: value as any }))} defaultValue="Medium">
+              <SelectTrigger id="projectPriority">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -318,29 +301,29 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onProjectCreate
           </div>
           
           <div>
-            <Label htmlFor="startDate">Start Date</Label>
+            <Label htmlFor="projectStartDate">Start Date</Label>
             <Input
-              id="startDate"
+              id="projectStartDate"
               type="date"
               value={formData.startDate}
-              onChange={(e) => handleInputChange('startDate', e.target.value)}
+              onChange={(e) => setFormData(prev => ({ ...prev, startDate: e.target.value }))}
             />
           </div>
           
           <div>
-            <Label htmlFor="endDate">End Date</Label>
+            <Label htmlFor="projectEndDate">End Date</Label>
             <Input
-              id="endDate"
+              id="projectEndDate"
               type="date"
               value={formData.endDate}
-              onChange={(e) => handleInputChange('endDate', e.target.value)}
+              onChange={(e) => setFormData(prev => ({ ...prev, endDate: e.target.value }))}
             />
           </div>
           
           <div>
-            <Label htmlFor="assignedPersonId">Assigned Person</Label>
-            <Select onValueChange={(value) => handleInputChange('assignedPersonId', value)}>
-              <SelectTrigger>
+            <Label htmlFor="assignedPersonSelect">Assigned Person</Label>
+            <Select onValueChange={(value) => setFormData(prev => ({ ...prev, assignedPersonId: value }))}>
+              <SelectTrigger id="assignedPersonSelect">
                 <SelectValue placeholder="Select assigned person" />
               </SelectTrigger>
               <SelectContent>
@@ -377,27 +360,39 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onProjectCreate
             <Label>Contact Info</Label>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mt-2">
               <Input
+                id="contactName"
                 placeholder="Contact name"
                 value={formData.contactInfo.name}
-                onChange={(e) => handleContactInfoChange('name', e.target.value)}
+                onChange={(e) => setFormData(prev => ({
+                  ...prev,
+                  contactInfo: { ...prev.contactInfo, name: e.target.value }
+                }))}
               />
               <Input
+                id="contactPhone"
                 placeholder="Contact phone"
                 value={formData.contactInfo.phone}
-                onChange={(e) => handleContactInfoChange('phone', e.target.value)}
+                onChange={(e) => setFormData(prev => ({
+                  ...prev,
+                  contactInfo: { ...prev.contactInfo, phone: e.target.value }
+                }))}
               />
               <Input
+                id="contactEmail"
                 placeholder="Contact email"
                 value={formData.contactInfo.email}
-                onChange={(e) => handleContactInfoChange('email', e.target.value)}
+                onChange={(e) => setFormData(prev => ({
+                  ...prev,
+                  contactInfo: { ...prev.contactInfo, email: e.target.value }
+                }))}
               />
             </div>
           </div>
           
           <div className="md:col-span-2">
-            <Label htmlFor="tags">Tags (comma-separated)</Label>
+            <Label htmlFor="projectTags">Tags (comma-separated)</Label>
             <Input
-              id="tags"
+              id="projectTags"
               value={formData.tags.join(', ')}
               onChange={(e) => handleTagsChange(e.target.value)}
               placeholder="tag1, tag2, tag3"
@@ -408,7 +403,7 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onProjectCreate
             <Checkbox
               id="isFavorite"
               checked={formData.isFavorite}
-              onCheckedChange={(checked) => handleInputChange('isFavorite', checked as boolean)}
+              onCheckedChange={(checked) => setFormData(prev => ({ ...prev, isFavorite: checked as boolean }))}
             />
             <Label htmlFor="isFavorite">Mark as Favorite</Label>
           </div>
