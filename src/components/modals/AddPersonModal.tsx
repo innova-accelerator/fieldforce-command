@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import {
   Dialog,
@@ -18,12 +17,51 @@ import {
   SelectValue,
 } from '../ui/select';
 import { X } from 'lucide-react';
-import { peopleApi, CreatePersonRequest } from '../../services/api/people';
-import { organizationsApi, OrganizationResponse } from '../../services/api/organizations';
+import { supabase } from '../../integrations/supabase/client';
 
 interface AddPersonModalProps {
   onPersonAdded?: () => void;
   defaultOrganizationId?: string;
+}
+
+interface CreatePersonRequest {
+  organizationId: string | null;
+  firstName: string;
+  lastName: string;
+  title: string;
+  birthday: string;
+  email: string;
+  officeNumber: string;
+  cellNumber: string;
+  phoneWithExtension: string;
+  linkedin: string;
+  facebook: string;
+  twitter: string;
+  additionalInfo: string;
+  address: string;
+  city: string;
+  state: string;
+  zipcode: string;
+}
+
+interface OrganizationResponse {
+  id: string;
+  name: string;
+  relation: string;
+  category: string;
+  email: string;
+  phone: string;
+  website: string;
+  linkedin: string;
+  facebook: string;
+  twitter: string;
+  additional_info: string;
+  address: string;
+  city: string;
+  state: string;
+  zipcode: string;
+  created_at: string;
+  updated_at: string;
 }
 
 const STATE_OPTIONS = ['AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'];
@@ -60,10 +98,29 @@ const AddPersonModal: React.FC<AddPersonModalProps> = ({ onPersonAdded, defaultO
   const fetchOrganizations = async () => {
     setLoadingOrgs(true);
     try {
-      const orgs = await organizationsApi.getAll();
-      setOrganizations(orgs);
+      console.log('Fetching organizations from Supabase...');
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        console.error('User not authenticated');
+        setErrors({ general: 'User not authenticated' });
+        return;
+      }
+
+      const { data: organizations, error } = await supabase
+        .from('organizations')
+        .select('*')
+        .eq('user_id', user.id);
+
+      if (error) {
+        console.error('Failed to fetch organizations:', error);
+        setErrors({ general: 'Failed to load organizations: ' + error.message });
+        return;
+      }
+
+      console.log('Organizations fetched successfully:', organizations);
+      setOrganizations(organizations || []);
     } catch (error) {
-      console.error('Failed to fetch organizations:', error);
+      console.error('Error fetching organizations:', error);
       setErrors({ general: 'Failed to load organizations' });
     } finally {
       setLoadingOrgs(false);
@@ -76,7 +133,43 @@ const AddPersonModal: React.FC<AddPersonModalProps> = ({ onPersonAdded, defaultO
     setErrors({});
 
     try {
-      await peopleApi.create(formData);
+      console.log('Creating person with data:', formData);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        throw new Error('User not authenticated');
+      }
+
+      const { data, error } = await supabase
+        .from('people')
+        .insert({
+          user_id: user.id,
+          organization_id: formData.organizationId,
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          title: formData.title,
+          birthday: formData.birthday || null,
+          email: formData.email,
+          office_number: formData.officeNumber,
+          cell_number: formData.cellNumber,
+          phone_alt: formData.phoneWithExtension,
+          linkedin: formData.linkedin,
+          facebook: formData.facebook,
+          twitter: formData.twitter,
+          additional_info: formData.additionalInfo,
+          address: formData.address,
+          city: formData.city,
+          state: formData.state,
+          zipcode: formData.zipcode
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Failed to create person:', error);
+        throw new Error(error.message);
+      }
+
+      console.log('Person created successfully:', data);
       
       // Reset form
       setFormData({
@@ -101,6 +194,7 @@ const AddPersonModal: React.FC<AddPersonModalProps> = ({ onPersonAdded, defaultO
       
       onPersonAdded?.();
     } catch (error) {
+      console.error('Error creating person:', error);
       if (error instanceof Error) {
         setErrors({ general: error.message });
       }
