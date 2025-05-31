@@ -74,7 +74,8 @@ const mockJob: Job = {
   clientId: '1',
   tags: ['HVAC', 'Installation'],
   assignedToName: 'John Smith',
-  createdAt: new Date('2024-01-10').toISOString()
+  createdAt: new Date('2024-01-10').toISOString(),
+  updatedAt: new Date('2024-01-15').toISOString()
 };
 
 export const useJob = (jobId: string) => {

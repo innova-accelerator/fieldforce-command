@@ -74,7 +74,8 @@ const mockJob: Job = {
   clientId: '1',
   tags: ['HVAC', 'Installation'],
   assignedToName: 'John Smith',
-  createdAt: new Date('2024-01-10').toISOString()
+  createdAt: new Date('2024-01-10').toISOString(),
+  updatedAt: new Date('2024-01-15').toISOString()
 };
 
 export const fetchJob = async (jobId: string): Promise<Job> => {
@@ -109,5 +110,5 @@ export const updateJob = async (jobId: string, updates: Partial<Job>): Promise<J
   // if (error) throw error;
   // return data;
   
-  return { ...mockJob, ...updates, id: jobId };
+  return { ...mockJob, ...updates, id: jobId, updatedAt: new Date().toISOString() };
 };
