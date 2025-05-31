@@ -1,10 +1,11 @@
-
 import React, { useState } from 'react';
 import { Calendar, Clock, User, MapPin, Phone, Mail } from 'lucide-react';
-import { mockJobs, mockAssociates } from '../data/mockData';
+import { mockJobs } from '../data/mockData';
+import { useAssociates } from '../hooks/useData';
 
 const Scheduling = () => {
   const [jobs] = useState(mockJobs);
+  const { data: associates = [] } = useAssociates();
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedJob, setSelectedJob] = useState<string | null>(null);
 
@@ -287,7 +288,7 @@ const Scheduling = () => {
             <User className="h-8 w-8 text-purple-600" />
             <div className="ml-3">
               <p className="text-sm font-medium text-gray-600">Available Techs</p>
-              <p className="text-lg font-semibold text-gray-900">{mockAssociates.length}</p>
+              <p className="text-lg font-semibold text-gray-900">{associates.length}</p>
             </div>
           </div>
         </div>

@@ -1,7 +1,5 @@
 
 import { Job, Customer, Associate, Activity, DashboardMetrics } from '../types';
-import { Organization } from '../types/organization';
-import { Person } from '../types/person';
 
 export const mockCustomers: Customer[] = [
   {
@@ -106,63 +104,6 @@ export const mockJobs: Job[] = [
   }
 ];
 
-export const mockAssociates: Associate[] = [
-  {
-    id: 'tech-1',
-    name: 'Alex Thompson',
-    email: 'alex@company.com',
-    phone: '555-0301',
-    skills: ['networking', 'installation'],
-    certifications: ['CCNA'],
-    availability: 'available',
-    location: {
-      lat: 40.7128,
-      lng: -74.0060,
-      address: '123 Tech St'
-    },
-    rating: 4.5,
-    completedJobs: 25,
-    joinedAt: new Date('2023-01-01'),
-    hourlyRate: 75
-  },
-  {
-    id: 'tech-2',
-    name: 'Maria Garcia',
-    email: 'maria@company.com',
-    phone: '555-0302',
-    skills: ['security', 'maintenance'],
-    certifications: ['Security+'],
-    availability: 'available',
-    location: {
-      lat: 40.7589,
-      lng: -73.9851,
-      address: '456 Security Ave'
-    },
-    rating: 4.8,
-    completedJobs: 32,
-    joinedAt: new Date('2023-02-01'),
-    hourlyRate: 80
-  },
-  {
-    id: 'tech-3',
-    name: 'David Chen',
-    email: 'david@company.com',
-    phone: '555-0303',
-    skills: ['installation', 'troubleshooting'],
-    certifications: ['A+'],
-    availability: 'available',
-    location: {
-      lat: 40.7505,
-      lng: -73.9934,
-      address: '789 Install Blvd'
-    },
-    rating: 4.6,
-    completedJobs: 28,
-    joinedAt: new Date('2023-03-01'),
-    hourlyRate: 70
-  }
-];
-
 export const mockActivities: Activity[] = [
   {
     id: '1',
@@ -215,80 +156,4 @@ export const mockMetrics: DashboardMetrics = {
   completedJobsThisMonth: 45,
   revenue: 125000,
   revenueGrowth: 8.5
-};
-
-export const mockOrganizations: Organization[] = [
-  {
-    id: '1',
-    name: 'ABC Corporation',
-    relation: 'Unknown',
-    category: 'Technology',
-    email: 'info@abccorp.com',
-    phone: '555-0100',
-    website: 'https://www.abccorp.com',
-    address: '123 Business Park',
-    city: 'Tech City',
-    state: 'CA',
-    zipcode: '90210',
-    createdAt: new Date('2024-01-01T00:00:00Z')
-  },
-  {
-    id: '2',
-    name: 'XYZ Industries',
-    relation: 'Partner',
-    category: 'Manufacturing',
-    email: 'contact@xyzind.com',
-    phone: '555-0200',
-    website: 'https://www.xyzind.com',
-    address: '456 Industrial Way',
-    city: 'Manufacturing Hub',
-    state: 'TX',
-    zipcode: '73301',
-    createdAt: new Date('2024-01-01T00:00:00Z')
-  }
-];
-
-export const mockPeople: Person[] = [
-  {
-    id: '1',
-    organizationId: '1',
-    firstName: 'John',
-    lastName: 'Smith',
-    email: 'john.smith@abccorp.com',
-    title: 'IT Director',
-    officeNumber: '555-0101',
-    cellNumber: '555-0123',
-    createdAt: new Date('2024-01-01T00:00:00Z')
-  },
-  {
-    id: '2',
-    organizationId: '2',
-    firstName: 'Sarah',
-    lastName: 'Johnson',
-    email: 'sarah.johnson@xyzind.com',
-    title: 'Operations Manager',
-    officeNumber: '555-0201',
-    cellNumber: '555-0124',
-    createdAt: new Date('2024-01-01T00:00:00Z')
-  }
-];
-
-// Helper functions for assignment operations
-export const assignPersonToJob = (jobId: string, personId: string) => {
-  const job = mockJobs.find(j => j.id === jobId);
-  if (job) {
-    job.assigned_person_id = personId;
-    const person = mockPeople.find(p => p.id === personId);
-    if (person) {
-      job.assignedPersonName = `${person.firstName} ${person.lastName}`;
-    }
-  }
-};
-
-export const getPersonById = (personId: string) => {
-  return mockPeople.find(p => p.id === personId);
-};
-
-export const getOrganizationById = (organizationId: string) => {
-  return mockOrganizations.find(o => o.id === organizationId);
 };

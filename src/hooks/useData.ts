@@ -1,16 +1,13 @@
+
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { 
   mockCustomers, 
-  mockAssociates, 
   mockActivities, 
   mockMetrics, 
-  mockOrganizations, 
-  mockPeople 
+  mockJobs
 } from '../data/mockData';
-import { Customer, Associate, Activity, DashboardMetrics } from '../types';
-import { Organization } from '../types/organization';
-import { Person } from '../types/person';
+import { Customer, Activity, DashboardMetrics } from '../types';
 import { Job } from '../types/job';
 
 // Simulate API calls with delays for mock data
@@ -56,13 +53,6 @@ export const useJobs = () => {
         timeline: []
       }));
     },
-  });
-};
-
-export const useAssociates = () => {
-  return useQuery({
-    queryKey: ['associates'],
-    queryFn: () => simulateApiCall<Associate[]>(mockAssociates),
   });
 };
 
@@ -115,6 +105,24 @@ export const usePeople = () => {
 
       if (error) throw error;
       return people;
+    },
+  });
+};
+
+export const useAssociates = () => {
+  return useQuery({
+    queryKey: ['associates'],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('User not authenticated');
+
+      const { data: associates, error } = await supabase
+        .from('associates')
+        .select('*')
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+      return associates;
     },
   });
 };

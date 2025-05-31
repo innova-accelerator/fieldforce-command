@@ -1,28 +1,51 @@
+
 import React, { useState } from 'react';
 import { Plus, Search, User, Mail, Phone, Building, MapPin } from 'lucide-react';
-import { mockPeople, mockOrganizations } from '../data/mockData';
-import { Person } from '../types/person';
+import { usePeople, useOrganizations } from '../hooks/useData';
 
 const PeoplePage = () => {
-  const [people] = useState<Person[]>(mockPeople);
+  const { data: people = [], isLoading: peopleLoading } = usePeople();
+  const { data: organizations = [] } = useOrganizations();
   const [searchTerm, setSearchTerm] = useState('');
   const [organizationFilter, setOrganizationFilter] = useState<string>('all');
 
   const filteredPeople = people.filter(person => {
-    const fullName = `${person.firstName} ${person.lastName}`;
+    const fullName = `${person.first_name} ${person.last_name}`;
     const matchesSearch = fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          person.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          person.title?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesOrganization = organizationFilter === 'all' || person.organizationId === organizationFilter;
+    const matchesOrganization = organizationFilter === 'all' || person.organization_id === organizationFilter;
     
     return matchesSearch && matchesOrganization;
   });
 
-  const getOrganizationName = (organizationId: string | undefined) => {
+  const getOrganizationName = (organizationId: string | null) => {
     if (!organizationId) return 'No Organization';
-    const org = mockOrganizations.find(o => o.id === organizationId);
+    const org = organizations.find(o => o.id === organizationId);
     return org?.name || 'Unknown Organization';
   };
+
+  if (peopleLoading) {
+    return (
+      <div className="p-6">
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-200 rounded w-32 mb-6"></div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div className="h-6 bg-gray-200 rounded mb-2"></div>
+                <div className="h-4 bg-gray-200 rounded mb-4"></div>
+                <div className="space-y-2">
+                  <div className="h-4 bg-gray-200 rounded"></div>
+                  <div className="h-4 bg-gray-200 rounded"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
   
   return (
     <div className="p-6">
@@ -55,7 +78,7 @@ const PeoplePage = () => {
           className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         >
           <option value="all">All Organizations</option>
-          {mockOrganizations.map((org) => (
+          {organizations.map((org) => (
             <option key={org.id} value={org.id}>{org.name}</option>
           ))}
         </select>
@@ -71,7 +94,7 @@ const PeoplePage = () => {
               </div>
               <div className="flex-1">
                 <h3 className="text-lg font-semibold text-gray-900">
-                  {person.firstName} {person.lastName}
+                  {person.first_name} {person.last_name}
                 </h3>
                 <p className="text-gray-600 text-sm">{person.title}</p>
               </div>
@@ -86,23 +109,23 @@ const PeoplePage = () => {
                   </a>
                 </div>
               )}
-              {person.cellNumber && (
+              {person.cell_number && (
                 <div className="flex items-center text-sm text-gray-600">
                   <Phone className="h-4 w-4 mr-2" />
-                  <a href={`tel:${person.cellNumber}`} className="text-blue-600 hover:underline">
-                    {person.cellNumber}
+                  <a href={`tel:${person.cell_number}`} className="text-blue-600 hover:underline">
+                    {person.cell_number}
                   </a>
                 </div>
               )}
-              {person.officeNumber && (
+              {person.office_number && (
                 <div className="flex items-center text-sm text-gray-600">
                   <Phone className="h-4 w-4 mr-2" />
-                  <span>Office: {person.officeNumber}</span>
+                  <span>Office: {person.office_number}</span>
                 </div>
               )}
               <div className="flex items-center text-sm text-gray-600">
                 <Building className="h-4 w-4 mr-2" />
-                {getOrganizationName(person.organizationId)}
+                {getOrganizationName(person.organization_id)}
               </div>
             </div>
 
