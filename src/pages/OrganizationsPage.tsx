@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Layout from '../components/Layout';
 import { Button } from '../components/ui/button';
@@ -8,6 +7,7 @@ import { Organization } from '../types/organization';
 import { Plus } from 'lucide-react';
 
 const OrganizationsPage = () => {
+  const [currentPage, setCurrentPage] = useState('organizations');
   const [organizations, setOrganizations] = useState<Organization[]>(mockOrganizations);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
@@ -60,7 +60,7 @@ const OrganizationsPage = () => {
   };
 
   return (
-    <Layout currentPage="organizations" onNavigate={() => {}}>
+    <Layout currentPage={currentPage} onNavigate={setCurrentPage}>
       <div className="p-6">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Organizations</h1>
