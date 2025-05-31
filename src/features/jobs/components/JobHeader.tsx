@@ -22,7 +22,7 @@ const JobHeader: React.FC<JobHeaderProps> = ({ job, onUpdate }) => {
   };
 
   const toggleFavorite = () => {
-    onUpdate({ isFavorite: !job.isFavorite });
+    onUpdate({ is_favorite: !job.is_favorite });
   };
 
   const getPhaseColor = (phase: string) => {
@@ -57,7 +57,7 @@ const JobHeader: React.FC<JobHeaderProps> = ({ job, onUpdate }) => {
             >
               <Star 
                 className={`h-5 w-5 ${
-                  job.isFavorite ? 'fill-yellow-400 text-yellow-400' : 'text-gray-400'
+                  job.is_favorite ? 'fill-yellow-400 text-yellow-400' : 'text-gray-400'
                 }`} 
               />
             </Button>
@@ -82,7 +82,7 @@ const JobHeader: React.FC<JobHeaderProps> = ({ job, onUpdate }) => {
           </div>
           
           <div className="text-sm text-gray-600">
-            <span>Assigned: {job.assignedTechs.map(techId => `Tech ${techId}`).join(', ') || 'Unassigned'}</span>
+            <span>Assigned: {job.assigned_techs.map(techId => `Tech ${techId}`).join(', ') || 'Unassigned'}</span>
           </div>
         </div>
       </div>

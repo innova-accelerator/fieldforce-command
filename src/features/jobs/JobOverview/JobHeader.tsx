@@ -1,7 +1,8 @@
+
 import React from 'react';
 import { Star, Edit } from 'lucide-react';
 import { Button } from '../../../components/ui/button';
-import { Job } from '../../../types';
+import { Job } from '../../../types/job';
 
 interface JobHeaderProps {
   job: Job;
@@ -35,7 +36,7 @@ const JobHeader: React.FC<JobHeaderProps> = ({ job }) => {
             <span className="hidden sm:inline">•</span>
             <span>Phase: {job.status}</span>
             <span className="hidden sm:inline">•</span>
-            <span>Assigned: {job.assignedToName || 'Unassigned'}</span>
+            <span>Assigned: {job.assignedPersonName || 'Unassigned'}</span>
           </div>
         </div>
         

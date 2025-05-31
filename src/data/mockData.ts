@@ -1,319 +1,263 @@
-import { Customer, Associate, Activity, DashboardMetrics } from '../types';
+
+import { Job, Customer, Associate, Activity, DashboardMetrics } from '../types';
 import { Organization } from '../types/organization';
 import { Person } from '../types/person';
-import { Job } from '../types/job';
 
 export const mockCustomers: Customer[] = [
   {
     id: '1',
     name: 'John Smith',
-    email: 'john.smith@email.com',
-    phone: '(555) 123-4567',
-    address: '123 Main St, New York, NY 10001',
+    email: 'john@email.com',
+    phone: '555-0123',
+    address: '123 Main St, City, State',
     company: 'ABC Corp',
-    createdAt: new Date('2024-01-15'),
-    lastContact: new Date('2024-03-10'),
+    status: 'Active',
+    lastContact: new Date('2024-01-15'),
     totalJobs: 5,
-    status: 'active',
-    notes: 'Preferred customer, always pays on time.'
+    notes: 'Preferred customer, always pays on time'
   },
   {
     id: '2',
     name: 'Sarah Johnson',
-    email: 'sarah.j@email.com',
-    phone: '(555) 987-6543',
-    address: '456 Oak Ave, Brooklyn, NY 11201',
-    createdAt: new Date('2024-02-20'),
-    lastContact: new Date('2024-03-15'),
+    email: 'sarah@email.com',
+    phone: '555-0124',
+    address: '456 Oak Ave, City, State',
+    company: 'XYZ Industries',
+    status: 'Active',
+    lastContact: new Date('2024-01-10'),
     totalJobs: 3,
-    status: 'active'
+    notes: 'Requires detailed project updates'
   },
   {
     id: '3',
-    name: 'Mike Wilson',
-    email: 'mike.w@email.com',
-    phone: '(555) 456-7890',
-    address: '789 Pine St, Queens, NY 11375',
-    company: 'Wilson Industries',
-    createdAt: new Date('2024-01-05'),
-    lastContact: new Date('2024-02-28'),
-    totalJobs: 8,
-    status: 'active'
+    name: 'Mike Davis',
+    email: 'mike@email.com',
+    phone: '555-0125',
+    address: '789 Pine St, City, State',
+    company: 'Tech Solutions',
+    status: 'Inactive',
+    lastContact: new Date('2024-01-05'),
+    totalJobs: 7,
+    notes: 'Previous issues with billing'
   }
 ];
 
 export const mockJobs: Job[] = [
   {
-    id: 'job-1',
-    name: 'Office HVAC Installation',
-    title: 'Office HVAC Installation', 
-    customerName: 'TechCorp Inc',
-    client: 'TechCorp Inc',
-    description: 'Install new HVAC system in main office building with full ductwork and controls',
-    status: 'In Progress',
+    id: '1',
+    name: 'Network Installation',
+    description: 'Install new network infrastructure for office building',
+    customer_id: '1',
+    organization_id: '1',
+    assigned_person_id: '1',
+    location: '123 Business Park, Tech City',
+    phase: 'Planning',
+    status: 'New',
     priority: 'High',
-    startDate: '2024-01-15T00:00:00.000Z',
-    endDate: '2024-01-30T00:00:00.000Z',
-    scheduledDate: '2024-01-15T00:00:00.000Z',
-    estimatedDuration: 8,
-    assignedPersonId: 'person-1',
-    assignedToName: 'John Smith',
-    organizationId: 'org-1',
-    clientId: '1',
-    createdAt: '2024-01-10T00:00:00.000Z',
-    updatedAt: '2024-01-10T00:00:00.000Z',
-    phase: 'Installation',
-    location: '123 Main St, Anytown, ST 12345',
-    isFavorite: false,
-    assignedTechs: [],
+    start_date: '2024-02-01T00:00:00Z',
+    end_date: '2024-02-15T00:00:00Z',
+    scheduled_date: '2024-02-01T09:00:00Z',
+    estimated_duration: 40,
+    assigned_techs: ['tech-1', 'tech-2'],
+    contact_name: 'John Smith',
+    contact_phone: '555-0123',
+    contact_email: 'john@email.com',
+    tags: ['networking', 'installation'],
+    is_favorite: false,
+    notes: ['Initial consultation completed', 'Equipment ordered'],
     tasks: [],
-    notes: [],
     timeline: [],
-    contactInfo: {
-      name: 'John Doe',
-      phone: '(555) 123-4567',
-      email: 'john@techcorp.com'
-    },
-    tags: ['HVAC', 'Installation']
+    created_at: '2024-01-20T00:00:00Z',
+    updated_at: '2024-01-20T00:00:00Z',
+    user_id: 'user-1',
+    customerName: 'John Smith'
   },
   {
-    id: 'job-2', 
-    name: 'Warehouse Electrical Upgrade',
-    title: 'Warehouse Electrical Upgrade',
-    customerName: 'BuildCorp LLC',
-    client: 'BuildCorp LLC',
-    description: 'Upgrade electrical systems in warehouse facility including new panels and wiring',
-    status: 'New',
+    id: '2',
+    name: 'Security System Upgrade',
+    description: 'Upgrade existing security cameras and access control',
+    customer_id: '2',
+    organization_id: '2',
+    assigned_person_id: '2',
+    location: '456 Corporate Plaza, Business District',
+    phase: 'In Progress',
+    status: 'In Progress',
     priority: 'Medium',
-    startDate: '2024-01-25T00:00:00.000Z',
-    endDate: '2024-02-10T00:00:00.000Z',
-    scheduledDate: '2024-01-25T00:00:00.000Z',
-    estimatedDuration: 12,
-    assignedPersonId: 'person-2',
-    assignedToName: 'Sarah Johnson',
-    organizationId: 'org-2',
-    clientId: '2',
-    createdAt: '2024-01-20T00:00:00.000Z',
-    updatedAt: '2024-01-20T00:00:00.000Z',
-    phase: 'Planning',
-    location: '456 Industrial Blvd, Warehouse City, ST 67890',
-    isFavorite: true,
-    assignedTechs: [],
+    start_date: '2024-01-25T00:00:00Z',
+    end_date: '2024-02-10T00:00:00Z',
+    scheduled_date: '2024-01-25T08:00:00Z',
+    estimated_duration: 32,
+    assigned_techs: ['tech-2', 'tech-3'],
+    contact_name: 'Sarah Johnson',
+    contact_phone: '555-0124',
+    contact_email: 'sarah@email.com',
+    tags: ['security', 'upgrade'],
+    is_favorite: true,
+    notes: ['Site survey completed', 'Permits obtained'],
     tasks: [],
-    notes: [],
     timeline: [],
-    contactInfo: {
-      name: 'Jane Smith',
-      phone: '(555) 987-6543',
-      email: 'jane@buildcorp.com'
-    },
-    tags: ['Electrical', 'Upgrade']
+    created_at: '2024-01-15T00:00:00Z',
+    updated_at: '2024-01-25T00:00:00Z',
+    user_id: 'user-1',
+    customerName: 'Sarah Johnson'
   }
 ];
 
 export const mockAssociates: Associate[] = [
   {
-    id: '1',
-    name: 'Tom Rodriguez',
-    email: 'tom.r@fieldforce.com',
-    phone: '(555) 111-2222',
-    skills: ['HVAC', 'Maintenance', 'Repair'],
-    certifications: ['EPA 608', 'HVAC Excellence'],
-    availability: 'available',
-    location: {
-      lat: 40.7128,
-      lng: -74.0060,
-      address: 'Manhattan, NY'
-    },
-    rating: 4.8,
-    completedJobs: 156,
-    joinedAt: new Date('2023-06-15'),
-    hourlyRate: 75
+    id: 'tech-1',
+    name: 'Alex Thompson',
+    avatarUrl: '/placeholder.svg',
+    email: 'alex@company.com'
   },
   {
-    id: '2',
-    name: 'Lisa Chen',
-    email: 'lisa.c@fieldforce.com',
-    phone: '(555) 333-4444',
-    skills: ['Electrical', 'Installation', 'Troubleshooting'],
-    certifications: ['Licensed Electrician', 'OSHA 30'],
-    availability: 'busy',
-    location: {
-      lat: 40.6892,
-      lng: -73.9442,
-      address: 'Brooklyn, NY'
-    },
-    rating: 4.9,
-    completedJobs: 203,
-    joinedAt: new Date('2023-04-20'),
-    hourlyRate: 80
+    id: 'tech-2',
+    name: 'Maria Garcia',
+    avatarUrl: '/placeholder.svg',
+    email: 'maria@company.com'
   },
   {
-    id: '3',
-    name: 'David Park',
-    email: 'david.p@fieldforce.com',
-    phone: '(555) 555-6666',
-    skills: ['Plumbing', 'Repair', 'Installation'],
-    certifications: ['Master Plumber', 'Backflow Prevention'],
-    availability: 'available',
-    location: {
-      lat: 40.7282,
-      lng: -73.7949,
-      address: 'Queens, NY'
-    },
-    rating: 4.7,
-    completedJobs: 89,
-    joinedAt: new Date('2023-08-10'),
-    hourlyRate: 70
+    id: 'tech-3',
+    name: 'David Chen',
+    avatarUrl: '/placeholder.svg',
+    email: 'david@company.com'
   }
 ];
 
 export const mockActivities: Activity[] = [
   {
     id: '1',
-    type: 'job_completed',
-    title: 'Job Completed',
-    description: 'HVAC installation completed for ABC Corp',
-    timestamp: new Date('2024-03-20T14:30:00'),
-    customerId: '1',
-    jobId: '1',
-    associateId: '1'
+    type: 'job_created',
+    title: 'New job created',
+    description: 'Network Installation job created for John Smith',
+    timestamp: new Date('2024-01-20T10:00:00'),
+    relatedCustomer: 'John Smith',
+    relatedJob: 'Network Installation'
   },
   {
     id: '2',
-    type: 'note',
-    title: 'Customer Note',
-    description: 'Customer mentioned additional work needed next month',
-    timestamp: new Date('2024-03-19T10:15:00'),
-    customerId: '2'
+    type: 'job_completed',
+    title: 'Job completed',
+    description: 'Security System Upgrade completed successfully',
+    timestamp: new Date('2024-01-19T16:30:00'),
+    relatedCustomer: 'Sarah Johnson',
+    relatedJob: 'Security System Upgrade'
   },
   {
     id: '3',
+    type: 'note',
+    title: 'Note added',
+    description: 'Updated project timeline for Network Installation',
+    timestamp: new Date('2024-01-18T14:15:00'),
+    relatedCustomer: 'John Smith',
+    relatedJob: 'Network Installation'
+  },
+  {
+    id: '4',
     type: 'call',
-    title: 'Phone Call',
-    description: 'Discussed pricing for electrical work',
-    timestamp: new Date('2024-03-18T16:45:00'),
-    customerId: '3'
+    title: 'Customer call',
+    description: 'Follow-up call with Mike Davis regarding project status',
+    timestamp: new Date('2024-01-17T11:00:00'),
+    relatedCustomer: 'Mike Davis'
+  },
+  {
+    id: '5',
+    type: 'email',
+    title: 'Email sent',
+    description: 'Project proposal sent to potential new customer',
+    timestamp: new Date('2024-01-16T09:30:00'),
+    relatedCustomer: 'New Lead'
   }
 ];
 
 export const mockMetrics: DashboardMetrics = {
-  totalCustomers: 127,
+  totalCustomers: 156,
   activeJobs: 23,
-  availableAssociates: 8,
-  completedJobsThisMonth: 156,
-  revenue: 45670,
-  revenueGrowth: 12.5
+  availableAssociates: 12,
+  revenue: 125000,
+  revenueGrowth: 8.5
 };
 
 export const mockOrganizations: Organization[] = [
   {
-    id: 'org-1',
+    id: '1',
     name: 'ABC Corporation',
     relation: 'Client',
     category: 'Technology',
-    email: 'contact@abccorp.com',
-    phone: '(555) 123-4567',
-    website: 'https://abccorp.com',
-    address: '123 Business Ave',
-    city: 'New York',
-    state: 'NY',
-    zipcode: '10001',
-    createdAt: new Date('2024-01-15')
+    email: 'info@abccorp.com',
+    phone: '555-0100',
+    website: 'https://www.abccorp.com',
+    address: '123 Business Park',
+    city: 'Tech City',
+    state: 'CA',
+    zipcode: '90210',
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-01T00:00:00Z',
+    user_id: 'user-1'
   },
   {
-    id: 'org-2',
-    name: 'Wilson Industries',
+    id: '2',
+    name: 'XYZ Industries',
     relation: 'Partner',
     category: 'Manufacturing',
-    email: 'info@wilsonindustries.com',
-    phone: '(555) 987-6543',
-    address: '456 Industrial Blvd',
-    city: 'Brooklyn',
-    state: 'NY',
-    zipcode: '11201',
-    createdAt: new Date('2024-02-10')
+    email: 'contact@xyzind.com',
+    phone: '555-0200',
+    website: 'https://www.xyzind.com',
+    address: '456 Industrial Way',
+    city: 'Manufacturing Hub',
+    state: 'TX',
+    zipcode: '73301',
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-01T00:00:00Z',
+    user_id: 'user-1'
   }
 ];
 
 export const mockPeople: Person[] = [
   {
-    id: 'person-1',
-    organizationId: 'org-1',
+    id: '1',
+    organizationId: '1',
     firstName: 'John',
     lastName: 'Smith',
     email: 'john.smith@abccorp.com',
-    title: 'Project Manager',
-    cellNumber: '(555) 111-2222',
-    createdAt: new Date('2024-01-20')
+    title: 'IT Director',
+    officeNumber: '555-0101',
+    cellNumber: '555-0123',
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-01T00:00:00Z',
+    user_id: 'user-1'
   },
   {
-    id: 'person-2',
-    organizationId: 'org-1',
+    id: '2',
+    organizationId: '2',
     firstName: 'Sarah',
     lastName: 'Johnson',
-    email: 'sarah.johnson@abccorp.com',
-    title: 'Operations Director',
-    cellNumber: '(555) 333-4444',
-    createdAt: new Date('2024-01-25')
-  },
-  {
-    id: 'person-3',
-    organizationId: 'org-2',
-    firstName: 'Mike',
-    lastName: 'Wilson',
-    email: 'mike.wilson@wilsonindustries.com',
-    title: 'CEO',
-    cellNumber: '(555) 555-6666',
-    createdAt: new Date('2024-02-15')
+    email: 'sarah.johnson@xyzind.com',
+    title: 'Operations Manager',
+    officeNumber: '555-0201',
+    cellNumber: '555-0124',
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-01T00:00:00Z',
+    user_id: 'user-1'
   }
 ];
 
-// CRUD Functions
-export const createOrganization = (orgData: Omit<Organization, 'id' | 'createdAt'>): Organization => {
-  const newOrg: Organization = {
-    ...orgData,
-    id: `org-${Date.now()}`,
-    createdAt: new Date()
-  };
-  mockOrganizations.push(newOrg);
-  return newOrg;
-};
-
-export const createPerson = (personData: Omit<Person, 'id' | 'createdAt'>): Person => {
-  const newPerson: Person = {
-    ...personData,
-    id: `person-${Date.now()}`,
-    createdAt: new Date()
-  };
-  mockPeople.push(newPerson);
-  return newPerson;
-};
-
-export const createJob = (jobData: Omit<Job, 'id' | 'createdAt' | 'updatedAt'>): Job => {
-  const newJob: Job = {
-    ...jobData,
-    id: `job-${Date.now()}`,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
-  };
-  mockJobs.push(newJob);
-  return newJob;
-};
-
-export const assignPersonToJob = (jobId: string, personId: string): void => {
+// Helper functions for assignment operations
+export const assignPersonToJob = (jobId: string, personId: string) => {
   const job = mockJobs.find(j => j.id === jobId);
-  const person = mockPeople.find(p => p.id === personId);
-  if (job && person) {
-    job.assignedPersonId = personId;
-    job.organizationId = person.organizationId;
+  if (job) {
+    job.assigned_person_id = personId;
+    const person = mockPeople.find(p => p.id === personId);
+    if (person) {
+      job.assignedPersonName = `${person.firstName} ${person.lastName}`;
+    }
   }
 };
 
-export const getOrganizationById = (id: string): Organization | undefined => {
-  return mockOrganizations.find(org => org.id === id);
+export const getPersonById = (personId: string) => {
+  return mockPeople.find(p => p.id === personId);
 };
 
-export const getPersonById = (id: string): Person | undefined => {
-  return mockPeople.find(person => person.id === id);
+export const getOrganizationById = (organizationId: string) => {
+  return mockOrganizations.find(o => o.id === organizationId);
 };

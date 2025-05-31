@@ -38,7 +38,11 @@ const JobOverviewPage: React.FC = () => {
     
     const newTask: Task = {
       ...task,
-      id: `task-${Date.now()}`
+      id: `task-${Date.now()}`,
+      job_id: job.id,
+      complete: false,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
     };
     
     const updatedTasks = [...(job.tasks || []), newTask];
@@ -58,10 +62,13 @@ const JobOverviewPage: React.FC = () => {
     if (!job) return;
     
     const newEntry: TimelineEntry = {
+      id: `timeline-${Date.now()}`,
+      job_id: job.id,
       timestamp: new Date().toISOString(),
       type: 'note',
       content,
-      author: 'Current User'
+      author_id: undefined, // Should be set to current user's person ID
+      created_at: new Date().toISOString()
     };
     
     const updatedNotes = [...(job.notes || []), content];
@@ -73,12 +80,15 @@ const JobOverviewPage: React.FC = () => {
     });
   };
 
-  const addTimelineEntry = (entry: Omit<TimelineEntry, 'timestamp'>) => {
+  const addTimelineEntry = (entry: Omit<TimelineEntry, 'timestamp' | 'id' | 'job_id' | 'created_at'>) => {
     if (!job) return;
     
     const newEntry: TimelineEntry = {
       ...entry,
-      timestamp: new Date().toISOString()
+      id: `timeline-${Date.now()}`,
+      job_id: job.id,
+      timestamp: new Date().toISOString(),
+      created_at: new Date().toISOString()
     };
     
     const updatedTimeline = [newEntry, ...(job.timeline || [])];

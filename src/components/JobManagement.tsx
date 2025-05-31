@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Search, Plus, Calendar, User, MapPin, Clock, Filter } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -12,8 +13,8 @@ const JobManagement = () => {
 
   const filteredJobs = jobs.filter(job => {
     const matchesSearch = job.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         job.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         job.description.toLowerCase().includes(searchTerm.toLowerCase());
+                         job.customerName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         job.description?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'all' || job.status === statusFilter;
     const matchesPriority = priorityFilter === 'all' || job.priority === priorityFilter;
     
@@ -22,21 +23,21 @@ const JobManagement = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'new': return 'bg-blue-100 text-blue-800 border-blue-200';
-      case 'scheduled': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'in-progress': return 'bg-purple-100 text-purple-800 border-purple-200';
-      case 'completed': return 'bg-green-100 text-green-800 border-green-200';
-      case 'cancelled': return 'bg-red-100 text-red-800 border-red-200';
+      case 'New': return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'Scheduled': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'In Progress': return 'bg-purple-100 text-purple-800 border-purple-200';
+      case 'Completed': return 'bg-green-100 text-green-800 border-green-200';
+      case 'Cancelled': return 'bg-red-100 text-red-800 border-red-200';
       default: return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'urgent': return 'bg-red-100 text-red-800 border-red-200';
-      case 'high': return 'bg-orange-100 text-orange-800 border-orange-200';
-      case 'medium': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'low': return 'bg-green-100 text-green-800 border-green-200';
+      case 'Urgent': return 'bg-red-100 text-red-800 border-red-200';
+      case 'High': return 'bg-orange-100 text-orange-800 border-orange-200';
+      case 'Medium': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'Low': return 'bg-green-100 text-green-800 border-green-200';
       default: return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
@@ -68,20 +69,20 @@ const JobManagement = () => {
             <MapPin className="h-4 w-4 mr-2" />
             {job.location}
           </div>
-          {job.assignedToName && (
+          {job.assignedPersonName && (
             <div className="flex items-center text-sm text-gray-600">
               <User className="h-4 w-4 mr-2" />
-              Assigned to: {job.assignedToName}
+              Assigned to: {job.assignedPersonName}
             </div>
           )}
           <div className="flex items-center text-sm text-gray-600">
             <Clock className="h-4 w-4 mr-2" />
-            {job.estimatedDuration || 0}h estimated
+            {job.estimated_duration || 0}h estimated
           </div>
-          {job.scheduledDate && (
+          {job.scheduled_date && (
             <div className="flex items-center text-sm text-gray-600">
               <Calendar className="h-4 w-4 mr-2" />
-              Scheduled: {new Date(job.scheduledDate).toLocaleDateString()}
+              Scheduled: {new Date(job.scheduled_date).toLocaleDateString()}
             </div>
           )}
         </div>
@@ -130,11 +131,11 @@ const JobManagement = () => {
             className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
             <option value="all">All Status</option>
-            <option value="new">New</option>
-            <option value="scheduled">Scheduled</option>
-            <option value="in-progress">In Progress</option>
-            <option value="completed">Completed</option>
-            <option value="cancelled">Cancelled</option>
+            <option value="New">New</option>
+            <option value="Scheduled">Scheduled</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+            <option value="Cancelled">Cancelled</option>
           </select>
           
           <select
@@ -143,10 +144,10 @@ const JobManagement = () => {
             className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
             <option value="all">All Priority</option>
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-            <option value="urgent">Urgent</option>
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+            <option value="Urgent">Urgent</option>
           </select>
         </div>
       </div>

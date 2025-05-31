@@ -34,19 +34,19 @@ const JobSidebar: React.FC<JobSidebarProps> = ({ job }) => {
         </CardHeader>
         <CardContent className="space-y-3">
           <div>
-            <div className="font-medium text-gray-900">{job.contactInfo.name}</div>
+            <div className="font-medium text-gray-900">{job.contact_name}</div>
             <div className="text-sm text-gray-600">{job.customerName}</div>
           </div>
           <div className="flex items-center gap-2 text-sm">
             <Phone className="h-4 w-4 text-gray-400" />
-            <a href={`tel:${job.contactInfo.phone}`} className="text-blue-600 hover:underline">
-              {job.contactInfo.phone}
+            <a href={`tel:${job.contact_phone}`} className="text-blue-600 hover:underline">
+              {job.contact_phone}
             </a>
           </div>
           <div className="flex items-center gap-2 text-sm">
             <Mail className="h-4 w-4 text-gray-400" />
-            <a href={`mailto:${job.contactInfo.email}`} className="text-blue-600 hover:underline">
-              {job.contactInfo.email}
+            <a href={`mailto:${job.contact_email}`} className="text-blue-600 hover:underline">
+              {job.contact_email}
             </a>
           </div>
         </CardContent>
@@ -81,11 +81,11 @@ const JobSidebar: React.FC<JobSidebarProps> = ({ job }) => {
         <CardContent className="space-y-3">
           <div>
             <div className="text-sm font-medium text-gray-900">Start Date</div>
-            <div className="text-sm text-gray-600">{job.startDate ? formatDate(job.startDate) : 'Not set'}</div>
+            <div className="text-sm text-gray-600">{job.start_date ? formatDate(job.start_date) : 'Not set'}</div>
           </div>
           <div>
             <div className="text-sm font-medium text-gray-900">End Date</div>
-            <div className="text-sm text-gray-600">{job.endDate ? formatDate(job.endDate) : 'Not set'}</div>
+            <div className="text-sm text-gray-600">{job.end_date ? formatDate(job.end_date) : 'Not set'}</div>
           </div>
         </CardContent>
       </Card>
@@ -100,7 +100,7 @@ const JobSidebar: React.FC<JobSidebarProps> = ({ job }) => {
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            {job.assignedTechs.map((techId) => (
+            {job.assigned_techs.map((techId) => (
               <div key={techId} className="flex items-center gap-3">
                 <Avatar className="h-8 w-8">
                   <AvatarFallback>
@@ -113,7 +113,7 @@ const JobSidebar: React.FC<JobSidebarProps> = ({ job }) => {
                 </div>
               </div>
             ))}
-            {job.assignedTechs.length === 0 && (
+            {job.assigned_techs.length === 0 && (
               <div className="text-sm text-gray-500">No team members assigned</div>
             )}
           </div>

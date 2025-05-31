@@ -32,35 +32,35 @@ const SchedulingPanel: React.FC<SchedulingPanelProps> = ({
     return dateObj.toISOString().split('T')[0]; // YYYY-MM-DD format
   };
 
-  const updateDate = (field: 'startDate' | 'endDate', value: string) => {
+  const updateDate = (field: 'start_date' | 'end_date', value: string) => {
     onUpdate({ [field]: value });
     onTimelineUpdate({
       type: 'scheduling',
-      content: `${field === 'startDate' ? 'Start' : 'End'} date updated to ${value ? new Date(value).toLocaleDateString() : 'not set'}`,
-      author: 'Current User'
+      content: `${field === 'start_date' ? 'Start' : 'End'} date updated to ${value ? new Date(value).toLocaleDateString() : 'not set'}`,
+      author_id: undefined // Should be set to current user's person ID
     });
   };
 
   const assignTech = (associate: Associate) => {
-    if (!job.assignedTechs.find(techId => techId === associate.id)) {
-      const updatedTechs = [...job.assignedTechs, associate.id];
-      onUpdate({ assignedTechs: updatedTechs });
+    if (!job.assigned_techs.find(techId => techId === associate.id)) {
+      const updatedTechs = [...job.assigned_techs, associate.id];
+      onUpdate({ assigned_techs: updatedTechs });
       onTimelineUpdate({
         type: 'assignment',
         content: `${associate.name} assigned to job`,
-        author: 'Current User'
+        author_id: undefined // Should be set to current user's person ID
       });
     }
     setShowAssignModal(false);
   };
 
   const removeTech = (techId: string) => {
-    const updatedTechs = job.assignedTechs.filter(id => id !== techId);
-    onUpdate({ assignedTechs: updatedTechs });
+    const updatedTechs = job.assigned_techs.filter(id => id !== techId);
+    onUpdate({ assigned_techs: updatedTechs });
     onTimelineUpdate({
       type: 'assignment',
       content: `Tech ${techId} removed from job`,
-      author: 'Current User'
+      author_id: undefined // Should be set to current user's person ID
     });
   };
 
@@ -82,8 +82,8 @@ const SchedulingPanel: React.FC<SchedulingPanelProps> = ({
             <Input
               id="startDate"
               type="date"
-              value={formatDateForInput(job.startDate)}
-              onChange={(e) => updateDate('startDate', e.target.value)}
+              value={formatDateForInput(job.start_date)}
+              onChange={(e) => updateDate('start_date', e.target.value)}
               className="mt-1"
             />
           </div>
@@ -95,8 +95,8 @@ const SchedulingPanel: React.FC<SchedulingPanelProps> = ({
             <Input
               id="endDate"
               type="date"
-              value={formatDateForInput(job.endDate)}
-              onChange={(e) => updateDate('endDate', e.target.value)}
+              value={formatDateForInput(job.end_date)}
+              onChange={(e) => updateDate('end_date', e.target.value)}
               className="mt-1"
             />
           </div>
@@ -119,7 +119,7 @@ const SchedulingPanel: React.FC<SchedulingPanelProps> = ({
           </div>
           
           <div className="space-y-2">
-            {job.assignedTechs.map((techId) => (
+            {job.assigned_techs.map((techId) => (
               <div key={techId} className="flex items-center justify-between p-2 bg-gray-50 rounded">
                 <div className="flex items-center gap-2">
                   <Avatar className="h-6 w-6">
@@ -140,7 +140,7 @@ const SchedulingPanel: React.FC<SchedulingPanelProps> = ({
               </div>
             ))}
             
-            {job.assignedTechs.length === 0 && (
+            {job.assigned_techs.length === 0 && (
               <p className="text-sm text-gray-500 italic">No techs assigned</p>
             )}
           </div>

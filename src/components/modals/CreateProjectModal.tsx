@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -46,23 +45,21 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onProjectCreate
   const [formData, setFormData] = useState<CreateJobRequest>({
     name: '',
     description: '',
-    clientId: '',
-    organizationId: '',
+    customer_id: '',
+    organization_id: '',
     location: '',
     phase: '',
     status: 'New',
     priority: 'Medium',
-    startDate: '',
-    endDate: '',
-    assignedPersonId: '',
-    assignedTechs: [],
-    contactInfo: {
-      name: '',
-      phone: '',
-      email: ''
-    },
+    start_date: '',
+    end_date: '',
+    assigned_person_id: '',
+    assigned_techs: [],
+    contact_name: '',
+    contact_phone: '',
+    contact_email: '',
     tags: [],
-    isFavorite: false
+    is_favorite: false
   });
 
   useEffect(() => {
@@ -82,12 +79,10 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onProjectCreate
       // Update form with client data
       setFormData(prev => ({
         ...prev,
-        organizationId: selectedClient.organizationId || '',
-        contactInfo: {
-          name: `${selectedClient.firstName} ${selectedClient.lastName}`,
-          phone: selectedClient.cellNumber || selectedClient.officeNumber,
-          email: selectedClient.email
-        }
+        organization_id: selectedClient.organizationId || '',
+        contact_name: `${selectedClient.firstName} ${selectedClient.lastName}`,
+        contact_phone: selectedClient.cellNumber || selectedClient.officeNumber,
+        contact_email: selectedClient.email
       }));
     } else {
       setFilteredPeople([]);
@@ -112,7 +107,14 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onProjectCreate
     try {
       const person = await peopleApi.getById(personId);
       setSelectedClient(person);
-      setFormData(prev => ({ ...prev, clientId: personId }));
+      setFormData(prev => ({ 
+        ...prev, 
+        customer_id: personId,
+        organization_id: person.organizationId || '',
+        contact_name: `${person.firstName} ${person.lastName}`,
+        contact_phone: person.cellNumber || person.officeNumber || '',
+        contact_email: person.email || ''
+      }));
     } catch (error) {
       console.error('Failed to fetch client data:', error);
       setErrors({ client: 'Failed to load client data' });
@@ -133,23 +135,21 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onProjectCreate
       setFormData({
         name: '',
         description: '',
-        clientId: '',
-        organizationId: '',
+        customer_id: '',
+        organization_id: '',
         location: '',
         phase: '',
         status: 'New',
         priority: 'Medium',
-        startDate: '',
-        endDate: '',
-        assignedPersonId: '',
-        assignedTechs: [],
-        contactInfo: {
-          name: '',
-          phone: '',
-          email: ''
-        },
+        start_date: '',
+        end_date: '',
+        assigned_person_id: '',
+        assigned_techs: [],
+        contact_name: '',
+        contact_phone: '',
+        contact_email: '',
         tags: [],
-        isFavorite: false
+        is_favorite: false
       });
       setSelectedClient(null);
       
@@ -175,9 +175,9 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onProjectCreate
   const handleTechToggle = (personId: string, checked: boolean) => {
     setFormData(prev => ({
       ...prev,
-      assignedTechs: checked
-        ? [...prev.assignedTechs, personId]
-        : prev.assignedTechs.filter(id => id !== personId)
+      assigned_techs: checked
+        ? [...prev.assigned_techs, personId]
+        : prev.assigned_techs.filter(id => id !== personId)
     }));
   };
 
@@ -305,8 +305,8 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onProjectCreate
             <Input
               id="projectStartDate"
               type="date"
-              value={formData.startDate}
-              onChange={(e) => setFormData(prev => ({ ...prev, startDate: e.target.value }))}
+              value={formData.start_date}
+              onChange={(e) => setFormData(prev => ({ ...prev, start_date: e.target.value }))}
             />
           </div>
           
@@ -315,14 +315,14 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onProjectCreate
             <Input
               id="projectEndDate"
               type="date"
-              value={formData.endDate}
-              onChange={(e) => setFormData(prev => ({ ...prev, endDate: e.target.value }))}
+              value={formData.end_date}
+              onChange={(e) => setFormData(prev => ({ ...prev, end_date: e.target.value }))}
             />
           </div>
           
           <div>
             <Label htmlFor="assignedPersonSelect">Assigned Person</Label>
-            <Select onValueChange={(value) => setFormData(prev => ({ ...prev, assignedPersonId: value }))}>
+            <Select onValueChange={(value) => setFormData(prev => ({ ...prev, assigned_person_id: value }))}>
               <SelectTrigger id="assignedPersonSelect">
                 <SelectValue placeholder="Select assigned person" />
               </SelectTrigger>
@@ -344,7 +344,7 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onProjectCreate
                   <div key={person.id} className="flex items-center space-x-2">
                     <Checkbox
                       id={`tech-${person.id}`}
-                      checked={formData.assignedTechs.includes(person.id)}
+                      checked={formData.assigned_techs.includes(person.id)}
                       onCheckedChange={(checked) => handleTechToggle(person.id, checked as boolean)}
                     />
                     <Label htmlFor={`tech-${person.id}`} className="text-sm">
@@ -362,28 +362,28 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onProjectCreate
               <Input
                 id="contactName"
                 placeholder="Contact name"
-                value={formData.contactInfo.name}
+                value={formData.contact_name}
                 onChange={(e) => setFormData(prev => ({
                   ...prev,
-                  contactInfo: { ...prev.contactInfo, name: e.target.value }
+                  contact_name: e.target.value
                 }))}
               />
               <Input
                 id="contactPhone"
                 placeholder="Contact phone"
-                value={formData.contactInfo.phone}
+                value={formData.contact_phone}
                 onChange={(e) => setFormData(prev => ({
                   ...prev,
-                  contactInfo: { ...prev.contactInfo, phone: e.target.value }
+                  contact_phone: e.target.value
                 }))}
               />
               <Input
                 id="contactEmail"
                 placeholder="Contact email"
-                value={formData.contactInfo.email}
+                value={formData.contact_email}
                 onChange={(e) => setFormData(prev => ({
                   ...prev,
-                  contactInfo: { ...prev.contactInfo, email: e.target.value }
+                  contact_email: e.target.value
                 }))}
               />
             </div>
@@ -402,8 +402,8 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onProjectCreate
           <div className="md:col-span-2 flex items-center space-x-2">
             <Checkbox
               id="isFavorite"
-              checked={formData.isFavorite}
-              onCheckedChange={(checked) => setFormData(prev => ({ ...prev, isFavorite: checked as boolean }))}
+              checked={formData.is_favorite}
+              onCheckedChange={(checked) => setFormData(prev => ({ ...prev, is_favorite: checked as boolean }))}
             />
             <Label htmlFor="isFavorite">Mark as Favorite</Label>
           </div>

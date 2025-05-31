@@ -1,7 +1,8 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
 import { Button } from '../../../components/ui/button';
-import { Job } from '../../../types';
+import { Job } from '../../../types/job';
 
 interface KeyDataSectionsProps {
   job: Job;
@@ -39,7 +40,7 @@ const KeyDataSections: React.FC<KeyDataSectionsProps> = ({ job }) => {
               <input 
                 type="date" 
                 className="flex-1 px-3 py-1 border border-gray-300 rounded text-sm"
-                defaultValue={job.scheduledDate ? new Date(job.scheduledDate).toISOString().split('T')[0] : ''}
+                defaultValue={job.scheduled_date ? new Date(job.scheduled_date).toISOString().split('T')[0] : ''}
               />
               <Button size="sm" variant="outline">Set Now</Button>
             </div>
@@ -68,7 +69,7 @@ const KeyDataSections: React.FC<KeyDataSectionsProps> = ({ job }) => {
         <CardContent>
           <div className="space-y-2 mb-3">
             <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
-              <span className="text-sm">{job.assignedToName || 'Unassigned'}</span>
+              <span className="text-sm">{job.assignedPersonName || 'Unassigned'}</span>
               <Button size="sm" variant="ghost">Remove</Button>
             </div>
           </div>
@@ -85,7 +86,7 @@ const KeyDataSections: React.FC<KeyDataSectionsProps> = ({ job }) => {
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span>Planned Hours:</span>
-              <span>{job.estimatedDuration || 0}h</span>
+              <span>{job.estimated_duration || 0}h</span>
             </div>
             <div className="flex justify-between">
               <span>Income:</span>
