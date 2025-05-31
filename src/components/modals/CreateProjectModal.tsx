@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Dialog,
@@ -11,6 +11,8 @@ import {
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
+import { Textarea } from '../ui/textarea';
+import { Checkbox } from '../ui/checkbox';
 import {
   Select,
   SelectContent,
@@ -18,95 +20,179 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
-import { Textarea } from '../ui/textarea';
 import { Plus } from 'lucide-react';
-import { createJob, mockPeople, mockOrganizations, getPersonById, getOrganizationById } from '../../data/mockData';
-import { Job } from '../../types';
+import { jobsApi, CreateJobRequest } from '../../services/api/jobs';
+import { peopleApi, PersonResponse } from '../../services/api/people';
 
 interface CreateProjectModalProps {
   onProjectCreated?: () => void;
 }
 
+const PHASE_OPTIONS = ['Planning', 'Design', 'Development', 'Testing', 'Deployment', 'Maintenance'];
+const STATUS_OPTIONS = ['New', 'Scheduled', 'In Progress', 'Completed', 'Cancelled'] as const;
+const PRIORITY_OPTIONS = ['Low', 'Medium', 'High', 'Urgent'] as const;
+
 const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onProjectCreated }) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    title: '',
+  const [loading, setLoading] = useState(false);
+  const [loadingPeople, setLoadingPeople] = useState(false);
+  const [loadingClient, setLoadingClient] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [people, setPeople] = useState<PersonResponse[]>([]);
+  const [filteredPeople, setFilteredPeople] = useState<PersonResponse[]>([]);
+  const [selectedClient, setSelectedClient] = useState<PersonResponse | null>(null);
+  
+  const [formData, setFormData] = useState<CreateJobRequest>({
+    name: '',
     description: '',
-    status: 'new' as Job['status'],
-    priority: 'medium' as Job['priority'],
+    clientId: '',
+    organizationId: '',
+    location: '',
+    phase: '',
+    status: 'New',
+    priority: 'Medium',
     startDate: '',
     endDate: '',
-    assignedPersonId: ''
+    assignedPersonId: '',
+    assignedTechs: [],
+    contactInfo: {
+      name: '',
+      phone: '',
+      email: ''
+    },
+    tags: [],
+    isFavorite: false
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.title.trim()) {
-      alert('Project Title is required');
-      return;
+  useEffect(() => {
+    if (open) {
+      fetchPeople();
     }
+  }, [open]);
 
-    const assignedPerson = formData.assignedPersonId ? getPersonById(formData.assignedPersonId) : null;
-    const assignedOrg = assignedPerson ? getOrganizationById(assignedPerson.organizationId) : null;
-    
-    const jobData = {
-      title: formData.title,
-      name: formData.title,
-      description: formData.description || 'No description provided',
-      status: formData.status,
-      priority: formData.priority,
-      startDate: formData.startDate ? new Date(formData.startDate) : undefined,
-      endDate: formData.endDate ? new Date(formData.endDate) : undefined,
-      assignedPersonId: formData.assignedPersonId || undefined,
-      client: assignedOrg?.name || 'Unknown Client',
-      phase: 'Planning',
-      location: assignedOrg?.address ? `${assignedOrg.address}, ${assignedOrg.city}, ${assignedOrg.state} ${assignedOrg.zipcode}` : 'TBD',
-      isFavorite: false,
-      assignedTechs: [],
-      tasks: [],
-      notes: [],
-      timeline: [],
-      contactInfo: assignedPerson ? {
-        name: `${assignedPerson.firstName} ${assignedPerson.lastName}`,
-        phone: assignedPerson.cellNumber || '',
-        email: assignedPerson.email
-      } : {
-        name: '',
-        phone: '',
-        email: ''
-      },
-      organizationId: assignedPerson ? assignedPerson.organizationId : undefined,
-      customerId: assignedPerson?.organizationId,
-      customerName: assignedOrg?.name || 'Unknown Client',
-      estimatedDuration: 8,
-      scheduledDate: formData.startDate ? new Date(formData.startDate) : undefined,
-      tags: [] as string[],
-      assignedToName: assignedPerson ? `${assignedPerson.firstName} ${assignedPerson.lastName}` : undefined
-    };
+  useEffect(() => {
+    if (selectedClient) {
+      // Filter people by same organization
+      const filtered = people.filter(person => 
+        person.organizationId === selectedClient.organizationId
+      );
+      setFilteredPeople(filtered);
+      
+      // Update form with client data
+      setFormData(prev => ({
+        ...prev,
+        organizationId: selectedClient.organizationId || '',
+        contactInfo: {
+          name: `${selectedClient.firstName} ${selectedClient.lastName}`,
+          phone: selectedClient.cellNumber || selectedClient.officeNumber,
+          email: selectedClient.email
+        }
+      }));
+    } else {
+      setFilteredPeople([]);
+    }
+  }, [selectedClient, people]);
 
-    const newJob = createJob(jobData);
-    
-    // Reset form
-    setFormData({
-      title: '',
-      description: '',
-      status: 'new',
-      priority: 'medium',
-      startDate: '',
-      endDate: '',
-      assignedPersonId: ''
-    });
-    
-    setOpen(false);
-    onProjectCreated?.();
-    
-    // Navigate to the new job overview
-    navigate(`/jobs/${newJob.id}/overview`);
+  const fetchPeople = async () => {
+    setLoadingPeople(true);
+    try {
+      const peopleData = await peopleApi.getAll();
+      setPeople(peopleData);
+    } catch (error) {
+      console.error('Failed to fetch people:', error);
+      setErrors({ general: 'Failed to load people' });
+    } finally {
+      setLoadingPeople(false);
+    }
   };
 
-  const handleInputChange = (field: string, value: string) => {
+  const handleClientChange = async (personId: string) => {
+    setLoadingClient(true);
+    try {
+      const person = await peopleApi.getById(personId);
+      setSelectedClient(person);
+      setFormData(prev => ({ ...prev, clientId: personId }));
+    } catch (error) {
+      console.error('Failed to fetch client data:', error);
+      setErrors({ client: 'Failed to load client data' });
+    } finally {
+      setLoadingClient(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setErrors({});
+
+    try {
+      const response = await jobsApi.create(formData);
+      
+      // Reset form
+      setFormData({
+        name: '',
+        description: '',
+        clientId: '',
+        organizationId: '',
+        location: '',
+        phase: '',
+        status: 'New',
+        priority: 'Medium',
+        startDate: '',
+        endDate: '',
+        assignedPersonId: '',
+        assignedTechs: [],
+        contactInfo: {
+          name: '',
+          phone: '',
+          email: ''
+        },
+        tags: [],
+        isFavorite: false
+      });
+      setSelectedClient(null);
+      
+      setOpen(false);
+      onProjectCreated?.();
+      
+      // Navigate to the new job overview
+      navigate(`/jobs/${response.id}/overview`);
+    } catch (error) {
+      if (error instanceof Error) {
+        setErrors({ general: error.message });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleInputChange = (field: keyof CreateJobRequest, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: '' }));
+    }
+  };
+
+  const handleContactInfoChange = (field: keyof CreateJobRequest['contactInfo'], value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      contactInfo: { ...prev.contactInfo, [field]: value }
+    }));
+  };
+
+  const handleTagsChange = (value: string) => {
+    const tags = value.split(',').map(tag => tag.trim()).filter(Boolean);
+    handleInputChange('tags', tags);
+  };
+
+  const handleTechToggle = (personId: string, checked: boolean) => {
+    setFormData(prev => ({
+      ...prev,
+      assignedTechs: checked
+        ? [...prev.assignedTechs, personId]
+        : prev.assignedTechs.filter(id => id !== personId)
+    }));
   };
 
   return (
@@ -117,48 +203,116 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onProjectCreate
           Create Project
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[800px] max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Create New Project</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {errors.general && (
+            <div className="md:col-span-2 p-3 text-sm text-red-800 bg-red-100 rounded-md">
+              {errors.general}
+            </div>
+          )}
+
           <div className="md:col-span-2">
-            <Label htmlFor="title">Project Title *</Label>
+            <Label htmlFor="name">Project Name</Label>
             <Input
-              id="title"
-              required
-              value={formData.title}
-              onChange={(e) => handleInputChange('title', e.target.value)}
-              placeholder="Enter project title"
+              id="name"
+              value={formData.name}
+              onChange={(e) => handleInputChange('name', e.target.value)}
+              placeholder="Enter project name"
+            />
+          </div>
+          
+          <div className="md:col-span-2">
+            <Label htmlFor="description">Description</Label>
+            <Textarea
+              id="description"
+              value={formData.description}
+              onChange={(e) => handleInputChange('description', e.target.value)}
+              placeholder="Project description..."
+              rows={3}
+            />
+          </div>
+          
+          <div className="md:col-span-2">
+            <Label htmlFor="clientId">Client (Person)</Label>
+            <Select 
+              onValueChange={handleClientChange}
+              disabled={loadingPeople}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder={loadingPeople ? "Loading..." : "Select client"} />
+              </SelectTrigger>
+              <SelectContent>
+                {people.map(person => (
+                  <SelectItem key={person.id} value={person.id}>
+                    {person.firstName} {person.lastName} - {person.email}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {loadingClient && <p className="text-sm text-gray-500 mt-1">Loading client data...</p>}
+          </div>
+          
+          <div className="md:col-span-2">
+            <Label htmlFor="organizationId">Organization</Label>
+            <Input
+              id="organizationId"
+              value={selectedClient ? `${selectedClient.organizationId} (Auto-populated)` : ''}
+              disabled
+              placeholder="Will be auto-populated when client is selected"
             />
           </div>
           
           <div>
+            <Label htmlFor="location">Location</Label>
+            <Input
+              id="location"
+              value={formData.location}
+              onChange={(e) => handleInputChange('location', e.target.value)}
+              placeholder="Project location"
+            />
+          </div>
+          
+          <div>
+            <Label htmlFor="phase">Phase</Label>
+            <Select onValueChange={(value) => handleInputChange('phase', value)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select phase" />
+              </SelectTrigger>
+              <SelectContent>
+                {PHASE_OPTIONS.map(phase => (
+                  <SelectItem key={phase} value={phase}>{phase}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <div>
             <Label htmlFor="status">Status</Label>
-            <Select onValueChange={(value) => handleInputChange('status', value)} defaultValue="new">
+            <Select onValueChange={(value) => handleInputChange('status', value)} defaultValue="New">
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="new">New</SelectItem>
-                <SelectItem value="in-progress">In Progress</SelectItem>
-                <SelectItem value="completed">Completed</SelectItem>
-                <SelectItem value="cancelled">Cancelled</SelectItem>
+                {STATUS_OPTIONS.map(status => (
+                  <SelectItem key={status} value={status}>{status}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
           
           <div>
             <Label htmlFor="priority">Priority</Label>
-            <Select onValueChange={(value) => handleInputChange('priority', value)} defaultValue="medium">
+            <Select onValueChange={(value) => handleInputChange('priority', value)} defaultValue="Medium">
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="low">Low</SelectItem>
-                <SelectItem value="medium">Medium</SelectItem>
-                <SelectItem value="high">High</SelectItem>
-                <SelectItem value="urgent">Urgent</SelectItem>
+                {PRIORITY_OPTIONS.map(priority => (
+                  <SelectItem key={priority} value={priority}>{priority}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -183,38 +337,86 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onProjectCreate
             />
           </div>
           
-          <div className="md:col-span-2">
+          <div>
             <Label htmlFor="assignedPersonId">Assigned Person</Label>
             <Select onValueChange={(value) => handleInputChange('assignedPersonId', value)}>
               <SelectTrigger>
-                <SelectValue placeholder="Select person (optional)" />
+                <SelectValue placeholder="Select assigned person" />
               </SelectTrigger>
               <SelectContent>
-                {mockPeople.map(person => {
-                  const org = getOrganizationById(person.organizationId);
-                  return (
-                    <SelectItem key={person.id} value={person.id}>
-                      {person.firstName} {person.lastName} - {org?.name}
-                    </SelectItem>
-                  );
-                })}
+                {filteredPeople.map(person => (
+                  <SelectItem key={person.id} value={person.id}>
+                    {person.firstName} {person.lastName}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
           
+          {filteredPeople.length > 0 && (
+            <div className="md:col-span-2">
+              <Label>Additional Techs (optional)</Label>
+              <div className="space-y-2 max-h-32 overflow-y-auto border rounded-md p-2">
+                {filteredPeople.map(person => (
+                  <div key={person.id} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`tech-${person.id}`}
+                      checked={formData.assignedTechs.includes(person.id)}
+                      onCheckedChange={(checked) => handleTechToggle(person.id, checked as boolean)}
+                    />
+                    <Label htmlFor={`tech-${person.id}`} className="text-sm">
+                      {person.firstName} {person.lastName}
+                    </Label>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          
           <div className="md:col-span-2">
-            <Label htmlFor="description">Description</Label>
-            <Textarea
-              id="description"
-              value={formData.description}
-              onChange={(e) => handleInputChange('description', e.target.value)}
-              placeholder="Project description..."
-              rows={3}
+            <Label>Contact Info</Label>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mt-2">
+              <Input
+                placeholder="Contact name"
+                value={formData.contactInfo.name}
+                onChange={(e) => handleContactInfoChange('name', e.target.value)}
+              />
+              <Input
+                placeholder="Contact phone"
+                value={formData.contactInfo.phone}
+                onChange={(e) => handleContactInfoChange('phone', e.target.value)}
+              />
+              <Input
+                placeholder="Contact email"
+                value={formData.contactInfo.email}
+                onChange={(e) => handleContactInfoChange('email', e.target.value)}
+              />
+            </div>
+          </div>
+          
+          <div className="md:col-span-2">
+            <Label htmlFor="tags">Tags (comma-separated)</Label>
+            <Input
+              id="tags"
+              value={formData.tags.join(', ')}
+              onChange={(e) => handleTagsChange(e.target.value)}
+              placeholder="tag1, tag2, tag3"
             />
           </div>
           
+          <div className="md:col-span-2 flex items-center space-x-2">
+            <Checkbox
+              id="isFavorite"
+              checked={formData.isFavorite}
+              onCheckedChange={(checked) => handleInputChange('isFavorite', checked as boolean)}
+            />
+            <Label htmlFor="isFavorite">Mark as Favorite</Label>
+          </div>
+          
           <div className="md:col-span-2 flex gap-2 pt-4">
-            <Button type="submit">Create Project</Button>
+            <Button type="submit" disabled={loading}>
+              {loading ? 'Creating...' : 'Create Project'}
+            </Button>
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>
               Cancel
             </Button>
