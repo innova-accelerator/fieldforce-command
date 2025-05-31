@@ -15,9 +15,48 @@ interface SchedulingPanelProps {
 
 // Mock available associates - in real app, fetch from API
 const availableAssociates: Associate[] = [
-  { id: 'tech-3', name: 'Mike Davis', email: 'mike@company.com', availability: 'available', created_at: '2024-01-01T00:00:00Z', updated_at: '2024-01-01T00:00:00Z' },
-  { id: 'tech-4', name: 'Lisa Chen', email: 'lisa@company.com', availability: 'available', created_at: '2024-01-01T00:00:00Z', updated_at: '2024-01-01T00:00:00Z' },
-  { id: 'tech-5', name: 'David Brown', email: 'david@company.com', availability: 'available', created_at: '2024-01-01T00:00:00Z', updated_at: '2024-01-01T00:00:00Z' }
+  { 
+    id: 'tech-3', 
+    name: 'Mike Davis', 
+    email: 'mike@company.com', 
+    phone: '555-0301',
+    skills: ['networking', 'installation'],
+    certifications: ['CCNA'],
+    availability: 'available',
+    location: { lat: 40.7128, lng: -74.0060, address: '123 Tech St' },
+    rating: 4.5,
+    completedJobs: 25,
+    joinedAt: new Date('2023-01-01'),
+    hourlyRate: 75
+  },
+  { 
+    id: 'tech-4', 
+    name: 'Lisa Chen', 
+    email: 'lisa@company.com', 
+    phone: '555-0302',
+    skills: ['security', 'maintenance'],
+    certifications: ['Security+'],
+    availability: 'available',
+    location: { lat: 40.7589, lng: -73.9851, address: '456 Security Ave' },
+    rating: 4.8,
+    completedJobs: 32,
+    joinedAt: new Date('2023-02-01'),
+    hourlyRate: 80
+  },
+  { 
+    id: 'tech-5', 
+    name: 'David Brown', 
+    email: 'david@company.com', 
+    phone: '555-0303',
+    skills: ['installation', 'troubleshooting'],
+    certifications: ['A+'],
+    availability: 'available',
+    location: { lat: 40.7505, lng: -73.9934, address: '789 Install Blvd' },
+    rating: 4.6,
+    completedJobs: 28,
+    joinedAt: new Date('2023-03-01'),
+    hourlyRate: 70
+  }
 ];
 
 const SchedulingPanel: React.FC<SchedulingPanelProps> = ({ 

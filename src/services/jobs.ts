@@ -33,8 +33,8 @@ export const fetchJob = async (jobId: string): Promise<Job> => {
 };
 
 export const updateJob = async (jobId: string, updates: Partial<Job>): Promise<Job> => {
-  // Remove computed fields before updating
-  const { tasks, timeline, customerName, assignedPersonName, ...dbUpdates } = updates;
+  // Remove computed fields and user_id before updating
+  const { tasks, timeline, customerName, assignedPersonName, user_id, ...dbUpdates } = updates;
 
   const { data: updatedJob, error } = await supabase
     .from('jobs')
@@ -104,18 +104,20 @@ export const updateJob = async (jobId: string, updates: Partial<Job>): Promise<J
 };
 
 export const createJob = async (jobData: Partial<Job>): Promise<Job> => {
-  // Remove computed fields before creating
-  const { tasks, timeline, customerName, assignedPersonName, ...dbData } = jobData;
+  // Remove computed fields and user_id before creating
+  const { tasks, timeline, customerName, assignedPersonName, user_id, ...dbData } = jobData;
 
   // Get current user
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error('User not authenticated');
 
-  // Ensure required fields are present
+  // Ensure required fields are present and priority is valid
   const insertData = {
     ...dbData,
     name: dbData.name || 'Untitled Job',
-    user_id: user.id
+    priority: dbData.priority === 'High' ? 'high' : 
+              dbData.priority === 'Medium' ? 'medium' : 
+              dbData.priority === 'Low' ? 'low' : 'medium'
   };
 
   const { data: newJob, error } = await supabase
