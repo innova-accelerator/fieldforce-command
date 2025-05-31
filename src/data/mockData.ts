@@ -110,17 +110,56 @@ export const mockAssociates: Associate[] = [
   {
     id: 'tech-1',
     name: 'Alex Thompson',
-    email: 'alex@company.com'
+    email: 'alex@company.com',
+    phone: '555-0301',
+    skills: ['networking', 'installation'],
+    certifications: ['CCNA'],
+    availability: 'available',
+    location: {
+      lat: 40.7128,
+      lng: -74.0060,
+      address: '123 Tech St'
+    },
+    rating: 4.5,
+    completedJobs: 25,
+    joinedAt: new Date('2023-01-01'),
+    hourlyRate: 75
   },
   {
     id: 'tech-2',
     name: 'Maria Garcia',
-    email: 'maria@company.com'
+    email: 'maria@company.com',
+    phone: '555-0302',
+    skills: ['security', 'maintenance'],
+    certifications: ['Security+'],
+    availability: 'available',
+    location: {
+      lat: 40.7589,
+      lng: -73.9851,
+      address: '456 Security Ave'
+    },
+    rating: 4.8,
+    completedJobs: 32,
+    joinedAt: new Date('2023-02-01'),
+    hourlyRate: 80
   },
   {
     id: 'tech-3',
     name: 'David Chen',
-    email: 'david@company.com'
+    email: 'david@company.com',
+    phone: '555-0303',
+    skills: ['installation', 'troubleshooting'],
+    certifications: ['A+'],
+    availability: 'available',
+    location: {
+      lat: 40.7505,
+      lng: -73.9934,
+      address: '789 Install Blvd'
+    },
+    rating: 4.6,
+    completedJobs: 28,
+    joinedAt: new Date('2023-03-01'),
+    hourlyRate: 70
   }
 ];
 
@@ -191,8 +230,7 @@ export const mockOrganizations: Organization[] = [
     city: 'Tech City',
     state: 'CA',
     zipcode: '90210',
-    createdAt: new Date('2024-01-01T00:00:00Z'),
-    userId: 'user-1'
+    createdAt: new Date('2024-01-01T00:00:00Z')
   },
   {
     id: '2',
@@ -206,8 +244,7 @@ export const mockOrganizations: Organization[] = [
     city: 'Manufacturing Hub',
     state: 'TX',
     zipcode: '73301',
-    createdAt: new Date('2024-01-01T00:00:00Z'),
-    userId: 'user-1'
+    createdAt: new Date('2024-01-01T00:00:00Z')
   }
 ];
 
@@ -221,8 +258,7 @@ export const mockPeople: Person[] = [
     title: 'IT Director',
     officeNumber: '555-0101',
     cellNumber: '555-0123',
-    createdAt: new Date('2024-01-01T00:00:00Z'),
-    userId: 'user-1'
+    createdAt: new Date('2024-01-01T00:00:00Z')
   },
   {
     id: '2',
@@ -233,8 +269,7 @@ export const mockPeople: Person[] = [
     title: 'Operations Manager',
     officeNumber: '555-0201',
     cellNumber: '555-0124',
-    createdAt: new Date('2024-01-01T00:00:00Z'),
-    userId: 'user-1'
+    createdAt: new Date('2024-01-01T00:00:00Z')
   }
 ];
 

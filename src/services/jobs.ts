@@ -115,9 +115,10 @@ export const createJob = async (jobData: Partial<Job>): Promise<Job> => {
   const insertData = {
     ...dbData,
     name: dbData.name || 'Untitled Job',
-    priority: dbData.priority === 'High' ? 'high' : 
-              dbData.priority === 'Medium' ? 'medium' : 
-              dbData.priority === 'Low' ? 'low' : 'medium',
+    priority: dbData.priority === 'High' ? 'High' : 
+              dbData.priority === 'Medium' ? 'Medium' : 
+              dbData.priority === 'Low' ? 'Low' : 
+              dbData.priority === 'Urgent' ? 'Urgent' : 'Medium',
     user_id: user.id
   };
 
