@@ -259,6 +259,7 @@ export const mockNewJobs: NewJob[] = [
   {
     id: 'job-1',
     name: 'HVAC System Installation',
+    title: 'HVAC System Installation',
     description: 'Complete HVAC system installation for commercial building',
     status: 'in-progress',
     priority: 'high',
@@ -266,17 +267,44 @@ export const mockNewJobs: NewJob[] = [
     endDate: '2024-01-30',
     assignedPersonId: 'person-1',
     organizationId: 'org-1',
-    createdAt: new Date('2024-01-10')
+    createdAt: new Date('2024-01-10'),
+    client: 'ABC Corporation',
+    phase: 'Installation',
+    location: '123 Business Ave, New York, NY 10001',
+    isFavorite: false,
+    assignedTechs: [],
+    tasks: [],
+    notes: [],
+    timeline: [],
+    contactInfo: {
+      name: 'John Smith',
+      phone: '(555) 111-2222',
+      email: 'john.smith@abccorp.com'
+    }
   },
   {
     id: 'job-2',
     name: 'Electrical Upgrade',
+    title: 'Electrical Upgrade',
     description: 'Upgrade electrical systems in manufacturing facility',
     status: 'new',
     priority: 'medium',
     startDate: '2024-02-01',
     endDate: '2024-02-15',
-    createdAt: new Date('2024-01-25')
+    createdAt: new Date('2024-01-25'),
+    client: 'Wilson Industries',
+    phase: 'Planning',
+    location: '456 Industrial Blvd, Brooklyn, NY 11201',
+    isFavorite: false,
+    assignedTechs: [],
+    tasks: [],
+    notes: [],
+    timeline: [],
+    contactInfo: {
+      name: 'Mike Wilson',
+      phone: '(555) 555-6666',
+      email: 'mike.wilson@wilsonindustries.com'
+    }
   }
 ];
 

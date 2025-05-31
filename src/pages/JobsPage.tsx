@@ -30,8 +30,28 @@ const JobsPage = () => {
     }
 
     const assignedPerson = formData.assignedPersonId ? getPersonById(formData.assignedPersonId) : null;
+    const assignedOrg = assignedPerson ? getOrganizationById(assignedPerson.organizationId) : null;
+    
     const jobData = {
       ...formData,
+      title: formData.name, // Use name as title
+      client: assignedOrg?.name || 'Unknown Client',
+      phase: 'Planning',
+      location: assignedOrg?.address ? `${assignedOrg.address}, ${assignedOrg.city}, ${assignedOrg.state} ${assignedOrg.zipcode}` : 'TBD',
+      isFavorite: false,
+      assignedTechs: [],
+      tasks: [],
+      notes: [],
+      timeline: [],
+      contactInfo: assignedPerson ? {
+        name: `${assignedPerson.firstName} ${assignedPerson.lastName}`,
+        phone: assignedPerson.cellNumber || '',
+        email: assignedPerson.email
+      } : {
+        name: '',
+        phone: '',
+        email: ''
+      },
       organizationId: assignedPerson ? assignedPerson.organizationId : undefined
     };
 
