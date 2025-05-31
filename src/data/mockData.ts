@@ -45,7 +45,6 @@ export const mockCustomers: Customer[] = [
 export const mockJobs: Job[] = [
   {
     id: 'job-1',
-    name: 'Office HVAC Installation',
     title: 'Office HVAC Installation', 
     description: 'Install new HVAC system in main office building',
     status: 'in-progress',
@@ -71,7 +70,6 @@ export const mockJobs: Job[] = [
   },
   {
     id: 'job-2', 
-    name: 'Warehouse Electrical Upgrade',
     title: 'Warehouse Electrical Upgrade',
     description: 'Upgrade electrical systems in warehouse facility',
     status: 'new',
