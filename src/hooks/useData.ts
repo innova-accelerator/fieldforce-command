@@ -94,7 +94,27 @@ export const useOrganizations = () => {
         .eq('user_id', user.id);
 
       if (error) throw error;
-      return organizations;
+      
+      // Transform the data to match our Organization interface
+      return organizations.map(org => ({
+        id: org.id,
+        name: org.name,
+        relation: org.relation,
+        category: org.category,
+        email: org.email,
+        phone: org.phone,
+        website: org.website,
+        linkedin: org.linkedin,
+        facebook: org.facebook,
+        twitter: org.twitter,
+        additionalInfo: org.additional_info,
+        address: org.address,
+        city: org.city,
+        state: org.state,
+        zipcode: org.zipcode,
+        classification: org.classification as 'associate' | 'customer' | undefined,
+        createdAt: new Date(org.created_at)
+      }));
     },
   });
 };
