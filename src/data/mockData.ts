@@ -45,7 +45,8 @@ export const mockCustomers: Customer[] = [
 export const mockJobs: Job[] = [
   {
     id: 'job-1',
-    title: 'Office HVAC Installation', 
+    title: 'Office HVAC Installation',
+    name: 'Office HVAC Installation', 
     description: 'Install new HVAC system in main office building with full ductwork and controls',
     status: 'in-progress',
     priority: 'high',
@@ -71,11 +72,13 @@ export const mockJobs: Job[] = [
     customerName: 'TechCorp Inc',
     estimatedDuration: 8,
     scheduledDate: new Date('2024-01-15'),
-    tags: ['HVAC', 'Installation']
+    tags: ['HVAC', 'Installation'],
+    assignedToName: 'John Smith'
   },
   {
     id: 'job-2', 
     title: 'Warehouse Electrical Upgrade',
+    name: 'Warehouse Electrical Upgrade',
     description: 'Upgrade electrical systems in warehouse facility including new panels and wiring',
     status: 'new',
     priority: 'medium',
@@ -101,7 +104,8 @@ export const mockJobs: Job[] = [
     customerName: 'BuildCorp LLC',
     estimatedDuration: 12,
     scheduledDate: new Date('2024-01-25'),
-    tags: ['Electrical', 'Upgrade']
+    tags: ['Electrical', 'Upgrade'],
+    assignedToName: 'Sarah Johnson'
   }
 ];
 

@@ -1,6 +1,5 @@
-
 import { useQuery } from '@tanstack/react-query';
-import { Job } from '../types';
+import { Job } from '../types/job';
 
 // Mock data for development
 const mockJob: Job = {

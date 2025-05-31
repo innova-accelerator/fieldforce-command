@@ -1,8 +1,7 @@
-
 import React from 'react';
 import { Star, Edit } from 'lucide-react';
 import { Button } from '../../../components/ui/button';
-import { Job } from '../../../types';
+import { Job } from '../../../types/job';
 
 interface JobHeaderProps {
   job: Job;

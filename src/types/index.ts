@@ -51,3 +51,6 @@ export interface DashboardMetrics {
   revenue: number;
   revenueGrowth: number;
 }
+
+// Re-export Job and related types from job.ts
+export * from './job';

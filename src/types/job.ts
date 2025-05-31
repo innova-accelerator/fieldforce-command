@@ -2,6 +2,7 @@
 export interface Job {
   id: string;
   title: string; // Display title for the job
+  name: string; // Job name
   description: string; // Made required to match usage
   status: 'new' | 'in-progress' | 'completed' | 'cancelled';
   priority: 'low' | 'medium' | 'high' | 'urgent';
@@ -32,6 +33,7 @@ export interface Job {
   estimatedDuration?: number;
   scheduledDate?: Date;
   tags?: string[];
+  assignedToName?: string; // Added missing property
 }
 
 export interface Task {
