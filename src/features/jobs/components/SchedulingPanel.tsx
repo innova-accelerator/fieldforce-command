@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Calendar, Clock, User, Plus } from 'lucide-react';
 import { Button } from '../../../components/ui/button';
@@ -175,14 +176,15 @@ const SchedulingPanel: React.FC<SchedulingPanelProps> = ({
       
       {/* Assignment Modal */}
       {showAssignModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999] p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 relative">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold">Assign Tech/Subcontractor</h3>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowAssignModal(false)}
+                className="h-8 w-8 p-0"
               >
                 ×
               </Button>

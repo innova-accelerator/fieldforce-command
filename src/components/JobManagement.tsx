@@ -3,6 +3,7 @@ import { Search, Plus, Calendar, User, MapPin, Clock, Filter } from 'lucide-reac
 import { Link } from 'react-router-dom';
 import { fetchAllJobs } from '../services/jobs';
 import { Job } from '../types/job';
+import CreateProjectModal from './modals/CreateProjectModal';
 
 const JobManagement = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -10,6 +11,7 @@ const JobManagement = () => {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [priorityFilter, setPriorityFilter] = useState<string>('all');
   const [loading, setLoading] = useState(true);
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   useEffect(() => {
     const loadJobs = async () => {
@@ -25,6 +27,19 @@ const JobManagement = () => {
 
     loadJobs();
   }, []);
+
+  const handleProjectCreated = () => {
+    // Reload jobs after creating a new project
+    const loadJobs = async () => {
+      try {
+        const jobsFromSupabase = await fetchAllJobs();
+        setJobs(jobsFromSupabase);
+      } catch (error) {
+        console.error('Error reloading jobs:', error);
+      }
+    };
+    loadJobs();
+  };
 
   if (loading) {
     return (
@@ -128,7 +143,10 @@ const JobManagement = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Jobs</h1>
-        <button className="mt-4 sm:mt-0 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center">
+        <button 
+          onClick={() => setShowCreateModal(true)}
+          className="mt-4 sm:mt-0 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center"
+        >
           <Plus className="h-4 w-4 mr-2" />
           Create Job
         </button>
@@ -187,6 +205,28 @@ const JobManagement = () => {
       {filteredJobs.length === 0 && (
         <div className="text-center py-12">
           <p className="text-gray-500">No jobs found matching your criteria.</p>
+        </div>
+      )}
+
+      {/* Create Project Modal */}
+      {showCreateModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+            <CreateProjectModal 
+              onProjectCreated={() => {
+                handleProjectCreated();
+                setShowCreateModal(false);
+              }}
+            />
+            <div className="absolute top-4 right-4">
+              <button
+                onClick={() => setShowCreateModal(false)}
+                className="text-gray-400 hover:text-gray-600 text-xl font-bold"
+              >
+                ×
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
