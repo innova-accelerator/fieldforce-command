@@ -2,6 +2,8 @@
 import React from 'react';
 import { Users, Calendar, UserCheck, Settings, Home, Menu, X, Building2, User, Briefcase } from 'lucide-react';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ThemeToggle } from './ui/theme-toggle';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -11,6 +13,7 @@ interface LayoutProps {
 
 const Layout = ({ children, currentPage, onNavigate }: LayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const navigate = useNavigate();
 
   const navigation = [
     { name: 'Dashboard', href: 'dashboard', icon: Home },
@@ -24,12 +27,12 @@ const Layout = ({ children, currentPage, onNavigate }: LayoutProps) => {
   ];
 
   const handleNavigation = (href: string) => {
-    onNavigate(href);
+    navigate(`/${href}`);
     setSidebarOpen(false);
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex">
       {/* Mobile sidebar backdrop */}
       {sidebarOpen && (
         <div 
@@ -40,14 +43,14 @@ const Layout = ({ children, currentPage, onNavigate }: LayoutProps) => {
 
       {/* Sidebar */}
       <div className={`
-        fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0
+        fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
-        <div className="flex items-center justify-between h-16 px-6 border-b border-gray-200">
-          <h1 className="text-xl font-bold text-blue-900">FieldForce</h1>
+        <div className="flex items-center justify-between h-16 px-6 border-b border-gray-200 dark:border-gray-700">
+          <h1 className="text-xl font-bold text-blue-900 dark:text-blue-400">FieldForce</h1>
           <button
             onClick={() => setSidebarOpen(false)}
-            className="lg:hidden text-gray-400 hover:text-gray-600"
+            className="lg:hidden text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
           >
             <X className="h-6 w-6" />
           </button>
@@ -63,8 +66,8 @@ const Layout = ({ children, currentPage, onNavigate }: LayoutProps) => {
                 className={`
                   w-full flex items-center px-3 py-2 mb-1 text-sm font-medium rounded-lg transition-colors duration-200
                   ${isActive 
-                    ? 'bg-blue-100 text-blue-900 border-r-2 border-blue-600' 
-                    : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                    ? 'bg-blue-100 dark:bg-blue-900 text-blue-900 dark:text-blue-100 border-r-2 border-blue-600 dark:border-blue-400' 
+                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100'
                   }
                 `}
               >
@@ -79,22 +82,23 @@ const Layout = ({ children, currentPage, onNavigate }: LayoutProps) => {
       {/* Main content */}
       <div className="flex-1 flex flex-col lg:ml-0">
         {/* Top header */}
-        <header className="bg-white shadow-sm border-b border-gray-200 lg:static">
+        <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 lg:static">
           <div className="flex items-center justify-between h-16 px-4 sm:px-6">
             <div className="flex items-center">
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="lg:hidden text-gray-400 hover:text-gray-600 mr-4"
+                className="lg:hidden text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 mr-4"
               >
                 <Menu className="h-6 w-6" />
               </button>
-              <h2 className="text-lg font-semibold text-gray-900 capitalize">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 capitalize">
                 {currentPage.replace('-', ' ')}
               </h2>
             </div>
             
             <div className="flex items-center space-x-4">
-              <div className="text-sm text-gray-500">
+              <ThemeToggle />
+              <div className="text-sm text-gray-500 dark:text-gray-400">
                 Welcome back, Admin
               </div>
             </div>
@@ -102,7 +106,7 @@ const Layout = ({ children, currentPage, onNavigate }: LayoutProps) => {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 overflow-auto bg-gray-50 dark:bg-gray-900">
           {children}
         </main>
       </div>
