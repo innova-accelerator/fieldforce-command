@@ -63,6 +63,12 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onProjectCreate
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Basic validation
+    if (!formData.name.trim()) {
+      return;
+    }
+
     try {
       await createProject(formData);
       // Reset form after successful creation
@@ -87,6 +93,7 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onProjectCreate
       });
     } catch (error) {
       // Error is handled in the hook
+      console.error('Failed to create project:', error);
     }
   };
 
@@ -147,7 +154,7 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onProjectCreate
         />
         
         <div className="md:col-span-2 flex gap-2 pt-4">
-          <Button type="submit" disabled={loading}>
+          <Button type="submit" disabled={loading || !formData.name.trim()}>
             {loading ? 'Creating...' : 'Create Project'}
           </Button>
           {onClose && (

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Plus, Search, Filter, Calendar, User, MapPin, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -15,33 +14,27 @@ const JobsPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
 
-  useEffect(() => {
-    const loadJobs = async () => {
-      try {
-        const jobsFromSupabase = await fetchAllJobs();
-        setJobs(jobsFromSupabase);
-      } catch (err) {
-        console.error('Error loading jobs:', err);
-        setError('Error loading jobs');
-      } finally {
-        setLoading(false);
-      }
-    };
+  const loadJobs = async () => {
+    try {
+      setLoading(true);
+      const jobsFromSupabase = await fetchAllJobs();
+      setJobs(jobsFromSupabase);
+      setError(null);
+    } catch (err) {
+      console.error('Error loading jobs:', err);
+      setError('Error loading jobs');
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     loadJobs();
   }, []);
 
-  const handleProjectCreated = () => {
+  const handleProjectCreated = async () => {
     // Reload jobs after creating a new project
-    const loadJobs = async () => {
-      try {
-        const jobsFromSupabase = await fetchAllJobs();
-        setJobs(jobsFromSupabase);
-      } catch (err) {
-        console.error('Error reloading jobs:', err);
-      }
-    };
-    loadJobs();
+    await loadJobs();
     setShowCreateModal(false);
   };
 
