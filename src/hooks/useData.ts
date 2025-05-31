@@ -1,4 +1,3 @@
-
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { 
@@ -29,8 +28,27 @@ export const useCustomers = () => {
         .select('*')
         .eq('user_id', user.id);
 
-      if (error) throw error;
-      return customers;
+      if (error) {
+        console.error('Failed to fetch customers:', error);
+        throw error;
+      }
+
+      console.log('Customers fetched from useData hook:', customers);
+
+      // Transform the data to match our Customer interface
+      return (customers || []).map(customer => ({
+        id: customer.id,
+        name: customer.name,
+        email: customer.email || '',
+        phone: customer.phone || '',
+        address: customer.address || '',
+        company: customer.company,
+        createdAt: new Date(customer.created_at),
+        lastContact: customer.last_contact ? new Date(customer.last_contact) : undefined,
+        totalJobs: customer.total_jobs || 0,
+        status: customer.status as 'active' | 'inactive',
+        notes: customer.notes
+      }));
     },
   });
 };
