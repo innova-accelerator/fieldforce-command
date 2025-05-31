@@ -6,6 +6,7 @@ import { Job, Task, TimelineEntry, Associate } from '@/types/job';
 const mockJob: Job = {
   id: 'job-123',
   title: 'HVAC System Installation',
+  name: 'HVAC System Installation',
   description: 'Complete HVAC system installation for commercial building including ductwork, units, and controls.',
   client: 'ABC Corporation',
   phase: 'In Progress',
@@ -74,7 +75,8 @@ const mockJob: Job = {
   customerName: 'ABC Corporation',
   estimatedDuration: 8,
   scheduledDate: new Date('2024-01-15'),
-  tags: ['HVAC', 'Installation']
+  tags: ['HVAC', 'Installation'],
+  assignedToName: 'John Smith'
 };
 
 export const fetchJob = async (jobId: string): Promise<Job> => {

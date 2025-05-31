@@ -38,9 +38,14 @@ const JobsPage = () => {
     const assignedOrg = assignedPerson ? getOrganizationById(assignedPerson.organizationId) : null;
     
     const jobData = {
-      ...formData,
+      title: formData.title,
+      name: formData.title, // Added missing name property
+      description: formData.description || 'No description provided', // Ensure description is always provided
+      status: formData.status,
+      priority: formData.priority,
       startDate: formData.startDate ? new Date(formData.startDate) : undefined,
       endDate: formData.endDate ? new Date(formData.endDate) : undefined,
+      assignedPersonId: formData.assignedPersonId || undefined,
       client: assignedOrg?.name || 'Unknown Client',
       phase: 'Planning',
       location: assignedOrg?.address ? `${assignedOrg.address}, ${assignedOrg.city}, ${assignedOrg.state} ${assignedOrg.zipcode}` : 'TBD',
@@ -63,7 +68,8 @@ const JobsPage = () => {
       customerName: assignedOrg?.name || 'Unknown Client',
       estimatedDuration: 8,
       scheduledDate: formData.startDate ? new Date(formData.startDate) : undefined,
-      tags: []
+      tags: [] as string[],
+      assignedToName: assignedPerson ? `${assignedPerson.firstName} ${assignedPerson.lastName}` : undefined
     };
 
     createJob(jobData);

@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
-import { Job } from '../../../types/job';
+import { Job } from '../../../types';
 
 interface NextActionsProps {
   job: Job;
