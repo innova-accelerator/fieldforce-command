@@ -298,6 +298,7 @@ export type Database = {
           address: string | null
           category: string | null
           city: string | null
+          classification: string | null
           created_at: string | null
           email: string | null
           facebook: string | null
@@ -318,6 +319,7 @@ export type Database = {
           address?: string | null
           category?: string | null
           city?: string | null
+          classification?: string | null
           created_at?: string | null
           email?: string | null
           facebook?: string | null
@@ -338,6 +340,7 @@ export type Database = {
           address?: string | null
           category?: string | null
           city?: string | null
+          classification?: string | null
           created_at?: string | null
           email?: string | null
           facebook?: string | null
