@@ -93,10 +93,15 @@ export const useOrganizations = () => {
         .select('*')
         .eq('user_id', user.id);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Failed to fetch organizations:', error);
+        throw error;
+      }
+      
+      console.log('Organizations fetched from useData hook:', organizations);
       
       // Transform the data to match our Organization interface
-      return organizations.map(org => ({
+      return (organizations || []).map(org => ({
         id: org.id,
         name: org.name,
         relation: org.relation,
@@ -134,8 +139,13 @@ export const usePeople = () => {
         `)
         .eq('user_id', user.id);
 
-      if (error) throw error;
-      return people;
+      if (error) {
+        console.error('Failed to fetch people:', error);
+        throw error;
+      }
+      
+      console.log('People fetched from useData hook:', people);
+      return people || [];
     },
   });
 };

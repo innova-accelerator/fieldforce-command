@@ -97,14 +97,17 @@ const AddPersonModal: React.FC<AddPersonModalProps> = ({ onPersonAdded, defaultO
 
   const fetchOrganizations = async () => {
     setLoadingOrgs(true);
+    setErrors({});
     try {
       console.log('Fetching organizations from Supabase...');
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         console.error('User not authenticated');
-        setErrors({ general: 'User not authenticated' });
+        setErrors({ general: 'User not authenticated. Please log in.' });
         return;
       }
+
+      console.log('User authenticated:', user.id);
 
       const { data: organizations, error } = await supabase
         .from('organizations')
@@ -118,10 +121,16 @@ const AddPersonModal: React.FC<AddPersonModalProps> = ({ onPersonAdded, defaultO
       }
 
       console.log('Organizations fetched successfully:', organizations);
+      
+      if (!organizations || organizations.length === 0) {
+        console.log('No organizations found for user');
+        setErrors({ general: 'No organizations found. Please create an organization first.' });
+      }
+      
       setOrganizations(organizations || []);
     } catch (error) {
       console.error('Error fetching organizations:', error);
-      setErrors({ general: 'Failed to load organizations' });
+      setErrors({ general: 'Failed to load organizations. Please try again.' });
     } finally {
       setLoadingOrgs(false);
     }
@@ -255,7 +264,7 @@ const AddPersonModal: React.FC<AddPersonModalProps> = ({ onPersonAdded, defaultO
                 disabled={loadingOrgs}
               >
                 <SelectTrigger className="bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100">
-                  <SelectValue placeholder={loadingOrgs ? "Loading..." : "Select organization"} />
+                  <SelectValue placeholder={loadingOrgs ? "Loading organizations..." : "Select organization"} />
                 </SelectTrigger>
                 <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
                   <SelectItem value="—" className="text-gray-900 dark:text-gray-100">— No Organization —</SelectItem>
@@ -266,6 +275,14 @@ const AddPersonModal: React.FC<AddPersonModalProps> = ({ onPersonAdded, defaultO
                   ))}
                 </SelectContent>
               </Select>
+              {loadingOrgs && (
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Loading organizations...</p>
+              )}
+              {organizations.length === 0 && !loadingOrgs && !errors.general && (
+                <p className="text-sm text-yellow-600 dark:text-yellow-400 mt-1">
+                  No organizations found. You may want to create an organization first.
+                </p>
+              )}
             </div>
             
             <div>
