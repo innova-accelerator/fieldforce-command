@@ -104,7 +104,7 @@ export const updateJob = async (jobId: string, updates: Partial<Job>): Promise<J
 };
 
 export const createJob = async (jobData: Partial<Job>): Promise<Job> => {
-  // Remove computed fields and user_id before creating
+  // Remove computed fields before creating
   const { tasks, timeline, customerName, assignedPersonName, user_id, ...dbData } = jobData;
 
   // Get current user
@@ -117,7 +117,8 @@ export const createJob = async (jobData: Partial<Job>): Promise<Job> => {
     name: dbData.name || 'Untitled Job',
     priority: dbData.priority === 'High' ? 'high' : 
               dbData.priority === 'Medium' ? 'medium' : 
-              dbData.priority === 'Low' ? 'low' : 'medium'
+              dbData.priority === 'Low' ? 'low' : 'medium',
+    user_id: user.id
   };
 
   const { data: newJob, error } = await supabase

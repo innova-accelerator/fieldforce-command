@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Calendar, Clock, User, Plus } from 'lucide-react';
 import { Button } from '../../../components/ui/button';
@@ -19,7 +18,6 @@ const availableAssociates: Associate[] = [
     id: 'tech-3', 
     name: 'Mike Davis', 
     email: 'mike@company.com', 
-    phone: '555-0301',
     skills: ['networking', 'installation'],
     certifications: ['CCNA'],
     availability: 'available',
@@ -33,7 +31,6 @@ const availableAssociates: Associate[] = [
     id: 'tech-4', 
     name: 'Lisa Chen', 
     email: 'lisa@company.com', 
-    phone: '555-0302',
     skills: ['security', 'maintenance'],
     certifications: ['Security+'],
     availability: 'available',
@@ -47,7 +44,6 @@ const availableAssociates: Associate[] = [
     id: 'tech-5', 
     name: 'David Brown', 
     email: 'david@company.com', 
-    phone: '555-0303',
     skills: ['installation', 'troubleshooting'],
     certifications: ['A+'],
     availability: 'available',
