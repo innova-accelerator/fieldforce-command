@@ -22,6 +22,12 @@ export const fetchAllJobs = async (): Promise<Job[]> => {
   // Transform the data to match our Job interface
   return (jobs || []).map((job: any) => ({
     ...job,
+    status: ['New', 'Scheduled', 'In Progress', 'Completed', 'Cancelled'].includes(job.status) 
+      ? job.status 
+      : 'New',
+    priority: ['Low', 'Medium', 'High', 'Urgent'].includes(job.priority)
+      ? job.priority
+      : 'Medium',
     tasks: job.tasks?.map((task: any) => ({
       ...task,
       priority: task.priority === 'high' ? 'high' : task.priority === 'medium' ? 'medium' : 'low'
@@ -59,6 +65,12 @@ export const fetchJob = async (jobId: string): Promise<Job> => {
   // Transform the data to match our Job interface
   const transformedJob: Job = {
     ...job,
+    status: ['New', 'Scheduled', 'In Progress', 'Completed', 'Cancelled'].includes(job.status) 
+      ? job.status 
+      : 'New',
+    priority: ['Low', 'Medium', 'High', 'Urgent'].includes(job.priority)
+      ? job.priority
+      : 'Medium',
     tasks: job.tasks?.map((task: any) => ({
       ...task,
       priority: task.priority === 'high' ? 'high' : task.priority === 'medium' ? 'medium' : 'low'
@@ -139,6 +151,12 @@ export const updateJob = async (jobId: string, updates: Partial<Job>): Promise<J
   // Transform the response
   const transformedJob: Job = {
     ...updatedJob,
+    status: ['New', 'Scheduled', 'In Progress', 'Completed', 'Cancelled'].includes(updatedJob.status) 
+      ? updatedJob.status 
+      : 'New',
+    priority: ['Low', 'Medium', 'High', 'Urgent'].includes(updatedJob.priority)
+      ? updatedJob.priority
+      : 'Medium',
     tasks: updatedJob.tasks?.map((task: any) => ({
       ...task,
       priority: task.priority === 'high' ? 'high' : task.priority === 'medium' ? 'medium' : 'low'
@@ -188,6 +206,12 @@ export const createJob = async (jobData: Partial<Job>): Promise<Job> => {
   // Transform the response
   const transformedJob: Job = {
     ...newJob,
+    status: ['New', 'Scheduled', 'In Progress', 'Completed', 'Cancelled'].includes(newJob.status) 
+      ? newJob.status 
+      : 'New',
+    priority: ['Low', 'Medium', 'High', 'Urgent'].includes(newJob.priority)
+      ? newJob.priority
+      : 'Medium',
     tasks: newJob.tasks?.map((task: any) => ({
       ...task,
       priority: task.priority === 'high' ? 'high' : task.priority === 'medium' ? 'medium' : 'low'
