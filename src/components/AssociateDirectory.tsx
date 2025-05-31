@@ -27,11 +27,11 @@ const AssociateDirectory = () => {
   }
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-background dark:bg-[#171717] min-h-screen">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Associates</h1>
-        <button className="mt-4 sm:mt-0 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Associates</h1>
+        <button className="mt-4 sm:mt-0 bg-blue-600 dark:bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors flex items-center">
           <Plus className="h-4 w-4 mr-2" />
           Add Associate
         </button>
@@ -58,7 +58,7 @@ const AssociateDirectory = () => {
 
       {filteredAssociates.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-gray-500">No associates found matching your criteria.</p>
+          <p className="text-gray-500 dark:text-gray-400">No associates found matching your criteria.</p>
         </div>
       )}
 
