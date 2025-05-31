@@ -20,7 +20,18 @@ const simulateApiCall = <T>(data: T, delay = 1000): Promise<T> => {
 export const useCustomers = () => {
   return useQuery({
     queryKey: ['customers'],
-    queryFn: () => simulateApiCall<Customer[]>(mockCustomers),
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('User not authenticated');
+
+      const { data: customers, error } = await supabase
+        .from('customers')
+        .select('*')
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+      return customers;
+    },
   });
 };
 
@@ -118,7 +129,10 @@ export const useAssociates = () => {
 
       const { data: associates, error } = await supabase
         .from('associates')
-        .select('*')
+        .select(`
+          *,
+          organizations (name)
+        `)
         .eq('user_id', user.id);
 
       if (error) throw error;

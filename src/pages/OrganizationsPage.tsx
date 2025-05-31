@@ -2,11 +2,13 @@
 import React, { useState } from 'react';
 import { Plus, Search, Filter, Building, Mail, Phone, Globe, MapPin } from 'lucide-react';
 import { useOrganizations } from '../hooks/useData';
+import AddUnifiedOrganizationModal from '../components/modals/AddUnifiedOrganizationModal';
 
 const OrganizationsPage = () => {
   const { data: organizations = [], isLoading } = useOrganizations();
   const [searchTerm, setSearchTerm] = useState('');
   const [relationFilter, setRelationFilter] = useState<string>('all');
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   const filteredOrganizations = organizations.filter(org => {
     const matchesSearch = org.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -23,6 +25,14 @@ const OrganizationsPage = () => {
       case 'Partner': return 'bg-green-100 text-green-800 border-green-200';
       case 'Vendor': return 'bg-purple-100 text-purple-800 border-purple-200';
       case 'Competitor': return 'bg-red-100 text-red-800 border-red-200';
+      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+    }
+  };
+
+  const getClassificationColor = (classification: string) => {
+    switch (classification) {
+      case 'associate': return 'bg-orange-100 text-orange-800 border-orange-200';
+      case 'customer': return 'bg-cyan-100 text-cyan-800 border-cyan-200';
       default: return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
@@ -54,7 +64,10 @@ const OrganizationsPage = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Organizations</h1>
-        <button className="mt-4 sm:mt-0 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center">
+        <button 
+          onClick={() => setIsAddModalOpen(true)}
+          className="mt-4 sm:mt-0 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center"
+        >
           <Plus className="h-4 w-4 mr-2" />
           Add Organization
         </button>
@@ -97,9 +110,16 @@ const OrganizationsPage = () => {
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">{org.name}</h3>
                 <p className="text-gray-600 text-sm mb-3">{org.category}</p>
               </div>
-              <span className={`px-3 py-1 text-xs font-medium rounded-full border ${getRelationColor(org.relation)}`}>
-                {org.relation}
-              </span>
+              <div className="flex flex-col space-y-2">
+                <span className={`px-3 py-1 text-xs font-medium rounded-full border ${getRelationColor(org.relation)}`}>
+                  {org.relation}
+                </span>
+                {org.classification && (
+                  <span className={`px-3 py-1 text-xs font-medium rounded-full border ${getClassificationColor(org.classification)}`}>
+                    {org.classification}
+                  </span>
+                )}
+              </div>
             </div>
 
             <div className="space-y-2 mb-4">
@@ -127,10 +147,12 @@ const OrganizationsPage = () => {
                   </a>
                 </div>
               )}
-              <div className="flex items-center text-sm text-gray-600">
-                <MapPin className="h-4 w-4 mr-2" />
-                {org.address}, {org.city}, {org.state} {org.zipcode}
-              </div>
+              {(org.address || org.city || org.state || org.zipcode) && (
+                <div className="flex items-center text-sm text-gray-600">
+                  <MapPin className="h-4 w-4 mr-2" />
+                  {[org.address, org.city, org.state, org.zipcode].filter(Boolean).join(', ')}
+                </div>
+              )}
             </div>
 
             <div className="flex justify-end space-x-2">
@@ -150,6 +172,11 @@ const OrganizationsPage = () => {
           <p className="text-gray-500">No organizations found matching your criteria.</p>
         </div>
       )}
+
+      <AddUnifiedOrganizationModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+      />
     </div>
   );
 };

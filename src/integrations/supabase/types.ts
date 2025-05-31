@@ -84,6 +84,7 @@ export type Database = {
           location_lat: number | null
           location_lng: number | null
           name: string
+          organization_id: string | null
           phone: string | null
           rating: number | null
           skills: string[] | null
@@ -103,6 +104,7 @@ export type Database = {
           location_lat?: number | null
           location_lng?: number | null
           name: string
+          organization_id?: string | null
           phone?: string | null
           rating?: number | null
           skills?: string[] | null
@@ -122,13 +124,22 @@ export type Database = {
           location_lat?: number | null
           location_lng?: number | null
           name?: string
+          organization_id?: string | null
           phone?: string | null
           rating?: number | null
           skills?: string[] | null
           updated_at?: string | null
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "associates_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       customers: {
         Row: {

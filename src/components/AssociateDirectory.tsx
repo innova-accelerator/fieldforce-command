@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { Search, Plus, Phone, Mail, MapPin, Star, Award, Clock } from 'lucide-react';
+import { Search, Plus, Phone, Mail, MapPin, Star, Award, Clock, Building } from 'lucide-react';
 import { useAssociates } from '../hooks/useData';
 
 const AssociateDirectory = () => {
@@ -66,6 +65,12 @@ const AssociateDirectory = () => {
           <MapPin className="h-4 w-4 mr-2" />
           {associate.location_address}
         </div>
+        {associate.organizations && (
+          <div className="flex items-center text-sm text-gray-600">
+            <Building className="h-4 w-4 mr-2" />
+            <span className="text-blue-600">{associate.organizations.name}</span>
+          </div>
+        )}
       </div>
 
       <div className="mb-4">
@@ -131,6 +136,12 @@ const AssociateDirectory = () => {
                   <label className="text-sm font-medium text-gray-500">Location</label>
                   <p className="text-gray-900">{associate.location_address}</p>
                 </div>
+                {associate.organizations && (
+                  <div>
+                    <label className="text-sm font-medium text-gray-500">Organization</label>
+                    <p className="text-blue-600">{associate.organizations.name}</p>
+                  </div>
+                )}
                 <div>
                   <label className="text-sm font-medium text-gray-500">Availability</label>
                   <span className={`inline-block px-3 py-1 text-sm font-medium rounded-full border ${getAvailabilityColor(associate.availability)}`}>
