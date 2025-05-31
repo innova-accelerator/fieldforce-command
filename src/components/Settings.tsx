@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { User, Bell, Shield, Database, Palette, Globe } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
@@ -41,7 +42,7 @@ const Settings = () => {
                         value={option.value}
                         checked={theme === option.value}
                         onChange={(e) => setTheme(e.target.value as any)}
-                        className="mr-2"
+                        className="mr-2 text-blue-600 dark:text-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400"
                       />
                       <span className="text-gray-700 dark:text-gray-300">{option.label}</span>
                     </label>
@@ -64,14 +65,14 @@ const Settings = () => {
                 { label: 'Associate availability', description: 'Updates on associate availability changes' },
                 { label: 'System maintenance', description: 'Important system updates and maintenance notices' },
               ].map((item, index) => (
-                <div key={index} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
                   <div>
                     <h4 className="font-medium text-gray-900 dark:text-gray-100">{item.label}</h4>
                     <p className="text-sm text-gray-600 dark:text-gray-400">{item.description}</p>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" defaultChecked className="sr-only peer" />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
                   </label>
                 </div>
               ))}
@@ -119,12 +120,12 @@ const Settings = () => {
               
               <div>
                 <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-3">Two-Factor Authentication</h4>
-                <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
                   <div>
                     <p className="font-medium text-gray-900 dark:text-gray-100">Enable 2FA</p>
                     <p className="text-sm text-gray-600 dark:text-gray-400">Add an extra layer of security to your account</p>
                   </div>
-                  <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                  <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
                     Enable
                   </button>
                 </div>
@@ -144,13 +145,13 @@ const Settings = () => {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-background dark:bg-gray-900 min-h-screen">
       <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Settings</h1>
       
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Sidebar */}
         <div className="lg:col-span-1">
-          <nav className="space-y-1">
+          <nav className="space-y-1 bg-white dark:bg-gray-800 rounded-lg shadow-sm dark:shadow-none border border-gray-200 dark:border-gray-700 p-2">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
@@ -158,7 +159,7 @@ const Settings = () => {
                 className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
                   activeTab === tab.id
                     ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300'
-                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200'
+                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-200'
                 }`}
               >
                 <tab.icon className="mr-3 h-4 w-4" />
@@ -173,7 +174,7 @@ const Settings = () => {
           {activeTab === 'profile' ? (
             <TabContent />
           ) : (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm dark:shadow-none border border-gray-200 dark:border-gray-700 p-6">
               <TabContent />
               
               {activeTab !== 'profile' && (
@@ -182,10 +183,10 @@ const Settings = () => {
                     <button className="px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                       Cancel
                     </button>
-                    <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                    <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
                       Save Changes
                     </button>
-                  </div>
+                    </div>
                 </div>
               )}
             </div>

@@ -78,10 +78,10 @@ const SchedulingPanel: React.FC<SchedulingPanelProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border p-4 sm:p-6">
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm dark:shadow-none border border-gray-200 dark:border-gray-700 p-4 sm:p-6">
       <div className="flex items-center gap-2 mb-4">
-        <Calendar className="h-5 w-5 text-blue-600" />
-        <h2 className="text-lg font-semibold text-gray-900">Scheduling</h2>
+        <Calendar className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Scheduling</h2>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -89,7 +89,7 @@ const SchedulingPanel: React.FC<SchedulingPanelProps> = ({
         {/* Date Fields */}
         <div className="space-y-4">
           <div>
-            <Label htmlFor="startDate" className="text-sm font-medium text-gray-700">
+            <Label htmlFor="startDate" className="text-sm font-medium text-gray-700 dark:text-gray-300">
               Expected Start Date
             </Label>
             <Input
@@ -102,7 +102,7 @@ const SchedulingPanel: React.FC<SchedulingPanelProps> = ({
           </div>
           
           <div>
-            <Label htmlFor="endDate" className="text-sm font-medium text-gray-700">
+            <Label htmlFor="endDate" className="text-sm font-medium text-gray-700 dark:text-gray-300">
               Expected End Date
             </Label>
             <Input
@@ -118,7 +118,7 @@ const SchedulingPanel: React.FC<SchedulingPanelProps> = ({
         {/* Assigned Techs */}
         <div>
           <div className="flex items-center justify-between mb-3">
-            <Label className="text-sm font-medium text-gray-700">
+            <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">
               Assigned Techs & Subcontractors
             </Label>
             <Button
@@ -133,20 +133,20 @@ const SchedulingPanel: React.FC<SchedulingPanelProps> = ({
           
           <div className="space-y-2">
             {job.assigned_techs.map((techId) => (
-              <div key={techId} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+              <div key={techId} className="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-700 rounded">
                 <div className="flex items-center gap-2">
                   <Avatar className="h-6 w-6">
-                    <AvatarFallback className="text-xs">
+                    <AvatarFallback className="text-xs bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300">
                       {`T${techId.slice(-1)}`}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="text-sm font-medium">Tech {techId}</span>
+                  <span className="text-sm font-medium text-gray-900 dark:text-gray-100">Tech {techId}</span>
                 </div>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => removeTech(techId)}
-                  className="h-6 w-6 p-0 text-red-500 hover:text-red-700"
+                  className="h-6 w-6 p-0 text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
                 >
                   ×
                 </Button>
@@ -154,14 +154,14 @@ const SchedulingPanel: React.FC<SchedulingPanelProps> = ({
             ))}
             
             {job.assigned_techs.length === 0 && (
-              <p className="text-sm text-gray-500 italic">No techs assigned</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 italic">No techs assigned</p>
             )}
           </div>
         </div>
       </div>
       
       {/* Quick Actions */}
-      <div className="flex flex-wrap gap-2 mt-6 pt-4 border-t">
+      <div className="flex flex-wrap gap-2 mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
         <Button size="sm" variant="outline">
           <Clock className="h-3 w-3 mr-1" />
           Set Now
@@ -176,15 +176,15 @@ const SchedulingPanel: React.FC<SchedulingPanelProps> = ({
       
       {/* Assignment Modal */}
       {showAssignModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999] p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 relative">
+        <div className="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-[9999] p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl dark:shadow-none border border-gray-200 dark:border-gray-700 max-w-md w-full p-6 relative">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">Assign Tech/Subcontractor</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Assign Tech/Subcontractor</h3>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowAssignModal(false)}
-                className="h-8 w-8 p-0"
+                className="h-8 w-8 p-0 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
               >
                 ×
               </Button>
@@ -195,14 +195,14 @@ const SchedulingPanel: React.FC<SchedulingPanelProps> = ({
                 <button
                   key={associate.id}
                   onClick={() => assignTech(associate)}
-                  className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
+                  className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors"
                 >
                   <Avatar className="h-8 w-8">
-                    <AvatarFallback>
+                    <AvatarFallback className="bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300">
                       {associate.name.split(' ').map(n => n[0]).join('')}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="font-medium">{associate.name}</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-100">{associate.name}</span>
                 </button>
               ))}
             </div>
