@@ -1,3 +1,4 @@
+
 import { supabase } from '@/integrations/supabase/client';
 import { Job, Task, TimelineEntry } from '@/types/job';
 
@@ -25,7 +26,12 @@ export const fetchAllJobs = async (): Promise<Job[]> => {
       ...task,
       priority: task.priority === 'high' ? 'high' : task.priority === 'medium' ? 'medium' : 'low'
     })) || [],
-    timeline: job.timeline_entries || [],
+    timeline: job.timeline_entries?.map((entry: any) => ({
+      ...entry,
+      type: ['note', 'status', 'assignment', 'scheduling'].includes(entry.type) 
+        ? entry.type 
+        : 'note'
+    })) || [],
     customerName: job.customers?.name,
     assignedPersonName: job.people ? `${job.people.first_name} ${job.people.last_name}` : undefined,
   }));
@@ -57,7 +63,12 @@ export const fetchJob = async (jobId: string): Promise<Job> => {
       ...task,
       priority: task.priority === 'high' ? 'high' : task.priority === 'medium' ? 'medium' : 'low'
     })) || [],
-    timeline: job.timeline_entries || [],
+    timeline: job.timeline_entries?.map((entry: any) => ({
+      ...entry,
+      type: ['note', 'status', 'assignment', 'scheduling'].includes(entry.type) 
+        ? entry.type 
+        : 'note'
+    })) || [],
     customerName: job.customers?.name,
     assignedPersonName: job.people ? `${job.people.first_name} ${job.people.last_name}` : undefined,
   };
@@ -132,7 +143,12 @@ export const updateJob = async (jobId: string, updates: Partial<Job>): Promise<J
       ...task,
       priority: task.priority === 'high' ? 'high' : task.priority === 'medium' ? 'medium' : 'low'
     })) || [],
-    timeline: updatedJob.timeline_entries || [],
+    timeline: updatedJob.timeline_entries?.map((entry: any) => ({
+      ...entry,
+      type: ['note', 'status', 'assignment', 'scheduling'].includes(entry.type) 
+        ? entry.type 
+        : 'note'
+    })) || [],
     customerName: updatedJob.customers?.name,
     assignedPersonName: updatedJob.people ? `${updatedJob.people.first_name} ${updatedJob.people.last_name}` : undefined,
   };
@@ -176,7 +192,12 @@ export const createJob = async (jobData: Partial<Job>): Promise<Job> => {
       ...task,
       priority: task.priority === 'high' ? 'high' : task.priority === 'medium' ? 'medium' : 'low'
     })) || [],
-    timeline: newJob.timeline_entries || [],
+    timeline: newJob.timeline_entries?.map((entry: any) => ({
+      ...entry,
+      type: ['note', 'status', 'assignment', 'scheduling'].includes(entry.type) 
+        ? entry.type 
+        : 'note'
+    })) || [],
     customerName: newJob.customers?.name,
     assignedPersonName: newJob.people ? `${newJob.people.first_name} ${newJob.people.last_name}` : undefined,
   };
