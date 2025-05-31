@@ -118,7 +118,7 @@ export const mockActivities: Activity[] = [
     id: '2',
     type: 'job_completed',
     title: 'Job completed',
-    description: 'Security System Upgrade completed successfully',
+    description: 'Security Upgrade completed successfully',
     timestamp: new Date('2024-01-19T16:30:00'),
     customerId: '2',
     jobId: '2'
