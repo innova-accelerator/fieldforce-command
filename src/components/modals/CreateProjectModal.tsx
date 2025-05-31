@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
@@ -13,7 +14,7 @@ import {
   SelectValue,
 } from '../ui/select';
 import { Plus } from 'lucide-react';
-import { jobsApi, CreateJobRequest } from '../../services/api/jobs';
+import { supabase } from '../../integrations/supabase/client';
 import { peopleApi, PersonResponse } from '../../services/api/people';
 
 interface CreateProjectModalProps {
@@ -35,23 +36,23 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onProjectCreate
   const [filteredPeople, setFilteredPeople] = useState<PersonResponse[]>([]);
   const [selectedClient, setSelectedClient] = useState<PersonResponse | null>(null);
   
-  const [formData, setFormData] = useState<CreateJobRequest>({
+  const [formData, setFormData] = useState({
     name: '',
     description: '',
     customer_id: '',
     organization_id: '',
     location: '',
     phase: '',
-    status: 'New',
-    priority: 'Medium',
+    status: 'New' as const,
+    priority: 'Medium' as const,
     start_date: '',
     end_date: '',
     assigned_person_id: '',
-    assigned_techs: [],
+    assigned_techs: [] as string[],
     contact_name: '',
     contact_phone: '',
     contact_email: '',
-    tags: [],
+    tags: [] as string[],
     is_favorite: false
   });
 
@@ -120,7 +121,37 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onProjectCreate
     setErrors({});
 
     try {
-      const response = await jobsApi.create(formData);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('User not authenticated');
+
+      const jobData = {
+        name: formData.name,
+        description: formData.description,
+        customer_id: formData.customer_id,
+        organization_id: formData.organization_id,
+        assigned_person_id: formData.assigned_person_id || null,
+        location: formData.location,
+        phase: formData.phase,
+        status: formData.status,
+        priority: formData.priority,
+        start_date: formData.start_date ? new Date(formData.start_date).toISOString() : null,
+        end_date: formData.end_date ? new Date(formData.end_date).toISOString() : null,
+        assigned_techs: formData.assigned_techs,
+        contact_name: formData.contact_name,
+        contact_phone: formData.contact_phone,
+        contact_email: formData.contact_email,
+        tags: formData.tags,
+        is_favorite: formData.is_favorite,
+        user_id: user.id
+      };
+
+      const { data: newJob, error } = await supabase
+        .from('jobs')
+        .insert(jobData)
+        .select()
+        .single();
+
+      if (error) throw error;
       
       // Reset form
       setFormData({
@@ -147,8 +178,9 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onProjectCreate
       onProjectCreated?.();
       
       // Navigate to the new job overview
-      navigate(`/jobs/${response.id}/overview`);
+      navigate(`/jobs/${newJob.id}/overview`);
     } catch (error) {
+      console.error('Error creating job:', error);
       if (error instanceof Error) {
         setErrors({ general: error.message });
       }
