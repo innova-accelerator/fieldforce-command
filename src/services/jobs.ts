@@ -1,15 +1,24 @@
 
 import { supabase } from '@/integrations/supabase/client';
-import { Job } from '@/types/job';
+import { Job, Task, TimelineEntry, Associate } from '@/types/job';
 
 // Mock data for development - easily replaceable with real API calls
 const mockJob: Job = {
   id: 'job-123',
+  name: 'HVAC System Installation',
   title: 'HVAC System Installation',
   client: 'ABC Corporation',
   phase: 'In Progress',
+  status: 'in-progress',
+  priority: 'high',
   startDate: '2024-01-15',
   endDate: '2024-01-30',
+  assignedPersonId: 'person-1',
+  organizationId: 'org-1',
+  createdAt: new Date('2024-01-10'),
+  location: '123 Business Ave, Suite 100, City, State 12345',
+  description: 'Complete HVAC system installation for commercial building including ductwork, units, and controls.',
+  isFavorite: false,
   assignedTechs: [
     { id: 'tech-1', name: 'John Smith', avatarUrl: '/placeholder.svg' },
     { id: 'tech-2', name: 'Sarah Johnson', avatarUrl: '/placeholder.svg' }
@@ -57,8 +66,6 @@ const mockJob: Job = {
       author: 'Admin'
     }
   ],
-  location: '123 Business Ave, Suite 100, City, State 12345',
-  description: 'Complete HVAC system installation for commercial building including ductwork, units, and controls.',
   contactInfo: {
     name: 'Mike Wilson',
     phone: '(555) 123-4567',

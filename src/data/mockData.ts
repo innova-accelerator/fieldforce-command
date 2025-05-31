@@ -44,49 +44,56 @@ export const mockCustomers: Customer[] = [
 
 export const mockJobs: Job[] = [
   {
-    id: '1',
-    title: 'HVAC Maintenance',
-    description: 'Annual HVAC system maintenance and inspection',
-    customerId: '1',
-    customerName: 'John Smith',
-    location: '123 Main St, New York, NY 10001',
-    priority: 'medium',
-    status: 'scheduled',
-    assignedTo: '1',
-    assignedToName: 'Tom Rodriguez',
-    scheduledDate: new Date('2024-03-25'),
-    createdAt: new Date('2024-03-20'),
-    estimatedDuration: 3,
-    tags: ['HVAC', 'Maintenance']
-  },
-  {
-    id: '2',
-    title: 'Plumbing Repair',
-    description: 'Fix leaking pipes in kitchen',
-    customerId: '2',
-    customerName: 'Sarah Johnson',
-    location: '456 Oak Ave, Brooklyn, NY 11201',
-    priority: 'high',
-    status: 'new',
-    createdAt: new Date('2024-03-22'),
-    estimatedDuration: 2,
-    tags: ['Plumbing', 'Repair']
-  },
-  {
-    id: '3',
-    title: 'Electrical Installation',
-    description: 'Install new electrical outlets in office',
-    customerId: '3',
-    customerName: 'Mike Wilson',
-    location: '789 Pine St, Queens, NY 11375',
-    priority: 'low',
+    id: 'job-1',
+    name: 'Office HVAC Installation',
+    title: 'Office HVAC Installation', 
+    description: 'Install new HVAC system in main office building',
     status: 'in-progress',
-    assignedTo: '2',
-    assignedToName: 'Lisa Chen',
-    scheduledDate: new Date('2024-03-23'),
-    createdAt: new Date('2024-03-18'),
-    estimatedDuration: 4,
-    tags: ['Electrical', 'Installation']
+    priority: 'high',
+    startDate: '2024-01-15',
+    endDate: '2024-02-15',
+    assignedPersonId: 'person-1',
+    organizationId: 'org-1',
+    createdAt: new Date('2024-01-10'),
+    client: 'TechCorp Inc',
+    phase: 'Installation',
+    location: '123 Main St, Anytown, ST 12345',
+    isFavorite: false,
+    assignedTechs: [],
+    tasks: [],
+    notes: [],
+    timeline: [],
+    contactInfo: {
+      name: 'John Doe',
+      phone: '(555) 123-4567',
+      email: 'john@techcorp.com'
+    }
+  },
+  {
+    id: 'job-2', 
+    name: 'Warehouse Electrical Upgrade',
+    title: 'Warehouse Electrical Upgrade',
+    description: 'Upgrade electrical systems in warehouse facility',
+    status: 'new',
+    priority: 'medium',
+    startDate: '2024-02-01',
+    endDate: '2024-03-01',
+    assignedPersonId: 'person-2',
+    organizationId: 'org-2',
+    createdAt: new Date('2024-01-20'),
+    client: 'BuildCorp LLC',
+    phase: 'Planning',
+    location: '456 Industrial Blvd, Warehouse City, ST 67890',
+    isFavorite: true,
+    assignedTechs: [],
+    tasks: [],
+    notes: [],
+    timeline: [],
+    contactInfo: {
+      name: 'Jane Smith',
+      phone: '(555) 987-6543',
+      email: 'jane@buildcorp.com'
+    }
   }
 ];
 
