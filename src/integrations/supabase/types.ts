@@ -19,7 +19,7 @@ export type Database = {
           job_id: string | null
           timestamp: string | null
           title: string
-          type: Database["public"]["Enums"]["activity_type"]
+          type: string
           user_id: string
         }
         Insert: {
@@ -31,7 +31,7 @@ export type Database = {
           job_id?: string | null
           timestamp?: string | null
           title: string
-          type: Database["public"]["Enums"]["activity_type"]
+          type: string
           user_id: string
         }
         Update: {
@@ -43,7 +43,7 @@ export type Database = {
           job_id?: string | null
           timestamp?: string | null
           title?: string
-          type?: Database["public"]["Enums"]["activity_type"]
+          type?: string
           user_id?: string
         }
         Relationships: [
@@ -68,20 +68,11 @@ export type Database = {
             referencedRelation: "jobs"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "activities_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
         ]
       }
       associates: {
         Row: {
-          availability:
-            | Database["public"]["Enums"]["associate_availability"]
-            | null
+          availability: string | null
           certifications: string[] | null
           completed_jobs: number | null
           created_at: string | null
@@ -100,9 +91,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
-          availability?:
-            | Database["public"]["Enums"]["associate_availability"]
-            | null
+          availability?: string | null
           certifications?: string[] | null
           completed_jobs?: number | null
           created_at?: string | null
@@ -121,9 +110,7 @@ export type Database = {
           user_id: string
         }
         Update: {
-          availability?:
-            | Database["public"]["Enums"]["associate_availability"]
-            | null
+          availability?: string | null
           certifications?: string[] | null
           completed_jobs?: number | null
           created_at?: string | null
@@ -141,15 +128,7 @@ export type Database = {
           updated_at?: string | null
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "associates_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       customers: {
         Row: {
@@ -162,7 +141,7 @@ export type Database = {
           name: string
           notes: string | null
           phone: string | null
-          status: Database["public"]["Enums"]["customer_status"] | null
+          status: string | null
           total_jobs: number | null
           updated_at: string | null
           user_id: string
@@ -177,7 +156,7 @@ export type Database = {
           name: string
           notes?: string | null
           phone?: string | null
-          status?: Database["public"]["Enums"]["customer_status"] | null
+          status?: string | null
           total_jobs?: number | null
           updated_at?: string | null
           user_id: string
@@ -192,20 +171,12 @@ export type Database = {
           name?: string
           notes?: string | null
           phone?: string | null
-          status?: Database["public"]["Enums"]["customer_status"] | null
+          status?: string | null
           total_jobs?: number | null
           updated_at?: string | null
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "customers_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       jobs: {
         Row: {
@@ -226,10 +197,10 @@ export type Database = {
           notes: string[] | null
           organization_id: string | null
           phase: string | null
-          priority: Database["public"]["Enums"]["job_priority"] | null
+          priority: string | null
           scheduled_date: string | null
           start_date: string | null
-          status: Database["public"]["Enums"]["job_status"] | null
+          status: string | null
           tags: string[] | null
           updated_at: string | null
           user_id: string
@@ -252,10 +223,10 @@ export type Database = {
           notes?: string[] | null
           organization_id?: string | null
           phase?: string | null
-          priority?: Database["public"]["Enums"]["job_priority"] | null
+          priority?: string | null
           scheduled_date?: string | null
           start_date?: string | null
-          status?: Database["public"]["Enums"]["job_status"] | null
+          status?: string | null
           tags?: string[] | null
           updated_at?: string | null
           user_id: string
@@ -278,10 +249,10 @@ export type Database = {
           notes?: string[] | null
           organization_id?: string | null
           phase?: string | null
-          priority?: Database["public"]["Enums"]["job_priority"] | null
+          priority?: string | null
           scheduled_date?: string | null
           start_date?: string | null
-          status?: Database["public"]["Enums"]["job_status"] | null
+          status?: string | null
           tags?: string[] | null
           updated_at?: string | null
           user_id?: string
@@ -308,13 +279,6 @@ export type Database = {
             referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "jobs_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
         ]
       }
       organizations: {
@@ -330,7 +294,7 @@ export type Database = {
           linkedin: string | null
           name: string
           phone: string | null
-          relation: Database["public"]["Enums"]["organization_relation"] | null
+          relation: string | null
           state: string | null
           twitter: string | null
           updated_at: string | null
@@ -350,7 +314,7 @@ export type Database = {
           linkedin?: string | null
           name: string
           phone?: string | null
-          relation?: Database["public"]["Enums"]["organization_relation"] | null
+          relation?: string | null
           state?: string | null
           twitter?: string | null
           updated_at?: string | null
@@ -370,7 +334,7 @@ export type Database = {
           linkedin?: string | null
           name?: string
           phone?: string | null
-          relation?: Database["public"]["Enums"]["organization_relation"] | null
+          relation?: string | null
           state?: string | null
           twitter?: string | null
           updated_at?: string | null
@@ -378,15 +342,7 @@ export type Database = {
           website?: string | null
           zipcode?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "organizations_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       people: {
         Row: {
@@ -464,13 +420,6 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "people_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -554,7 +503,7 @@ export type Database = {
           id: string
           job_id: string
           timestamp: string | null
-          type: Database["public"]["Enums"]["timeline_type"]
+          type: string
         }
         Insert: {
           author_id?: string | null
@@ -563,7 +512,7 @@ export type Database = {
           id?: string
           job_id: string
           timestamp?: string | null
-          type: Database["public"]["Enums"]["timeline_type"]
+          type: string
         }
         Update: {
           author_id?: string | null
@@ -572,7 +521,7 @@ export type Database = {
           id?: string
           job_id?: string
           timestamp?: string | null
-          type?: Database["public"]["Enums"]["timeline_type"]
+          type?: string
         }
         Relationships: [
           {
@@ -590,6 +539,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      users: {
+        Row: {
+          created_at: string | null
+          email: string
+          first_name: string | null
+          id: string
+          last_name: string | null
+          role: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          first_name?: string | null
+          id: string
+          last_name?: string | null
+          role?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          role?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
       }
     }
     Views: {

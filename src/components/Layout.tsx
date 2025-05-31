@@ -1,9 +1,10 @@
-
 import React from 'react';
 import { Users, Calendar, UserCheck, Settings, Home, Menu, X, Building2, User, Briefcase } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ThemeToggle } from './ui/theme-toggle';
+import { useAuth } from '../contexts/AuthContext';
+import { LogOut } from 'lucide-react';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -14,6 +15,7 @@ interface LayoutProps {
 const Layout = ({ children, currentPage, onNavigate }: LayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
+  const { user, signOut } = useAuth();
 
   const navigation = [
     { name: 'Dashboard', href: 'dashboard', icon: Home },
@@ -29,6 +31,15 @@ const Layout = ({ children, currentPage, onNavigate }: LayoutProps) => {
   const handleNavigation = (href: string) => {
     navigate(`/${href}`);
     setSidebarOpen(false);
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      navigate('/');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
   };
 
   return (
@@ -98,8 +109,17 @@ const Layout = ({ children, currentPage, onNavigate }: LayoutProps) => {
             
             <div className="flex items-center space-x-4">
               <ThemeToggle />
-              <div className="text-sm text-gray-500 dark:text-gray-400">
-                Welcome back, Admin
+              <div className="flex items-center space-x-2">
+                <div className="text-sm text-gray-500 dark:text-gray-400">
+                  Welcome back, {user?.email?.split('@')[0] || 'User'}
+                </div>
+                <button
+                  onClick={handleSignOut}
+                  className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
+                  title="Sign out"
+                >
+                  <LogOut className="h-5 w-5" />
+                </button>
               </div>
             </div>
           </div>

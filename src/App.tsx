@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -17,6 +16,9 @@ import OrganizationsPage from "./pages/OrganizationsPage";
 import PeoplePage from "./pages/PeoplePage";
 import JobsPage from "./pages/JobsPage";
 import NotFound from "./pages/NotFound";
+import { AuthProvider } from "./contexts/AuthContext";
+import AuthPage from "./pages/AuthPage";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -40,50 +42,69 @@ const AppContent = () => {
   return (
     <Routes>
       <Route path="/" element={<Index />} />
+      <Route path="/auth" element={<AuthPage />} />
       <Route path="/dashboard" element={
-        <Layout currentPage="dashboard" onNavigate={handleNavigate}>
-          <DashboardPage />
-        </Layout>
+        <ProtectedRoute>
+          <Layout currentPage="dashboard" onNavigate={handleNavigate}>
+            <DashboardPage />
+          </Layout>
+        </ProtectedRoute>
       } />
       <Route path="/customers" element={
-        <Layout currentPage="customers" onNavigate={handleNavigate}>
-          <CustomersPage />
-        </Layout>
+        <ProtectedRoute>
+          <Layout currentPage="customers" onNavigate={handleNavigate}>
+            <CustomersPage />
+          </Layout>
+        </ProtectedRoute>
       } />
       <Route path="/associates" element={
-        <Layout currentPage="associates" onNavigate={handleNavigate}>
-          <AssociatesPage />
-        </Layout>
+        <ProtectedRoute>
+          <Layout currentPage="associates" onNavigate={handleNavigate}>
+            <AssociatesPage />
+          </Layout>
+        </ProtectedRoute>
       } />
       <Route path="/schedule" element={
-        <Layout currentPage="schedule" onNavigate={handleNavigate}>
-          <SchedulePage />
-        </Layout>
+        <ProtectedRoute>
+          <Layout currentPage="schedule" onNavigate={handleNavigate}>
+            <SchedulePage />
+          </Layout>
+        </ProtectedRoute>
       } />
       <Route path="/settings" element={
-        <Layout currentPage="settings" onNavigate={handleNavigate}>
-          <SettingsPage />
-        </Layout>
+        <ProtectedRoute>
+          <Layout currentPage="settings" onNavigate={handleNavigate}>
+            <SettingsPage />
+          </Layout>
+        </ProtectedRoute>
       } />
       <Route path="/organizations" element={
-        <Layout currentPage="organizations" onNavigate={handleNavigate}>
-          <OrganizationsPage />
-        </Layout>
+        <ProtectedRoute>
+          <Layout currentPage="organizations" onNavigate={handleNavigate}>
+            <OrganizationsPage />
+          </Layout>
+        </ProtectedRoute>
       } />
       <Route path="/people" element={
-        <Layout currentPage="people" onNavigate={handleNavigate}>
-          <PeoplePage />
-        </Layout>
+        <ProtectedRoute>
+          <Layout currentPage="people" onNavigate={handleNavigate}>
+            <PeoplePage />
+          </Layout>
+        </ProtectedRoute>
       } />
       <Route path="/jobs" element={
-        <Layout currentPage="jobs" onNavigate={handleNavigate}>
-          <JobsPage />
-        </Layout>
+        <ProtectedRoute>
+          <Layout currentPage="jobs" onNavigate={handleNavigate}>
+            <JobsPage />
+          </Layout>
+        </ProtectedRoute>
       } />
       <Route path="/jobs/:jobId/overview" element={
-        <Layout currentPage="jobs" onNavigate={handleNavigate}>
-          <JobOverview />
-        </Layout>
+        <ProtectedRoute>
+          <Layout currentPage="jobs" onNavigate={handleNavigate}>
+            <JobOverview />
+          </Layout>
+        </ProtectedRoute>
       } />
       <Route path="*" element={
         <Layout currentPage="notfound" onNavigate={handleNavigate}>
@@ -96,15 +117,17 @@ const AppContent = () => {
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <ThemeProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <AppContent />
-        </BrowserRouter>
-      </TooltipProvider>
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <AppContent />
+          </BrowserRouter>
+        </TooltipProvider>
+      </ThemeProvider>
+    </AuthProvider>
   </QueryClientProvider>
 );
 

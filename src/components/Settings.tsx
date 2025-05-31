@@ -1,7 +1,7 @@
-
 import React, { useState } from 'react';
 import { User, Bell, Shield, Database, Palette, Globe } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
+import UserProfile from './UserProfile';
 
 const Settings = () => {
   const [activeTab, setActiveTab] = useState('profile');
@@ -19,53 +19,7 @@ const Settings = () => {
   const TabContent = () => {
     switch (activeTab) {
       case 'profile':
-        return (
-          <div className="space-y-6">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">Profile Settings</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  First Name
-                </label>
-                <input
-                  type="text"
-                  defaultValue="Admin"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Last Name
-                </label>
-                <input
-                  type="text"
-                  defaultValue="User"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  defaultValue="admin@fieldforce.com"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Phone
-                </label>
-                <input
-                  type="tel"
-                  defaultValue="(555) 123-4567"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                />
-              </div>
-            </div>
-          </div>
-        );
+        return <UserProfile />;
 
       case 'appearance':
         return (
@@ -216,20 +170,26 @@ const Settings = () => {
 
         {/* Content */}
         <div className="lg:col-span-3">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+          {activeTab === 'profile' ? (
             <TabContent />
-            
-            <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
-              <div className="flex justify-end space-x-3">
-                <button className="px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                  Cancel
-                </button>
-                <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                  Save Changes
-                </button>
-              </div>
+          ) : (
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+              <TabContent />
+              
+              {activeTab !== 'profile' && (
+                <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+                  <div className="flex justify-end space-x-3">
+                    <button className="px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                      Cancel
+                    </button>
+                    <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                      Save Changes
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

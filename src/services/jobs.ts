@@ -1,8 +1,10 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { Job, Task, TimelineEntry } from '@/types/job';
 
-export const fetchAllJobs = async (userId: string): Promise<Job[]> => {
+export const fetchAllJobs = async (): Promise<Job[]> => {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('User not authenticated');
+
   const { data: jobs, error } = await supabase
     .from('jobs')
     .select(`
@@ -12,7 +14,7 @@ export const fetchAllJobs = async (userId: string): Promise<Job[]> => {
       customers (name),
       people (first_name, last_name)
     `)
-    .eq('user_id', userId);
+    .eq('user_id', user.id);
 
   if (error) throw error;
 
@@ -30,6 +32,9 @@ export const fetchAllJobs = async (userId: string): Promise<Job[]> => {
 };
 
 export const fetchJob = async (jobId: string): Promise<Job> => {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('User not authenticated');
+
   const { data: job, error } = await supabase
     .from('jobs')
     .select(`
@@ -40,6 +45,7 @@ export const fetchJob = async (jobId: string): Promise<Job> => {
       people (first_name, last_name)
     `)
     .eq('id', jobId)
+    .eq('user_id', user.id)
     .single();
 
   if (error) throw error;
@@ -60,6 +66,9 @@ export const fetchJob = async (jobId: string): Promise<Job> => {
 };
 
 export const updateJob = async (jobId: string, updates: Partial<Job>): Promise<Job> => {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('User not authenticated');
+
   // Remove computed fields and user_id before updating
   const { tasks, timeline, customerName, assignedPersonName, user_id, ...dbUpdates } = updates;
 
@@ -67,6 +76,7 @@ export const updateJob = async (jobId: string, updates: Partial<Job>): Promise<J
     .from('jobs')
     .update(dbUpdates)
     .eq('id', jobId)
+    .eq('user_id', user.id)
     .select(`
       *,
       tasks (*),
@@ -131,12 +141,11 @@ export const updateJob = async (jobId: string, updates: Partial<Job>): Promise<J
 };
 
 export const createJob = async (jobData: Partial<Job>): Promise<Job> => {
-  // Remove computed fields before creating
-  const { tasks, timeline, customerName, assignedPersonName, user_id, ...dbData } = jobData;
-
-  // Get current user
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error('User not authenticated');
+
+  // Remove computed fields before creating
+  const { tasks, timeline, customerName, assignedPersonName, user_id, ...dbData } = jobData;
 
   // Ensure required fields are present and priority is valid
   const insertData = {

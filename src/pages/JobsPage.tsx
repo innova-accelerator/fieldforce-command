@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Plus, Search, Filter, Calendar, User, MapPin, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -16,9 +15,7 @@ const JobsPage = () => {
   useEffect(() => {
     const loadJobs = async () => {
       try {
-        // For now, using a placeholder user ID - in real app this would come from auth
-        const currentUser = { id: 'user-1' };
-        const jobsFromSupabase = await fetchAllJobs(currentUser.id);
+        const jobsFromSupabase = await fetchAllJobs();
         setJobs(jobsFromSupabase);
       } catch (err) {
         console.error('Error loading jobs:', err);

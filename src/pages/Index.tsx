@@ -1,130 +1,125 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '../components/ui/button';
-import { 
-  Users, 
-  Briefcase, 
-  Calendar, 
-  BarChart3, 
-  Building, 
-  UserCheck,
-  Settings
-} from 'lucide-react';
+import { Users, Calendar, UserCheck, Settings, Home, Building2, User, Briefcase, LogIn } from 'lucide-react';
 
 const Index = () => {
   const features = [
     {
       title: 'Dashboard',
-      description: 'Overview of your business metrics and activities',
-      icon: BarChart3,
-      path: '/dashboard',
-      color: 'bg-blue-500'
-    },
-    {
-      title: 'Jobs',
-      description: 'Manage and track all your field service jobs',
-      icon: Briefcase,
-      path: '/jobs',
-      color: 'bg-green-500'
-    },
-    {
-      title: 'Customers',
-      description: 'Customer relationship management',
-      icon: Users,
-      path: '/customers',
-      color: 'bg-purple-500'
+      description: 'Get an overview of your business metrics and recent activities',
+      icon: Home,
+      href: '/dashboard'
     },
     {
       title: 'Organizations',
-      description: 'Manage client and partner organizations',
-      icon: Building,
-      path: '/organizations',
-      color: 'bg-orange-500'
+      description: 'Manage your business partners and vendors',
+      icon: Building2,
+      href: '/organizations'
     },
     {
       title: 'People',
-      description: 'Contact management for individuals',
-      icon: UserCheck,
-      path: '/people',
-      color: 'bg-indigo-500'
+      description: 'Keep track of contacts and team members',
+      icon: User,
+      href: '/people'
+    },
+    {
+      title: 'Jobs',
+      description: 'Create, manage, and track all your field service jobs',
+      icon: Briefcase,
+      href: '/jobs'
+    },
+    {
+      title: 'Customers',
+      description: 'Manage your customer database and relationships',
+      icon: Users,
+      href: '/customers'
     },
     {
       title: 'Associates',
-      description: 'Field technician directory and management',
+      description: 'Coordinate with your field service team',
       icon: UserCheck,
-      path: '/associates',
-      color: 'bg-teal-500'
+      href: '/associates'
     },
     {
       title: 'Schedule',
-      description: 'Job scheduling and calendar management',
+      description: 'Plan and organize your field service operations',
       icon: Calendar,
-      path: '/schedule',
-      color: 'bg-red-500'
+      href: '/schedule'
     },
     {
       title: 'Settings',
-      description: 'Application configuration and preferences',
+      description: 'Configure your application preferences',
       icon: Settings,
-      path: '/settings',
-      color: 'bg-gray-500'
+      href: '/settings'
     }
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="container mx-auto px-4 py-12">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Field Force Management
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <div className="flex justify-center mb-8">
+            <div className="h-16 w-16 bg-blue-600 rounded-2xl flex items-center justify-center">
+              <span className="text-2xl font-bold text-white">FF</span>
+            </div>
+          </div>
+          
+          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
+            FieldForce
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Comprehensive solution for managing field service operations, 
-            customer relationships, and workforce scheduling.
+          
+          <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
+            Streamline your field service operations with our comprehensive management platform. 
+            Manage jobs, track teams, and deliver exceptional customer service.
           </p>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
-          {features.map((feature) => {
-            const Icon = feature.icon;
-            return (
-              <Link 
-                key={feature.path} 
-                to={feature.path}
-                className="group"
-                aria-label={`Navigate to ${feature.title}`}
-              >
-                <div className="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1 border border-gray-200">
-                  <div className={`w-12 h-12 ${feature.color} rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                    <Icon className="h-6 w-6 text-white" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    {feature.title}
-                  </h3>
-                  <p className="text-gray-600 text-sm">
-                    {feature.description}
-                  </p>
-                </div>
-              </Link>
-            );
-          })}
-        </div>
-
-        {/* Demo link to job overview */}
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-blue-50 rounded-lg p-6 border border-blue-200">
-            <h3 className="font-medium text-blue-900 mb-2">Job Overview Demo</h3>
-            <p className="text-sm text-blue-700 mb-4">
-              Experience the responsive Job Overview workspace with real-time updates, 
-              task management, and timeline tracking.
-            </p>
-            <Link to="/jobs/demo-job-123/overview">
-              <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
-                View Job Overview Demo
-              </Button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              to="/auth"
+              className="inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 transition-colors"
+            >
+              <LogIn className="h-5 w-5 mr-2" />
+              Sign In / Sign Up
+            </Link>
+            <Link
+              to="/dashboard"
+              className="inline-flex items-center px-8 py-3 border border-gray-300 dark:border-gray-600 text-base font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            >
+              View Dashboard
             </Link>
           </div>
+        </div>
+
+        {/* Features Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {features.map((feature) => (
+            <Link
+              key={feature.title}
+              to={feature.href}
+              className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 hover:shadow-md transition-shadow group"
+            >
+              <div className="flex items-center justify-center w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg mb-4 group-hover:bg-blue-200 dark:group-hover:bg-blue-800 transition-colors">
+                <feature.icon className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+              </div>
+              
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                {feature.title}
+              </h3>
+              
+              <p className="text-gray-600 dark:text-gray-300 text-sm">
+                {feature.description}
+              </p>
+            </Link>
+          ))}
+        </div>
+
+        {/* Footer */}
+        <div className="mt-16 text-center">
+          <p className="text-gray-500 dark:text-gray-400">
+            Built with React, TypeScript, and Supabase
+          </p>
         </div>
       </div>
     </div>
