@@ -2,7 +2,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import Layout from '../../components/Layout';
 import JobHeader from './components/JobHeader';
 import JobSidebar from './components/JobSidebar';
 import SchedulingPanel from './components/SchedulingPanel';
@@ -88,86 +87,78 @@ const JobOverviewPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <Layout currentPage="jobs" onNavigate={() => {}}>
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="text-lg">Loading job details...</div>
-        </div>
-      </Layout>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-lg">Loading job details...</div>
+      </div>
     );
   }
 
   if (error) {
     return (
-      <Layout currentPage="jobs" onNavigate={() => {}}>
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="text-lg text-red-600">Error loading job details</div>
-        </div>
-      </Layout>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-lg text-red-600">Error loading job details</div>
+      </div>
     );
   }
 
   if (!job) {
     return (
-      <Layout currentPage="jobs" onNavigate={() => {}}>
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="text-lg text-gray-600">Job not found</div>
-        </div>
-      </Layout>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-lg text-gray-600">Job not found</div>
+      </div>
     );
   }
 
   return (
-    <Layout currentPage="jobs" onNavigate={() => {}}>
-      <div className="min-h-screen bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        
+        {/* Job Header */}
+        <JobHeader job={job} onUpdate={handleUpdateJob} />
+        
+        {/* Two-column layout */}
+        <div className="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
           
-          {/* Job Header */}
-          <JobHeader job={job} onUpdate={handleUpdateJob} />
-          
-          {/* Two-column layout */}
-          <div className="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Left Column - Main Content */}
+          <div className="lg:col-span-8 space-y-6">
             
-            {/* Left Column - Main Content */}
-            <div className="lg:col-span-8 space-y-6">
-              
-              {/* Scheduling Panel */}
-              <SchedulingPanel 
-                job={job} 
-                onUpdate={handleUpdateJob}
-                onTimelineUpdate={addTimelineEntry}
-              />
-              
-              {/* Task Checklist */}
-              <Checklist 
-                tasks={job.tasks || []}
-                onAddTask={addTask}
-                onUpdateTask={updateTask}
-                onTimelineUpdate={addTimelineEntry}
-              />
-              
-              {/* Job Details Tabs */}
-              <JobDetailsTabs job={job} onUpdate={handleUpdateJob} />
-              
-            </div>
+            {/* Scheduling Panel */}
+            <SchedulingPanel 
+              job={job} 
+              onUpdate={handleUpdateJob}
+              onTimelineUpdate={addTimelineEntry}
+            />
             
-            {/* Right Column - Sidebar */}
-            <div className="lg:col-span-4 space-y-6">
-              
-              {/* Job Info Sidebar */}
-              <JobSidebar job={job} onUpdate={handleUpdateJob} />
-              
-              {/* Notes Section */}
-              <NotesSection onAddNote={addNote} />
-              
-              {/* Timeline Feed */}
-              <TimelineFeed timeline={job.timeline || []} />
-              
-            </div>
+            {/* Task Checklist */}
+            <Checklist 
+              tasks={job.tasks || []}
+              onAddTask={addTask}
+              onUpdateTask={updateTask}
+              onTimelineUpdate={addTimelineEntry}
+            />
+            
+            {/* Job Details Tabs */}
+            <JobDetailsTabs job={job} onUpdate={handleUpdateJob} />
             
           </div>
+          
+          {/* Right Column - Sidebar */}
+          <div className="lg:col-span-4 space-y-6">
+            
+            {/* Job Info Sidebar */}
+            <JobSidebar job={job} onUpdate={handleUpdateJob} />
+            
+            {/* Notes Section */}
+            <NotesSection onAddNote={addNote} />
+            
+            {/* Timeline Feed */}
+            <TimelineFeed timeline={job.timeline || []} />
+            
+          </div>
+          
         </div>
       </div>
-    </Layout>
+    </div>
   );
 };
 
