@@ -45,17 +45,23 @@ export const mockCustomers: Customer[] = [
 export const mockJobs: Job[] = [
   {
     id: 'job-1',
-    title: 'Office HVAC Installation',
-    name: 'Office HVAC Installation', 
-    description: 'Install new HVAC system in main office building with full ductwork and controls',
-    status: 'in-progress',
-    priority: 'high',
-    startDate: new Date('2024-01-15'),
-    endDate: new Date('2024-01-30'),
-    assignedPersonId: 'person-1',
-    organizationId: 'org-1',
-    createdAt: new Date('2024-01-10'),
+    name: 'Office HVAC Installation',
+    title: 'Office HVAC Installation', 
+    customerName: 'TechCorp Inc',
     client: 'TechCorp Inc',
+    description: 'Install new HVAC system in main office building with full ductwork and controls',
+    status: 'In Progress',
+    priority: 'High',
+    startDate: '2024-01-15T00:00:00.000Z',
+    endDate: '2024-01-30T00:00:00.000Z',
+    scheduledDate: '2024-01-15T00:00:00.000Z',
+    estimatedDuration: 8,
+    assignedPersonId: 'person-1',
+    assignedToName: 'John Smith',
+    organizationId: 'org-1',
+    clientId: '1',
+    createdAt: '2024-01-10T00:00:00.000Z',
+    updatedAt: '2024-01-10T00:00:00.000Z',
     phase: 'Installation',
     location: '123 Main St, Anytown, ST 12345',
     isFavorite: false,
@@ -68,26 +74,27 @@ export const mockJobs: Job[] = [
       phone: '(555) 123-4567',
       email: 'john@techcorp.com'
     },
-    customerId: '1',
-    customerName: 'TechCorp Inc',
-    estimatedDuration: 8,
-    scheduledDate: new Date('2024-01-15'),
-    tags: ['HVAC', 'Installation'],
-    assignedToName: 'John Smith'
+    tags: ['HVAC', 'Installation']
   },
   {
     id: 'job-2', 
-    title: 'Warehouse Electrical Upgrade',
     name: 'Warehouse Electrical Upgrade',
-    description: 'Upgrade electrical systems in warehouse facility including new panels and wiring',
-    status: 'new',
-    priority: 'medium',
-    startDate: new Date('2024-01-25'),
-    endDate: new Date('2024-02-10'),
-    assignedPersonId: 'person-2',
-    organizationId: 'org-2',
-    createdAt: new Date('2024-01-20'),
+    title: 'Warehouse Electrical Upgrade',
+    customerName: 'BuildCorp LLC',
     client: 'BuildCorp LLC',
+    description: 'Upgrade electrical systems in warehouse facility including new panels and wiring',
+    status: 'New',
+    priority: 'Medium',
+    startDate: '2024-01-25T00:00:00.000Z',
+    endDate: '2024-02-10T00:00:00.000Z',
+    scheduledDate: '2024-01-25T00:00:00.000Z',
+    estimatedDuration: 12,
+    assignedPersonId: 'person-2',
+    assignedToName: 'Sarah Johnson',
+    organizationId: 'org-2',
+    clientId: '2',
+    createdAt: '2024-01-20T00:00:00.000Z',
+    updatedAt: '2024-01-20T00:00:00.000Z',
     phase: 'Planning',
     location: '456 Industrial Blvd, Warehouse City, ST 67890',
     isFavorite: true,
@@ -100,12 +107,7 @@ export const mockJobs: Job[] = [
       phone: '(555) 987-6543',
       email: 'jane@buildcorp.com'
     },
-    customerId: '2',
-    customerName: 'BuildCorp LLC',
-    estimatedDuration: 12,
-    scheduledDate: new Date('2024-01-25'),
-    tags: ['Electrical', 'Upgrade'],
-    assignedToName: 'Sarah Johnson'
+    tags: ['Electrical', 'Upgrade']
   }
 ];
 
@@ -288,11 +290,12 @@ export const createPerson = (personData: Omit<Person, 'id' | 'createdAt'>): Pers
   return newPerson;
 };
 
-export const createJob = (jobData: Omit<Job, 'id' | 'createdAt'>): Job => {
+export const createJob = (jobData: Omit<Job, 'id' | 'createdAt' | 'updatedAt'>): Job => {
   const newJob: Job = {
     ...jobData,
     id: `job-${Date.now()}`,
-    createdAt: new Date()
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
   };
   mockJobs.push(newJob);
   return newJob;

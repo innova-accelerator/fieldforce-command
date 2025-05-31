@@ -2,6 +2,9 @@
 export interface Job {
   id: string;
   name: string;
+  title?: string; // Keep for backward compatibility, will be removed later
+  customerName: string;
+  client?: string; // Keep for backward compatibility, will be removed later
   description: string;
   clientId: string;
   organizationId: string;
@@ -11,7 +14,10 @@ export interface Job {
   priority: 'Low' | 'Medium' | 'High' | 'Urgent';
   startDate: string;
   endDate: string;
+  scheduledDate?: string;
+  estimatedDuration?: number;
   assignedPersonId?: string;
+  assignedToName?: string; // Keep for backward compatibility
   assignedTechs: string[];
   contactInfo: {
     name: string;
@@ -20,6 +26,9 @@ export interface Job {
   };
   tags: string[];
   isFavorite: boolean;
+  tasks: Task[];
+  notes: string[];
+  timeline: TimelineEntry[];
   createdAt: string;
   updatedAt: string;
 }

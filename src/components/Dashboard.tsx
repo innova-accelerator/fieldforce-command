@@ -93,7 +93,7 @@ const Dashboard = () => {
               {recentJobs.map((job) => (
                 <div key={job.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                   <div className="flex-1">
-                    <h4 className="font-medium text-gray-900">{job.title}</h4>
+                    <h4 className="font-medium text-gray-900">{job.name}</h4>
                     <p className="text-sm text-gray-600">{job.customerName}</p>
                     <div className="flex items-center space-x-2 mt-2">
                       <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(job.status)}`}>
@@ -107,7 +107,7 @@ const Dashboard = () => {
                   <div className="text-right">
                     <div className="flex items-center text-sm text-gray-500">
                       <Clock className="h-4 w-4 mr-1" />
-                      {job.estimatedDuration}h
+                      {job.estimatedDuration || 0}h
                     </div>
                   </div>
                 </div>

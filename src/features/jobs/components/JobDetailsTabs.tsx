@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs';
 import { Textarea } from '../../../components/ui/textarea';
@@ -7,6 +6,7 @@ import { Input } from '../../../components/ui/input';
 import { Label } from '../../../components/ui/label';
 import { MapPin, Phone, Mail, Globe, FileText, Link as LinkIcon, Upload } from 'lucide-react';
 import { Job } from '../../../types/job';
+import { Avatar, AvatarFallback } from '../../../components/ui/avatar';
 
 interface JobDetailsTabsProps {
   job: Job;
@@ -56,7 +56,10 @@ const JobDetailsTabs: React.FC<JobDetailsTabsProps> = ({ job, onUpdate }) => {
                 <div className="space-y-2">
                   <div>
                     <span className="text-sm font-medium text-gray-500">Client:</span>
-                    <p className="text-sm text-gray-900">{job.client}</p>
+                    <div>
+                      <Label htmlFor="customer">Customer</Label>
+                      <div className="text-sm text-gray-700">{job.customerName}</div>
+                    </div>
                   </div>
                   <div>
                     <span className="text-sm font-medium text-gray-500">Phase:</span>
@@ -73,20 +76,36 @@ const JobDetailsTabs: React.FC<JobDetailsTabsProps> = ({ job, onUpdate }) => {
               
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-gray-900">Team</h3>
-                <div className="space-y-2">
-                  {job.assignedTechs.map((tech) => (
-                    <div key={tech.id} className="flex items-center gap-2">
-                      <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
-                        <span className="text-xs text-blue-800">
-                          {tech.name.split(' ').map(n => n[0]).join('')}
-                        </span>
+                <div className="space-y-3">
+                  <Label>Assigned Team</Label>
+                  <div className="space-y-2">
+                    {job.assignedTechs.map((techId) => (
+                      <div key={techId} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                        <div className="flex items-center gap-2">
+                          <Avatar className="h-6 w-6">
+                            <AvatarFallback className="text-xs">
+                              {`T${techId.slice(-1)}`}
+                            </AvatarFallback>
+                          </Avatar>
+                          <span className="text-sm">Tech {techId}</span>
+                        </div>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => {
+                            const updatedTechs = job.assignedTechs.filter(id => id !== techId);
+                            onUpdate({ assignedTechs: updatedTechs });
+                          }}
+                          className="h-6 w-6 p-0 text-red-500"
+                        >
+                          ×
+                        </Button>
                       </div>
-                      <span className="text-sm text-gray-900">{tech.name}</span>
-                    </div>
-                  ))}
-                  {job.assignedTechs.length === 0 && (
-                    <p className="text-sm text-gray-500 italic">No team members assigned</p>
-                  )}
+                    ))}
+                  </div>
+                  <Button size="sm" variant="outline" className="w-full">
+                    Add Team Member
+                  </Button>
                 </div>
               </div>
             </div>

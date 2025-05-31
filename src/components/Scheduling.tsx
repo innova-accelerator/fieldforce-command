@@ -48,7 +48,7 @@ const Scheduling = () => {
   const getJobsForDate = (date: Date) => {
     return jobs.filter(job => 
       job.scheduledDate && 
-      job.scheduledDate.toDateString() === date.toDateString()
+      new Date(job.scheduledDate).toDateString() === date.toDateString()
     );
   };
 
@@ -68,13 +68,13 @@ const Scheduling = () => {
       }`}
       onClick={() => setSelectedJob(job)}
     >
-      <div className="font-medium truncate">{job.title}</div>
+      <div className="font-medium truncate">{job.name}</div>
       {!compact && (
         <>
           <div className="text-xs opacity-90 truncate">{job.customerName}</div>
           <div className="flex items-center text-xs opacity-90 mt-1">
             <Clock className="h-3 w-3 mr-1" />
-            {job.estimatedDuration}h
+            {job.estimatedDuration || 0}h
           </div>
         </>
       )}
@@ -224,7 +224,7 @@ const Scheduling = () => {
       <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">{job.title}</h2>
+            <h2 className="text-lg font-semibold text-gray-900">{job.name}</h2>
             <button
               onClick={onClose}
               className="text-gray-400 hover:text-gray-600"
@@ -249,11 +249,11 @@ const Scheduling = () => {
           </div>
           <div>
             <label className="text-sm font-medium text-gray-500">Scheduled</label>
-            <p className="text-gray-900">{job.scheduledDate?.toLocaleDateString()}</p>
+            <p className="text-gray-900">{job.scheduledDate ? new Date(job.scheduledDate).toLocaleDateString() : 'Not scheduled'}</p>
           </div>
           <div>
             <label className="text-sm font-medium text-gray-500">Duration</label>
-            <p className="text-gray-900">{job.estimatedDuration} hours</p>
+            <p className="text-gray-900">{job.estimatedDuration || 0} hours</p>
           </div>
         </div>
       </div>

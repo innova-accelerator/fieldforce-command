@@ -42,14 +42,14 @@ const JobOverviewPage: React.FC = () => {
       id: `task-${Date.now()}`
     };
     
-    const updatedTasks = [...job.tasks, newTask];
+    const updatedTasks = [...(job.tasks || []), newTask];
     handleUpdateJob({ tasks: updatedTasks });
   };
 
   const updateTask = (taskId: string, updates: Partial<Task>) => {
     if (!job) return;
     
-    const updatedTasks = job.tasks.map(task => 
+    const updatedTasks = (job.tasks || []).map(task => 
       task.id === taskId ? { ...task, ...updates } : task
     );
     handleUpdateJob({ tasks: updatedTasks });
@@ -65,8 +65,8 @@ const JobOverviewPage: React.FC = () => {
       author: 'Current User'
     };
     
-    const updatedNotes = [...job.notes, content];
-    const updatedTimeline = [newEntry, ...job.timeline];
+    const updatedNotes = [...(job.notes || []), content];
+    const updatedTimeline = [newEntry, ...(job.timeline || [])];
     
     handleUpdateJob({ 
       notes: updatedNotes, 
@@ -82,7 +82,7 @@ const JobOverviewPage: React.FC = () => {
       timestamp: new Date().toISOString()
     };
     
-    const updatedTimeline = [newEntry, ...job.timeline];
+    const updatedTimeline = [newEntry, ...(job.timeline || [])];
     handleUpdateJob({ timeline: updatedTimeline });
   };
 
@@ -139,7 +139,7 @@ const JobOverviewPage: React.FC = () => {
               
               {/* Task Checklist */}
               <Checklist 
-                tasks={job.tasks}
+                tasks={job.tasks || []}
                 onAddTask={addTask}
                 onUpdateTask={updateTask}
                 onTimelineUpdate={addTimelineEntry}
@@ -160,7 +160,7 @@ const JobOverviewPage: React.FC = () => {
               <NotesSection onAddNote={addNote} />
               
               {/* Timeline Feed */}
-              <TimelineFeed timeline={job.timeline} />
+              <TimelineFeed timeline={job.timeline || []} />
               
             </div>
             

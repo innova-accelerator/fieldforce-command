@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { MapPin, Phone, Mail, Calendar, Users, CheckSquare } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
@@ -20,8 +19,8 @@ const JobSidebar: React.FC<JobSidebarProps> = ({ job }) => {
     });
   };
 
-  const completedTasks = job.tasks.filter(task => task.complete).length;
-  const totalTasks = job.tasks.length;
+  const completedTasks = job.tasks ? job.tasks.filter(task => task.complete).length : 0;
+  const totalTasks = job.tasks ? job.tasks.length : 0;
 
   return (
     <div className="space-y-4">
@@ -36,7 +35,7 @@ const JobSidebar: React.FC<JobSidebarProps> = ({ job }) => {
         <CardContent className="space-y-3">
           <div>
             <div className="font-medium text-gray-900">{job.contactInfo.name}</div>
-            <div className="text-sm text-gray-600">{job.client}</div>
+            <div className="text-sm text-gray-600">{job.customerName}</div>
           </div>
           <div className="flex items-center gap-2 text-sm">
             <Phone className="h-4 w-4 text-gray-400" />
@@ -101,19 +100,16 @@ const JobSidebar: React.FC<JobSidebarProps> = ({ job }) => {
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            {job.assignedTechs.map((tech) => (
-              <div key={tech.id} className="flex items-center gap-3">
+            {job.assignedTechs.map((techId) => (
+              <div key={techId} className="flex items-center gap-3">
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src={tech.avatarUrl} alt={tech.name} />
                   <AvatarFallback>
-                    {tech.name.split(' ').map(n => n[0]).join('')}
+                    {`T${techId.slice(-1)}`}
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <div className="text-sm font-medium text-gray-900">{tech.name}</div>
-                  {tech.email && (
-                    <div className="text-xs text-gray-500">{tech.email}</div>
-                  )}
+                  <div className="text-sm font-medium text-gray-900">Tech {techId}</div>
+                  <div className="text-xs text-gray-500">tech{techId}@company.com</div>
                 </div>
               </div>
             ))}

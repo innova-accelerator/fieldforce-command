@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Calendar, Clock, User, Plus } from 'lucide-react';
 import { Button } from '../../../components/ui/button';
@@ -27,14 +26,14 @@ const SchedulingPanel: React.FC<SchedulingPanelProps> = ({
 }) => {
   const [showAssignModal, setShowAssignModal] = useState(false);
 
-  const formatDateForInput = (date: Date | undefined): string => {
+  const formatDateForInput = (date: Date | string | undefined): string => {
     if (!date) return '';
-    return date.toISOString().split('T')[0]; // YYYY-MM-DD format
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return dateObj.toISOString().split('T')[0]; // YYYY-MM-DD format
   };
 
   const updateDate = (field: 'startDate' | 'endDate', value: string) => {
-    const dateValue = value ? new Date(value) : undefined;
-    onUpdate({ [field]: dateValue });
+    onUpdate({ [field]: value });
     onTimelineUpdate({
       type: 'scheduling',
       content: `${field === 'startDate' ? 'Start' : 'End'} date updated to ${value ? new Date(value).toLocaleDateString() : 'not set'}`,
@@ -43,8 +42,8 @@ const SchedulingPanel: React.FC<SchedulingPanelProps> = ({
   };
 
   const assignTech = (associate: Associate) => {
-    if (!job.assignedTechs.find(tech => tech.id === associate.id)) {
-      const updatedTechs = [...job.assignedTechs, associate];
+    if (!job.assignedTechs.find(techId => techId === associate.id)) {
+      const updatedTechs = [...job.assignedTechs, associate.id];
       onUpdate({ assignedTechs: updatedTechs });
       onTimelineUpdate({
         type: 'assignment',
@@ -56,16 +55,13 @@ const SchedulingPanel: React.FC<SchedulingPanelProps> = ({
   };
 
   const removeTech = (techId: string) => {
-    const tech = job.assignedTechs.find(t => t.id === techId);
-    const updatedTechs = job.assignedTechs.filter(tech => tech.id !== techId);
+    const updatedTechs = job.assignedTechs.filter(id => id !== techId);
     onUpdate({ assignedTechs: updatedTechs });
-    if (tech) {
-      onTimelineUpdate({
-        type: 'assignment',
-        content: `${tech.name} removed from job`,
-        author: 'Current User'
-      });
-    }
+    onTimelineUpdate({
+      type: 'assignment',
+      content: `Tech ${techId} removed from job`,
+      author: 'Current User'
+    });
   };
 
   return (
@@ -123,21 +119,20 @@ const SchedulingPanel: React.FC<SchedulingPanelProps> = ({
           </div>
           
           <div className="space-y-2">
-            {job.assignedTechs.map((tech) => (
-              <div key={tech.id} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+            {job.assignedTechs.map((techId) => (
+              <div key={techId} className="flex items-center justify-between p-2 bg-gray-50 rounded">
                 <div className="flex items-center gap-2">
                   <Avatar className="h-6 w-6">
-                    <AvatarImage src={tech.avatarUrl} />
                     <AvatarFallback className="text-xs">
-                      {tech.name.split(' ').map(n => n[0]).join('')}
+                      {`T${techId.slice(-1)}`}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="text-sm font-medium">{tech.name}</span>
+                  <span className="text-sm font-medium">Tech {techId}</span>
                 </div>
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => removeTech(tech.id)}
+                  onClick={() => removeTech(techId)}
                   className="h-6 w-6 p-0 text-red-500 hover:text-red-700"
                 >
                   ×

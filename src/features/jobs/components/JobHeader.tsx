@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Star, Edit, Copy } from 'lucide-react';
 import { Button } from '../../../components/ui/button';
@@ -40,7 +39,7 @@ const JobHeader: React.FC<JobHeaderProps> = ({ job, onUpdate }) => {
     <div className="bg-white rounded-lg shadow-sm border p-4 sm:p-6">
       {/* Breadcrumb */}
       <nav className="text-xs sm:text-sm text-gray-500 mb-3">
-        Dashboard &gt; Jobs &gt; {job.title}
+        Dashboard &gt; Jobs &gt; {job.name}
       </nav>
       
       {/* Main Header */}
@@ -48,7 +47,7 @@ const JobHeader: React.FC<JobHeaderProps> = ({ job, onUpdate }) => {
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-3 mb-2">
             <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 truncate">
-              {job.title} – {job.client}
+              {job.name} – {job.customerName}
             </h1>
             <Button
               variant="ghost"
@@ -83,7 +82,7 @@ const JobHeader: React.FC<JobHeaderProps> = ({ job, onUpdate }) => {
           </div>
           
           <div className="text-sm text-gray-600">
-            <span>Assigned: {job.assignedTechs.map(tech => tech.name).join(', ') || 'Unassigned'}</span>
+            <span>Assigned: {job.assignedTechs.map(techId => `Tech ${techId}`).join(', ') || 'Unassigned'}</span>
           </div>
         </div>
       </div>
