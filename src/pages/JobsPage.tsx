@@ -5,7 +5,7 @@ import Layout from '../components/Layout';
 import { Button } from '../components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table';
 import { useJobs, usePeople, useOrganizations } from '../hooks/useData';
-import { Job } from '../types';
+import { Job } from '../types/job';
 import { X } from 'lucide-react';
 import { LoadingSkeleton, TableLoadingSkeleton } from '../components/ui/loading-skeleton';
 import { ErrorDisplay } from '../components/ui/error-display';
@@ -82,18 +82,18 @@ const JobsPage = () => {
                     <TableRow key={job.id}>
                       <TableCell className="font-medium">
                         <Link to={`/jobs/${job.id}/overview`} className="text-blue-600 hover:underline">
-                          {job.title}
+                          {job.name}
                         </Link>
                       </TableCell>
                       <TableCell>{job.customerName || '-'}</TableCell>
                       <TableCell>{organization?.name || '-'}</TableCell>
-                      <TableCell>{job.startDate ? job.startDate.toLocaleDateString() : '-'}</TableCell>
-                      <TableCell>{job.endDate ? job.endDate.toLocaleDateString() : '-'}</TableCell>
+                      <TableCell>{job.startDate ? new Date(job.startDate).toLocaleDateString() : '-'}</TableCell>
+                      <TableCell>{job.endDate ? new Date(job.endDate).toLocaleDateString() : '-'}</TableCell>
                       <TableCell>
                         <span className={`px-2 py-1 text-xs rounded-full ${
-                          job.status === 'completed' ? 'bg-green-100 text-green-800' :
-                          job.status === 'in-progress' ? 'bg-blue-100 text-blue-800' :
-                          job.status === 'cancelled' ? 'bg-red-100 text-red-800' :
+                          job.status === 'Completed' ? 'bg-green-100 text-green-800' :
+                          job.status === 'In Progress' ? 'bg-blue-100 text-blue-800' :
+                          job.status === 'Cancelled' ? 'bg-red-100 text-red-800' :
                           'bg-gray-100 text-gray-800'
                         }`}>
                           {job.status}
@@ -101,9 +101,9 @@ const JobsPage = () => {
                       </TableCell>
                       <TableCell>
                         <span className={`px-2 py-1 text-xs rounded-full ${
-                          job.priority === 'urgent' ? 'bg-red-100 text-red-800' :
-                          job.priority === 'high' ? 'bg-orange-100 text-orange-800' :
-                          job.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                          job.priority === 'Urgent' ? 'bg-red-100 text-red-800' :
+                          job.priority === 'High' ? 'bg-orange-100 text-orange-800' :
+                          job.priority === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
                           'bg-green-100 text-green-800'
                         }`}>
                           {job.priority}

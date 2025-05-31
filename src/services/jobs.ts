@@ -5,23 +5,23 @@ import { Job, Task, TimelineEntry, Associate } from '@/types/job';
 // Mock data for development - easily replaceable with real API calls
 const mockJob: Job = {
   id: 'job-123',
-  title: 'HVAC System Installation',
   name: 'HVAC System Installation',
   description: 'Complete HVAC system installation for commercial building including ductwork, units, and controls.',
-  client: 'ABC Corporation',
+  customerName: 'ABC Corporation',
   phase: 'In Progress',
-  status: 'in-progress',
-  priority: 'high',
-  startDate: new Date('2024-01-15'),
-  endDate: new Date('2024-01-30'),
+  status: 'In Progress',
+  priority: 'High',
+  startDate: new Date('2024-01-15').toISOString(),
+  endDate: new Date('2024-01-30').toISOString(),
   assignedPersonId: 'person-1',
   organizationId: 'org-1',
-  createdAt: new Date('2024-01-10'),
+  scheduledDate: new Date('2024-01-15').toISOString(),
+  estimatedDuration: 8,
   location: '123 Business Ave, Suite 100, City, State 12345',
   isFavorite: false,
   assignedTechs: [
-    { id: 'tech-1', name: 'John Smith', avatarUrl: '/placeholder.svg' },
-    { id: 'tech-2', name: 'Sarah Johnson', avatarUrl: '/placeholder.svg' }
+    'tech-1',
+    'tech-2'
   ],
   tasks: [
     { id: 'task-1', label: 'Site survey completed', complete: true, dueDate: '2024-01-10' },
@@ -71,12 +71,10 @@ const mockJob: Job = {
     phone: '(555) 123-4567',
     email: 'mike.wilson@abccorp.com'
   },
-  customerId: '1',
-  customerName: 'ABC Corporation',
-  estimatedDuration: 8,
-  scheduledDate: new Date('2024-01-15'),
+  clientId: '1',
   tags: ['HVAC', 'Installation'],
-  assignedToName: 'John Smith'
+  assignedToName: 'John Smith',
+  createdAt: new Date('2024-01-10').toISOString()
 };
 
 export const fetchJob = async (jobId: string): Promise<Job> => {
