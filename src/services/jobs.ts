@@ -22,21 +22,21 @@ export const fetchAllJobs = async (): Promise<Job[]> => {
   // Transform the data to match our Job interface
   return (jobs || []).map((job: any) => ({
     ...job,
-    status: ['New', 'Scheduled', 'In Progress', 'Completed', 'Cancelled'].includes(job.status) 
+    status: (['New', 'Scheduled', 'In Progress', 'Completed', 'Cancelled'].includes(job.status) 
       ? job.status 
-      : 'New',
-    priority: ['Low', 'Medium', 'High', 'Urgent'].includes(job.priority)
+      : 'New') as Job['status'],
+    priority: (['Low', 'Medium', 'High', 'Urgent'].includes(job.priority)
       ? job.priority
-      : 'Medium',
+      : 'Medium') as Job['priority'],
     tasks: job.tasks?.map((task: any) => ({
       ...task,
-      priority: task.priority === 'high' ? 'high' : task.priority === 'medium' ? 'medium' : 'low'
+      priority: (task.priority === 'high' ? 'high' : task.priority === 'medium' ? 'medium' : 'low') as Task['priority']
     })) || [],
     timeline: job.timeline_entries?.map((entry: any) => ({
       ...entry,
-      type: ['note', 'status', 'assignment', 'scheduling'].includes(entry.type) 
+      type: (['note', 'status', 'assignment', 'scheduling'].includes(entry.type) 
         ? entry.type 
-        : 'note'
+        : 'note') as TimelineEntry['type']
     })) || [],
     customerName: job.customers?.name,
     assignedPersonName: job.people ? `${job.people.first_name} ${job.people.last_name}` : undefined,
@@ -65,21 +65,21 @@ export const fetchJob = async (jobId: string): Promise<Job> => {
   // Transform the data to match our Job interface
   const transformedJob: Job = {
     ...job,
-    status: ['New', 'Scheduled', 'In Progress', 'Completed', 'Cancelled'].includes(job.status) 
+    status: (['New', 'Scheduled', 'In Progress', 'Completed', 'Cancelled'].includes(job.status) 
       ? job.status 
-      : 'New',
-    priority: ['Low', 'Medium', 'High', 'Urgent'].includes(job.priority)
+      : 'New') as Job['status'],
+    priority: (['Low', 'Medium', 'High', 'Urgent'].includes(job.priority)
       ? job.priority
-      : 'Medium',
+      : 'Medium') as Job['priority'],
     tasks: job.tasks?.map((task: any) => ({
       ...task,
-      priority: task.priority === 'high' ? 'high' : task.priority === 'medium' ? 'medium' : 'low'
+      priority: (task.priority === 'high' ? 'high' : task.priority === 'medium' ? 'medium' : 'low') as Task['priority']
     })) || [],
     timeline: job.timeline_entries?.map((entry: any) => ({
       ...entry,
-      type: ['note', 'status', 'assignment', 'scheduling'].includes(entry.type) 
+      type: (['note', 'status', 'assignment', 'scheduling'].includes(entry.type) 
         ? entry.type 
-        : 'note'
+        : 'note') as TimelineEntry['type']
     })) || [],
     customerName: job.customers?.name,
     assignedPersonName: job.people ? `${job.people.first_name} ${job.people.last_name}` : undefined,
@@ -116,7 +116,7 @@ export const updateJob = async (jobId: string, updates: Partial<Job>): Promise<J
     for (const task of tasks) {
       const taskData = {
         ...task,
-        priority: task.priority === 'high' ? 'high' : task.priority === 'medium' ? 'medium' : 'low'
+        priority: (task.priority === 'high' ? 'high' : task.priority === 'medium' ? 'medium' : 'low') as Task['priority']
       };
       
       if (task.id && task.id.startsWith('task-')) {
@@ -151,21 +151,21 @@ export const updateJob = async (jobId: string, updates: Partial<Job>): Promise<J
   // Transform the response
   const transformedJob: Job = {
     ...updatedJob,
-    status: ['New', 'Scheduled', 'In Progress', 'Completed', 'Cancelled'].includes(updatedJob.status) 
+    status: (['New', 'Scheduled', 'In Progress', 'Completed', 'Cancelled'].includes(updatedJob.status) 
       ? updatedJob.status 
-      : 'New',
-    priority: ['Low', 'Medium', 'High', 'Urgent'].includes(updatedJob.priority)
+      : 'New') as Job['status'],
+    priority: (['Low', 'Medium', 'High', 'Urgent'].includes(updatedJob.priority)
       ? updatedJob.priority
-      : 'Medium',
+      : 'Medium') as Job['priority'],
     tasks: updatedJob.tasks?.map((task: any) => ({
       ...task,
-      priority: task.priority === 'high' ? 'high' : task.priority === 'medium' ? 'medium' : 'low'
+      priority: (task.priority === 'high' ? 'high' : task.priority === 'medium' ? 'medium' : 'low') as Task['priority']
     })) || [],
     timeline: updatedJob.timeline_entries?.map((entry: any) => ({
       ...entry,
-      type: ['note', 'status', 'assignment', 'scheduling'].includes(entry.type) 
+      type: (['note', 'status', 'assignment', 'scheduling'].includes(entry.type) 
         ? entry.type 
-        : 'note'
+        : 'note') as TimelineEntry['type']
     })) || [],
     customerName: updatedJob.customers?.name,
     assignedPersonName: updatedJob.people ? `${updatedJob.people.first_name} ${updatedJob.people.last_name}` : undefined,
@@ -206,21 +206,21 @@ export const createJob = async (jobData: Partial<Job>): Promise<Job> => {
   // Transform the response
   const transformedJob: Job = {
     ...newJob,
-    status: ['New', 'Scheduled', 'In Progress', 'Completed', 'Cancelled'].includes(newJob.status) 
+    status: (['New', 'Scheduled', 'In Progress', 'Completed', 'Cancelled'].includes(newJob.status) 
       ? newJob.status 
-      : 'New',
-    priority: ['Low', 'Medium', 'High', 'Urgent'].includes(newJob.priority)
+      : 'New') as Job['status'],
+    priority: (['Low', 'Medium', 'High', 'Urgent'].includes(newJob.priority)
       ? newJob.priority
-      : 'Medium',
+      : 'Medium') as Job['priority'],
     tasks: newJob.tasks?.map((task: any) => ({
       ...task,
-      priority: task.priority === 'high' ? 'high' : task.priority === 'medium' ? 'medium' : 'low'
+      priority: (task.priority === 'high' ? 'high' : task.priority === 'medium' ? 'medium' : 'low') as Task['priority']
     })) || [],
     timeline: newJob.timeline_entries?.map((entry: any) => ({
       ...entry,
-      type: ['note', 'status', 'assignment', 'scheduling'].includes(entry.type) 
+      type: (['note', 'status', 'assignment', 'scheduling'].includes(entry.type) 
         ? entry.type 
-        : 'note'
+        : 'note') as TimelineEntry['type']
     })) || [],
     customerName: newJob.customers?.name,
     assignedPersonName: newJob.people ? `${newJob.people.first_name} ${newJob.people.last_name}` : undefined,
