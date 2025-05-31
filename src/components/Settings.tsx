@@ -1,196 +1,158 @@
 
 import React, { useState } from 'react';
-import { User, Bell, Shield, Database, Palette, Globe } from 'lucide-react';
-import { useTheme } from '../contexts/ThemeContext';
-import UserProfile from './UserProfile';
+import { User, Bell, Shield, Palette, Database, HelpCircle } from 'lucide-react';
 
 const Settings = () => {
   const [activeTab, setActiveTab] = useState('profile');
-  const { theme, setTheme } = useTheme();
+  const [notifications, setNotifications] = useState({
+    email: true,
+    push: false,
+    sms: true
+  });
 
   const tabs = [
     { id: 'profile', name: 'Profile', icon: User },
     { id: 'notifications', name: 'Notifications', icon: Bell },
     { id: 'security', name: 'Security', icon: Shield },
-    { id: 'data', name: 'Data & Privacy', icon: Database },
     { id: 'appearance', name: 'Appearance', icon: Palette },
-    { id: 'general', name: 'General', icon: Globe },
+    { id: 'data', name: 'Data & Privacy', icon: Database },
+    { id: 'support', name: 'Support', icon: HelpCircle },
   ];
 
-  const TabContent = () => {
+  const renderTabContent = () => {
     switch (activeTab) {
       case 'profile':
-        return <UserProfile />;
-
-      case 'appearance':
         return (
           <div className="space-y-6">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">Appearance Settings</h3>
-            <div className="space-y-4">
-              <div>
-                <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-3">Theme</h4>
-                <div className="space-y-2">
-                  {[
-                    { value: 'light', label: 'Light' },
-                    { value: 'dark', label: 'Dark' },
-                    { value: 'system', label: 'System' },
-                  ].map((option) => (
-                    <label key={option.value} className="flex items-center">
-                      <input
-                        type="radio"
-                        name="theme"
-                        value={option.value}
-                        checked={theme === option.value}
-                        onChange={(e) => setTheme(e.target.value as any)}
-                        className="mr-2 text-blue-600 dark:text-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400"
-                      />
-                      <span className="text-gray-700 dark:text-gray-300">{option.label}</span>
-                    </label>
-                  ))}
+            <div>
+              <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Profile Information</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">First Name</label>
+                  <input type="text" className="w-full px-3 py-2 border border-gray-300 dark:border-[#303030] bg-white dark:bg-[#303030] text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Last Name</label>
+                  <input type="text" className="w-full px-3 py-2 border border-gray-300 dark:border-[#303030] bg-white dark:bg-[#303030] text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email</label>
+                  <input type="email" className="w-full px-3 py-2 border border-gray-300 dark:border-[#303030] bg-white dark:bg-[#303030] text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Phone</label>
+                  <input type="tel" className="w-full px-3 py-2 border border-gray-300 dark:border-[#303030] bg-white dark:bg-[#303030] text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent" />
                 </div>
               </div>
             </div>
           </div>
         );
-
       case 'notifications':
         return (
           <div className="space-y-6">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">Notification Preferences</h3>
-            <div className="space-y-4">
-              {[
-                { label: 'New job assignments', description: 'Get notified when jobs are assigned to associates' },
-                { label: 'Job status updates', description: 'Receive updates when job status changes' },
-                { label: 'Customer messages', description: 'Get notified of new customer messages' },
-                { label: 'Associate availability', description: 'Updates on associate availability changes' },
-                { label: 'System maintenance', description: 'Important system updates and maintenance notices' },
-              ].map((item, index) => (
-                <div key={index} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+            <div>
+              <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Notification Preferences</h3>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-[#303030] rounded-lg border dark:border-gray-600">
                   <div>
-                    <h4 className="font-medium text-gray-900 dark:text-gray-100">{item.label}</h4>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">{item.description}</p>
+                    <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100">Email Notifications</h4>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">Receive updates via email</p>
                   </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" defaultChecked className="sr-only peer" />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                  </label>
+                  <button
+                    onClick={() => setNotifications({...notifications, email: !notifications.email})}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      notifications.email ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'
+                    }`}
+                  >
+                    <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      notifications.email ? 'translate-x-6' : 'translate-x-1'
+                    }`} />
+                  </button>
                 </div>
-              ))}
-            </div>
-          </div>
-        );
-
-      case 'security':
-        return (
-          <div className="space-y-6">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">Security Settings</h3>
-            <div className="space-y-6">
-              <div>
-                <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-3">Change Password</h4>
-                <div className="space-y-4">
+                <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-[#303030] rounded-lg border dark:border-gray-600">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Current Password
-                    </label>
-                    <input
-                      type="password"
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                    />
+                    <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100">Push Notifications</h4>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">Receive push notifications in browser</p>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      New Password
-                    </label>
-                    <input
-                      type="password"
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Confirm New Password
-                    </label>
-                    <input
-                      type="password"
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                    />
-                  </div>
+                  <button
+                    onClick={() => setNotifications({...notifications, push: !notifications.push})}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      notifications.push ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'
+                    }`}
+                  >
+                    <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      notifications.push ? 'translate-x-6' : 'translate-x-1'
+                    }`} />
+                  </button>
                 </div>
-              </div>
-              
-              <div>
-                <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-3">Two-Factor Authentication</h4>
-                <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+                <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-[#303030] rounded-lg border dark:border-gray-600">
                   <div>
-                    <p className="font-medium text-gray-900 dark:text-gray-100">Enable 2FA</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Add an extra layer of security to your account</p>
+                    <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100">SMS Notifications</h4>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">Receive updates via text message</p>
                   </div>
-                  <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
-                    Enable
+                  <button
+                    onClick={() => setNotifications({...notifications, sms: !notifications.sms})}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      notifications.sms ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'
+                    }`}
+                  >
+                    <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      notifications.sms ? 'translate-x-6' : 'translate-x-1'
+                    }`} />
                   </button>
                 </div>
               </div>
             </div>
           </div>
         );
-
       default:
         return (
-          <div className="space-y-6">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">Settings</h3>
-            <p className="text-gray-600 dark:text-gray-400">Configure your {activeTab} settings here.</p>
+          <div className="text-center py-12">
+            <p className="text-gray-500 dark:text-gray-400">Settings for {activeTab} coming soon.</p>
           </div>
         );
     }
   };
 
   return (
-    <div className="p-6 bg-background dark:bg-gray-900 min-h-screen">
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Settings</h1>
-      
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+    <div className="p-6 bg-background dark:bg-[#171717] min-h-screen">
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Settings</h1>
+        <p className="text-gray-600 dark:text-gray-400">Manage your account settings and preferences.</p>
+      </div>
+
+      <div className="flex flex-col lg:flex-row gap-6">
         {/* Sidebar */}
-        <div className="lg:col-span-1">
-          <nav className="space-y-1 bg-white dark:bg-gray-800 rounded-lg shadow-sm dark:shadow-none border border-gray-200 dark:border-gray-700 p-2">
+        <div className="lg:w-64">
+          <nav className="space-y-1">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
                   activeTab === tab.id
-                    ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300'
-                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-200'
+                    ? 'bg-blue-100 dark:bg-blue-900 text-blue-900 dark:text-blue-100'
+                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#303030] hover:text-gray-900 dark:hover:text-gray-100'
                 }`}
               >
-                <tab.icon className="mr-3 h-4 w-4" />
+                <tab.icon className="mr-3 h-5 w-5" />
                 {tab.name}
               </button>
             ))}
           </nav>
         </div>
 
-        {/* Content */}
-        <div className="lg:col-span-3">
-          {activeTab === 'profile' ? (
-            <TabContent />
-          ) : (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm dark:shadow-none border border-gray-200 dark:border-gray-700 p-6">
-              <TabContent />
-              
-              {activeTab !== 'profile' && (
-                <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
-                  <div className="flex justify-end space-x-3">
-                    <button className="px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                      Cancel
-                    </button>
-                    <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
-                      Save Changes
-                    </button>
-                    </div>
-                </div>
-              )}
+        {/* Main Content */}
+        <div className="flex-1">
+          <div className="bg-white dark:bg-[#212121] rounded-lg shadow-sm dark:shadow-none border border-gray-200 dark:border-[#303030] p-6">
+            {renderTabContent()}
+            
+            <div className="mt-6 pt-6 border-t border-gray-200 dark:border-[#303030]">
+              <button className="bg-blue-600 dark:bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors">
+                Save Changes
+              </button>
             </div>
-          )}
+          </div>
         </div>
       </div>
     </div>
