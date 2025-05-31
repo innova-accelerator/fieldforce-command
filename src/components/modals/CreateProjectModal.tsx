@@ -10,7 +10,10 @@ import { StatusFields } from './CreateProjectModal/components/StatusFields';
 import { AssignmentFields } from './CreateProjectModal/components/AssignmentFields';
 
 const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onProjectCreated, onClose }) => {
-  const { createProject, loading, errors } = useCreateProject(onProjectCreated);
+  const { createProject, loading, errors } = useCreateProject(() => {
+    onProjectCreated?.();
+    onClose?.();
+  });
   const {
     people,
     loadingPeople,
@@ -62,7 +65,7 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onProjectCreate
     e.preventDefault();
     try {
       await createProject(formData);
-      // Reset form
+      // Reset form after successful creation
       setFormData({
         name: '',
         description: '',
@@ -147,6 +150,11 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ onProjectCreate
           <Button type="submit" disabled={loading}>
             {loading ? 'Creating...' : 'Create Project'}
           </Button>
+          {onClose && (
+            <Button type="button" variant="outline" onClick={onClose}>
+              Cancel
+            </Button>
+          )}
         </div>
       </form>
     </div>

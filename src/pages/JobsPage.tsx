@@ -41,6 +41,7 @@ const JobsPage = () => {
       }
     };
     loadJobs();
+    setShowCreateModal(false);
   };
 
   if (loading) {
@@ -221,19 +222,9 @@ const JobsPage = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
             <CreateProjectModal 
-              onProjectCreated={() => {
-                handleProjectCreated();
-                setShowCreateModal(false);
-              }}
+              onProjectCreated={handleProjectCreated}
+              onClose={() => setShowCreateModal(false)}
             />
-            <div className="absolute top-4 right-4">
-              <button
-                onClick={() => setShowCreateModal(false)}
-                className="text-gray-400 hover:text-gray-600 text-xl font-bold"
-              >
-                ×
-              </button>
-            </div>
           </div>
         </div>
       )}
