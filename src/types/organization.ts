@@ -15,5 +15,6 @@ export interface Organization {
   city?: string;
   state?: string;
   zipcode?: string;
+  classification?: 'associate' | 'customer';
   createdAt: Date;
 }
