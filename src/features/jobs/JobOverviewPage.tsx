@@ -1,122 +1,63 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import Layout from '../../components/Layout';
 import JobHeader from './components/JobHeader';
+import JobSidebar from './components/JobSidebar';
 import SchedulingPanel from './components/SchedulingPanel';
 import Checklist from './components/Checklist';
 import NotesSection from './components/NotesSection';
 import TimelineFeed from './components/TimelineFeed';
 import JobDetailsTabs from './components/JobDetailsTabs';
-import { Job, Task, TimelineEntry, Associate } from '../../types/job';
-
-// Mock data - easily replaceable with API calls
-const mockJob: Job = {
-  id: 'job-123',
-  title: 'HVAC System Installation',
-  client: 'ABC Corporation',
-  phase: 'In Progress',
-  startDate: '2024-01-15',
-  endDate: '2024-01-30',
-  assignedTechs: [
-    { id: 'tech-1', name: 'John Smith', avatarUrl: '/placeholder.svg' },
-    { id: 'tech-2', name: 'Sarah Johnson', avatarUrl: '/placeholder.svg' }
-  ],
-  tasks: [
-    { id: 'task-1', label: 'Site survey completed', complete: true, dueDate: '2024-01-10' },
-    { id: 'task-2', label: 'Equipment procurement', complete: true, dueDate: '2024-01-12' },
-    { id: 'task-3', label: 'Installation phase 1', complete: false, dueDate: '2024-01-16' },
-    { id: 'task-4', label: 'System testing', complete: false, dueDate: '2024-01-25' }
-  ],
-  notes: [
-    'Initial assessment completed - all requirements confirmed',
-    'Client requested additional ventilation in conference room',
-    'Equipment delivery scheduled for January 14th'
-  ],
-  timeline: [
-    { 
-      timestamp: '2024-01-15T10:30:00Z', 
-      type: 'status', 
-      content: 'Job status changed to In Progress',
-      author: 'John Smith'
-    },
-    { 
-      timestamp: '2024-01-14T15:45:00Z', 
-      type: 'note', 
-      content: 'Equipment delivery confirmed for tomorrow morning',
-      author: 'Sarah Johnson'
-    },
-    { 
-      timestamp: '2024-01-14T09:20:00Z', 
-      type: 'assignment', 
-      content: 'Sarah Johnson assigned to installation team',
-      author: 'Project Manager'
-    },
-    { 
-      timestamp: '2024-01-12T14:15:00Z', 
-      type: 'note', 
-      content: 'Site survey completed. Ready for equipment procurement.',
-      author: 'John Smith'
-    },
-    { 
-      timestamp: '2024-01-10T11:30:00Z', 
-      type: 'status', 
-      content: 'Job created and assigned to team',
-      author: 'Admin'
-    }
-  ],
-  location: '123 Business Ave, Suite 100, City, State 12345',
-  description: 'Complete HVAC system installation for commercial building including ductwork, units, and controls.',
-  contactInfo: {
-    name: 'Mike Wilson',
-    phone: '(555) 123-4567',
-    email: 'mike.wilson@abccorp.com'
-  }
-};
+import { fetchJob, updateJob } from '../../services/jobs';
+import { Job, Task, TimelineEntry } from '../../types/job';
 
 const JobOverviewPage: React.FC = () => {
   const { jobId } = useParams<{ jobId: string }>();
-  const [job, setJob] = useState<Job>(mockJob);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    // Simulate API call
-    const fetchJob = async () => {
-      setLoading(true);
-      // In real implementation: const response = await getJobById(jobId);
-      await new Promise(resolve => setTimeout(resolve, 500)); // Simulate network delay
-      setJob({ ...mockJob, id: jobId || 'job-123' });
-      setLoading(false);
-    };
+  const { data: job, isLoading, error } = useQuery({
+    queryKey: ['job', jobId],
+    queryFn: () => fetchJob(jobId!),
+    enabled: !!jobId,
+  });
 
-    fetchJob();
-  }, [jobId]);
+  const updateJobMutation = useMutation({
+    mutationFn: (updates: Partial<Job>) => updateJob(jobId!, updates),
+    onSuccess: (updatedJob) => {
+      queryClient.setQueryData(['job', jobId], updatedJob);
+    },
+  });
 
-  const updateJob = (updates: Partial<Job>) => {
-    setJob(prev => ({ ...prev, ...updates }));
+  const handleUpdateJob = (updates: Partial<Job>) => {
+    updateJobMutation.mutate(updates);
   };
 
   const addTask = (task: Omit<Task, 'id'>) => {
+    if (!job) return;
+    
     const newTask: Task = {
       ...task,
       id: `task-${Date.now()}`
     };
-    setJob(prev => ({
-      ...prev,
-      tasks: [...prev.tasks, newTask]
-    }));
+    
+    const updatedTasks = [...job.tasks, newTask];
+    handleUpdateJob({ tasks: updatedTasks });
   };
 
   const updateTask = (taskId: string, updates: Partial<Task>) => {
-    setJob(prev => ({
-      ...prev,
-      tasks: prev.tasks.map(task => 
-        task.id === taskId ? { ...task, ...updates } : task
-      )
-    }));
+    if (!job) return;
+    
+    const updatedTasks = job.tasks.map(task => 
+      task.id === taskId ? { ...task, ...updates } : task
+    );
+    handleUpdateJob({ tasks: updatedTasks });
   };
 
   const addNote = (content: string) => {
+    if (!job) return;
+    
     const newEntry: TimelineEntry = {
       timestamp: new Date().toISOString(),
       type: 'note',
@@ -124,30 +65,52 @@ const JobOverviewPage: React.FC = () => {
       author: 'Current User'
     };
     
-    setJob(prev => ({
-      ...prev,
-      notes: [...prev.notes, content],
-      timeline: [newEntry, ...prev.timeline]
-    }));
+    const updatedNotes = [...job.notes, content];
+    const updatedTimeline = [newEntry, ...job.timeline];
+    
+    handleUpdateJob({ 
+      notes: updatedNotes, 
+      timeline: updatedTimeline 
+    });
   };
 
   const addTimelineEntry = (entry: Omit<TimelineEntry, 'timestamp'>) => {
+    if (!job) return;
+    
     const newEntry: TimelineEntry = {
       ...entry,
       timestamp: new Date().toISOString()
     };
     
-    setJob(prev => ({
-      ...prev,
-      timeline: [newEntry, ...prev.timeline]
-    }));
+    const updatedTimeline = [newEntry, ...job.timeline];
+    handleUpdateJob({ timeline: updatedTimeline });
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <Layout currentPage="jobs" onNavigate={() => {}}>
         <div className="flex items-center justify-center min-h-screen">
           <div className="text-lg">Loading job details...</div>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (error) {
+    return (
+      <Layout currentPage="jobs" onNavigate={() => {}}>
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-lg text-red-600">Error loading job details</div>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (!job) {
+    return (
+      <Layout currentPage="jobs" onNavigate={() => {}}>
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-lg text-gray-600">Job not found</div>
         </div>
       </Layout>
     );
@@ -159,9 +122,9 @@ const JobOverviewPage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           
           {/* Job Header */}
-          <JobHeader job={job} onUpdate={updateJob} />
+          <JobHeader job={job} onUpdate={handleUpdateJob} />
           
-          {/* Main Content Grid */}
+          {/* Two-column layout */}
           <div className="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
             
             {/* Left Column - Main Content */}
@@ -170,7 +133,7 @@ const JobOverviewPage: React.FC = () => {
               {/* Scheduling Panel */}
               <SchedulingPanel 
                 job={job} 
-                onUpdate={updateJob}
+                onUpdate={handleUpdateJob}
                 onTimelineUpdate={addTimelineEntry}
               />
               
@@ -183,12 +146,15 @@ const JobOverviewPage: React.FC = () => {
               />
               
               {/* Job Details Tabs */}
-              <JobDetailsTabs job={job} onUpdate={updateJob} />
+              <JobDetailsTabs job={job} onUpdate={handleUpdateJob} />
               
             </div>
             
-            {/* Right Column - Timeline & Notes */}
+            {/* Right Column - Sidebar */}
             <div className="lg:col-span-4 space-y-6">
+              
+              {/* Job Info Sidebar */}
+              <JobSidebar job={job} onUpdate={handleUpdateJob} />
               
               {/* Notes Section */}
               <NotesSection onAddNote={addNote} />
