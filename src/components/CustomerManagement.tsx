@@ -18,13 +18,14 @@ const CustomerManagement = () => {
     name: '',
     email: '',
     phone: '',
-    organization_id: ''
+    company: '',
+    address: ''
   });
 
   const filteredCustomers = customers.filter(customer =>
     customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     customer.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (customer.organizations && customer.organizations.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    (customer.company && customer.company.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -34,20 +35,21 @@ const CustomerManagement = () => {
 
     try {
       const { error: insertError } = await supabase
-        .from('people')
+        .from('customers')
         .insert({
           user_id: user?.id,
           name: formData.name,
           email: formData.email,
           phone: formData.phone,
-          organization_id: formData.organization_id || null,
-          type: 'customer'
+          company: formData.company,
+          address: formData.address,
+          status: 'active'
         });
 
       if (insertError) throw insertError;
 
       // Reset form and close modal
-      setFormData({ name: '', email: '', phone: '', organization_id: '' });
+      setFormData({ name: '', email: '', phone: '', company: '', address: '' });
       setShowModal(false);
       
       // The useCustomers hook will automatically refetch the data
@@ -101,10 +103,10 @@ const CustomerManagement = () => {
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1">{customer.name}</h3>
-                {customer.organizations && (
+                {customer.company && (
                   <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-2">
                     <Building className="h-4 w-4 mr-1" />
-                    {customer.organizations.name}
+                    {customer.company}
                   </div>
                 )}
               </div>
@@ -187,17 +189,23 @@ const CustomerManagement = () => {
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Organization</label>
-                  <select
-                    value={formData.organization_id}
-                    onChange={(e) => setFormData({ ...formData, organization_id: e.target.value })}
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Company</label>
+                  <input
+                    type="text"
+                    value={formData.company}
+                    onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-[#303030] bg-white dark:bg-[#303030] text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
-                  >
-                    <option value="">Select an organization</option>
-                    {organizations.map((org) => (
-                      <option key={org.id} value={org.id}>{org.name}</option>
-                    ))}
-                  </select>
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Address</label>
+                  <input
+                    type="text"
+                    value={formData.address}
+                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-[#303030] bg-white dark:bg-[#303030] text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
+                  />
                 </div>
               </div>
               
