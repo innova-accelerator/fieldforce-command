@@ -20,7 +20,10 @@ export const fetchJob = async (jobId: string): Promise<Job> => {
   // Transform the data to match our Job interface
   const transformedJob: Job = {
     ...job,
-    tasks: job.tasks || [],
+    tasks: job.tasks?.map((task: any) => ({
+      ...task,
+      priority: task.priority === 'high' ? 'high' : task.priority === 'medium' ? 'medium' : 'low'
+    })) || [],
     timeline: job.timeline_entries || [],
     customerName: job.customers?.name,
     assignedPersonName: job.people ? `${job.people.first_name} ${job.people.last_name}` : undefined,
@@ -51,18 +54,23 @@ export const updateJob = async (jobId: string, updates: Partial<Job>): Promise<J
   // Handle tasks updates if provided
   if (tasks) {
     for (const task of tasks) {
+      const taskData = {
+        ...task,
+        priority: task.priority === 'high' ? 'high' : task.priority === 'medium' ? 'medium' : 'low'
+      };
+      
       if (task.id && task.id.startsWith('task-')) {
         // This is a new task, insert it
-        const { id, ...taskData } = task;
+        const { id, ...insertData } = taskData;
         await supabase
           .from('tasks')
-          .insert({ ...taskData, job_id: jobId });
+          .insert({ ...insertData, job_id: jobId });
       } else if (task.id) {
         // This is an existing task, update it
-        const { id, ...taskData } = task;
+        const { id, ...updateData } = taskData;
         await supabase
           .from('tasks')
-          .update(taskData)
+          .update(updateData)
           .eq('id', id);
       }
     }
@@ -83,7 +91,10 @@ export const updateJob = async (jobId: string, updates: Partial<Job>): Promise<J
   // Transform the response
   const transformedJob: Job = {
     ...updatedJob,
-    tasks: updatedJob.tasks || [],
+    tasks: updatedJob.tasks?.map((task: any) => ({
+      ...task,
+      priority: task.priority === 'high' ? 'high' : task.priority === 'medium' ? 'medium' : 'low'
+    })) || [],
     timeline: updatedJob.timeline_entries || [],
     customerName: updatedJob.customers?.name,
     assignedPersonName: updatedJob.people ? `${updatedJob.people.first_name} ${updatedJob.people.last_name}` : undefined,
@@ -100,9 +111,16 @@ export const createJob = async (jobData: Partial<Job>): Promise<Job> => {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error('User not authenticated');
 
+  // Ensure required fields are present
+  const insertData = {
+    ...dbData,
+    name: dbData.name || 'Untitled Job',
+    user_id: user.id
+  };
+
   const { data: newJob, error } = await supabase
     .from('jobs')
-    .insert({ ...dbData, user_id: user.id })
+    .insert(insertData)
     .select(`
       *,
       tasks (*),
@@ -117,7 +135,10 @@ export const createJob = async (jobData: Partial<Job>): Promise<Job> => {
   // Transform the response
   const transformedJob: Job = {
     ...newJob,
-    tasks: newJob.tasks || [],
+    tasks: newJob.tasks?.map((task: any) => ({
+      ...task,
+      priority: task.priority === 'high' ? 'high' : task.priority === 'medium' ? 'medium' : 'low'
+    })) || [],
     timeline: newJob.timeline_entries || [],
     customerName: newJob.customers?.name,
     assignedPersonName: newJob.people ? `${newJob.people.first_name} ${newJob.people.last_name}` : undefined,

@@ -57,21 +57,6 @@ const JobsPage = () => {
     }
   };
 
-  const handleAssignPerson = (jobId: string, personId: string) => {
-    console.log('Assign person', personId, 'to job', jobId);
-    // In a real app, this would update the job via API
-  };
-
-  const handleAssignOrganization = (jobId: string, organizationId: string) => {
-    console.log('Assign organization', organizationId, 'to job', jobId);
-    // In a real app, this would update the job via API
-  };
-
-  const handleScheduleJob = (jobId: string, date: string) => {
-    console.log('Schedule job', jobId, 'for', date);
-    // In a real app, this would update the job schedule via API
-  };
-
   const JobCard = ({ job }: { job: any }) => (
     <Link to={`/jobs/${job.id}/overview`}>
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow cursor-pointer">

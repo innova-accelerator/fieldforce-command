@@ -12,7 +12,7 @@ export const mockCustomers: Customer[] = [
     address: '123 Main St, City, State',
     company: 'ABC Corp',
     status: 'active',
-    last_contact: new Date('2024-01-15'),
+    lastContact: new Date('2024-01-15'),
     total_jobs: 5,
     notes: 'Preferred customer, always pays on time',
     created_at: '2024-01-01T00:00:00Z',
@@ -27,7 +27,7 @@ export const mockCustomers: Customer[] = [
     address: '456 Oak Ave, City, State',
     company: 'XYZ Industries',
     status: 'active',
-    last_contact: new Date('2024-01-10'),
+    lastContact: new Date('2024-01-10'),
     total_jobs: 3,
     notes: 'Requires detailed project updates',
     created_at: '2024-01-01T00:00:00Z',
@@ -42,7 +42,7 @@ export const mockCustomers: Customer[] = [
     address: '789 Pine St, City, State',
     company: 'Tech Solutions',
     status: 'inactive',
-    last_contact: new Date('2024-01-05'),
+    lastContact: new Date('2024-01-05'),
     total_jobs: 7,
     notes: 'Previous issues with billing',
     created_at: '2024-01-01T00:00:00Z',
@@ -117,7 +117,6 @@ export const mockAssociates: Associate[] = [
     id: 'tech-1',
     name: 'Alex Thompson',
     email: 'alex@company.com',
-    user_id: 'user-1',
     availability: 'available',
     skills: ['networking', 'installation'],
     created_at: '2024-01-01T00:00:00Z',
@@ -127,7 +126,6 @@ export const mockAssociates: Associate[] = [
     id: 'tech-2',
     name: 'Maria Garcia',
     email: 'maria@company.com',
-    user_id: 'user-1',
     availability: 'available',
     skills: ['security', 'maintenance'],
     created_at: '2024-01-01T00:00:00Z',
@@ -137,7 +135,6 @@ export const mockAssociates: Associate[] = [
     id: 'tech-3',
     name: 'David Chen',
     email: 'david@company.com',
-    user_id: 'user-1',
     availability: 'available',
     skills: ['installation', 'troubleshooting'],
     created_at: '2024-01-01T00:00:00Z',
@@ -152,7 +149,6 @@ export const mockActivities: Activity[] = [
     title: 'New job created',
     description: 'Network Installation job created for John Smith',
     timestamp: new Date('2024-01-20T10:00:00'),
-    user_id: 'user-1',
     customer_id: '1',
     job_id: '1',
     created_at: '2024-01-20T10:00:00Z'
@@ -163,7 +159,6 @@ export const mockActivities: Activity[] = [
     title: 'Job completed',
     description: 'Security System Upgrade completed successfully',
     timestamp: new Date('2024-01-19T16:30:00'),
-    user_id: 'user-1',
     customer_id: '2',
     job_id: '2',
     created_at: '2024-01-19T16:30:00Z'
@@ -174,7 +169,6 @@ export const mockActivities: Activity[] = [
     title: 'Note added',
     description: 'Updated project timeline for Network Installation',
     timestamp: new Date('2024-01-18T14:15:00'),
-    user_id: 'user-1',
     customer_id: '1',
     job_id: '1',
     created_at: '2024-01-18T14:15:00Z'
@@ -185,7 +179,6 @@ export const mockActivities: Activity[] = [
     title: 'Customer call',
     description: 'Follow-up call with Mike Davis regarding project status',
     timestamp: new Date('2024-01-17T11:00:00'),
-    user_id: 'user-1',
     customer_id: '3',
     created_at: '2024-01-17T11:00:00Z'
   },
@@ -195,7 +188,6 @@ export const mockActivities: Activity[] = [
     title: 'Email sent',
     description: 'Project proposal sent to potential new customer',
     timestamp: new Date('2024-01-16T09:30:00'),
-    user_id: 'user-1',
     created_at: '2024-01-16T09:30:00Z'
   }
 ];
@@ -222,8 +214,8 @@ export const mockOrganizations: Organization[] = [
     city: 'Tech City',
     state: 'CA',
     zipcode: '90210',
-    createdAt: '2024-01-01T00:00:00Z',
-    updatedAt: '2024-01-01T00:00:00Z',
+    createdAt: new Date('2024-01-01T00:00:00Z'),
+    updatedAt: new Date('2024-01-01T00:00:00Z'),
     userId: 'user-1'
   },
   {
@@ -238,8 +230,8 @@ export const mockOrganizations: Organization[] = [
     city: 'Manufacturing Hub',
     state: 'TX',
     zipcode: '73301',
-    createdAt: '2024-01-01T00:00:00Z',
-    updatedAt: '2024-01-01T00:00:00Z',
+    createdAt: new Date('2024-01-01T00:00:00Z'),
+    updatedAt: new Date('2024-01-01T00:00:00Z'),
     userId: 'user-1'
   }
 ];
@@ -254,8 +246,8 @@ export const mockPeople: Person[] = [
     title: 'IT Director',
     officeNumber: '555-0101',
     cellNumber: '555-0123',
-    createdAt: '2024-01-01T00:00:00Z',
-    updatedAt: '2024-01-01T00:00:00Z',
+    createdAt: new Date('2024-01-01T00:00:00Z'),
+    updatedAt: new Date('2024-01-01T00:00:00Z'),
     userId: 'user-1'
   },
   {
@@ -267,8 +259,8 @@ export const mockPeople: Person[] = [
     title: 'Operations Manager',
     officeNumber: '555-0201',
     cellNumber: '555-0124',
-    createdAt: '2024-01-01T00:00:00Z',
-    updatedAt: '2024-01-01T00:00:00Z',
+    createdAt: new Date('2024-01-01T00:00:00Z'),
+    updatedAt: new Date('2024-01-01T00:00:00Z'),
     userId: 'user-1'
   }
 ];

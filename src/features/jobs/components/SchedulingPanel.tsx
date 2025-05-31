@@ -15,9 +15,9 @@ interface SchedulingPanelProps {
 
 // Mock available associates - in real app, fetch from API
 const availableAssociates: Associate[] = [
-  { id: 'tech-3', name: 'Mike Davis', email: 'mike@company.com', user_id: 'user-1', availability: 'available', created_at: '2024-01-01T00:00:00Z', updated_at: '2024-01-01T00:00:00Z' },
-  { id: 'tech-4', name: 'Lisa Chen', email: 'lisa@company.com', user_id: 'user-1', availability: 'available', created_at: '2024-01-01T00:00:00Z', updated_at: '2024-01-01T00:00:00Z' },
-  { id: 'tech-5', name: 'David Brown', email: 'david@company.com', user_id: 'user-1', availability: 'available', created_at: '2024-01-01T00:00:00Z', updated_at: '2024-01-01T00:00:00Z' }
+  { id: 'tech-3', name: 'Mike Davis', email: 'mike@company.com', availability: 'available', created_at: '2024-01-01T00:00:00Z', updated_at: '2024-01-01T00:00:00Z' },
+  { id: 'tech-4', name: 'Lisa Chen', email: 'lisa@company.com', availability: 'available', created_at: '2024-01-01T00:00:00Z', updated_at: '2024-01-01T00:00:00Z' },
+  { id: 'tech-5', name: 'David Brown', email: 'david@company.com', availability: 'available', created_at: '2024-01-01T00:00:00Z', updated_at: '2024-01-01T00:00:00Z' }
 ];
 
 const SchedulingPanel: React.FC<SchedulingPanelProps> = ({ 
