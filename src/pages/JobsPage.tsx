@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Layout from '../components/Layout';
@@ -29,14 +28,12 @@ const JobsPage = () => {
 
   if (jobsError) {
     return (
-      <Layout currentPage="jobs" onNavigate={() => {}}>
-        <div className="p-6">
-          <ErrorDisplay 
-            message="Failed to load projects. Please try again."
-            onRetry={() => refetchJobs()}
-          />
-        </div>
-      </Layout>
+      <div className="p-6">
+        <ErrorDisplay 
+          message="Failed to load projects. Please try again."
+          onRetry={() => refetchJobs()}
+        />
+      </div>
     );
   }
 

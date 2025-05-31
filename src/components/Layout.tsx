@@ -2,39 +2,28 @@
 import React from 'react';
 import { Users, Calendar, UserCheck, Settings, Home, Menu, X, Building2, User, Briefcase } from 'lucide-react';
 import { useState } from 'react';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 
 interface LayoutProps {
-  children: React.ReactNode;
-  currentPage: string;
-  onNavigate: (page: string) => void;
+  children?: React.ReactNode;
 }
 
-const Layout = ({ children, currentPage, onNavigate }: LayoutProps) => {
+const Layout = ({ children }: LayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const location = useLocation();
 
   const navigation = [
-    { name: 'Dashboard', href: 'dashboard', icon: Home },
-    { name: 'Organizations', href: 'organizations', icon: Building2 },
-    { name: 'People', href: 'people', icon: User },
-    { name: 'Jobs', href: 'jobs', icon: Briefcase },
-    { name: 'Customers', href: 'customers', icon: Users },
-    { name: 'Associates', href: 'associates', icon: UserCheck },
-    { name: 'Schedule', href: 'schedule', icon: Calendar },
-    { name: 'Settings', href: 'settings', icon: Settings },
+    { name: 'Dashboard', href: '/dashboard', icon: Home },
+    { name: 'Organizations', href: '/organizations', icon: Building2 },
+    { name: 'People', href: '/people', icon: User },
+    { name: 'Jobs', href: '/jobs', icon: Briefcase },
+    { name: 'Customers', href: '/customers', icon: Users },
+    { name: 'Associates', href: '/associates', icon: UserCheck },
+    { name: 'Schedule', href: '/schedule', icon: Calendar },
+    { name: 'Settings', href: '/settings', icon: Settings },
   ];
 
-  const handleNavigation = (href: string) => {
-    if (href === 'organizations') {
-      window.location.href = '/organizations';
-    } else if (href === 'people') {
-      window.location.href = '/people';
-    } else if (href === 'jobs') {
-      window.location.href = '/jobs';
-    } else {
-      onNavigate(href);
-    }
-    setSidebarOpen(false);
-  };
+  const currentPath = location.pathname;
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
@@ -63,11 +52,12 @@ const Layout = ({ children, currentPage, onNavigate }: LayoutProps) => {
         
         <nav className="mt-6 px-3">
           {navigation.map((item) => {
-            const isActive = currentPage === item.href;
+            const isActive = currentPath === item.href;
             return (
-              <button
+              <Link
                 key={item.name}
-                onClick={() => handleNavigation(item.href)}
+                to={item.href}
+                onClick={() => setSidebarOpen(false)}
                 className={`
                   w-full flex items-center px-3 py-2 mb-1 text-sm font-medium rounded-lg transition-colors duration-200
                   ${isActive 
@@ -78,7 +68,7 @@ const Layout = ({ children, currentPage, onNavigate }: LayoutProps) => {
               >
                 <item.icon className="mr-3 h-5 w-5" />
                 {item.name}
-              </button>
+              </Link>
             );
           })}
         </nav>
@@ -97,7 +87,7 @@ const Layout = ({ children, currentPage, onNavigate }: LayoutProps) => {
                 <Menu className="h-6 w-6" />
               </button>
               <h2 className="text-lg font-semibold text-gray-900 capitalize">
-                {currentPage.replace('-', ' ')}
+                {currentPath.replace('/', '').replace('-', ' ') || 'Home'}
               </h2>
             </div>
             
@@ -111,7 +101,7 @@ const Layout = ({ children, currentPage, onNavigate }: LayoutProps) => {
 
         {/* Page content */}
         <main className="flex-1 overflow-auto">
-          {children}
+          {children || <Outlet />}
         </main>
       </div>
     </div>
