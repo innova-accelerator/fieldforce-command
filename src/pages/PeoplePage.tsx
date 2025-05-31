@@ -1,13 +1,14 @@
-
 import React, { useState } from 'react';
 import { Plus, Search, User, Mail, Phone, Building, MapPin } from 'lucide-react';
 import { usePeople, useOrganizations } from '../hooks/useData';
+import AddPersonModal from '../components/modals/AddPersonModal';
 
 const PeoplePage = () => {
-  const { data: people = [], isLoading: peopleLoading } = usePeople();
+  const { data: people = [], isLoading: peopleLoading, refetch } = usePeople();
   const { data: organizations = [] } = useOrganizations();
   const [searchTerm, setSearchTerm] = useState('');
   const [organizationFilter, setOrganizationFilter] = useState<string>('all');
+  const [isAddPersonModalOpen, setIsAddPersonModalOpen] = useState(false);
 
   const filteredPeople = people.filter(person => {
     const fullName = `${person.first_name} ${person.last_name}`;
@@ -23,6 +24,11 @@ const PeoplePage = () => {
     if (!organizationId) return 'No Organization';
     const org = organizations.find(o => o.id === organizationId);
     return org?.name || 'Unknown Organization';
+  };
+
+  const handlePersonAdded = () => {
+    refetch();
+    setIsAddPersonModalOpen(false);
   };
 
   if (peopleLoading) {
@@ -52,7 +58,10 @@ const PeoplePage = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-900">People</h1>
-        <button className="mt-4 sm:mt-0 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center">
+        <button 
+          onClick={() => setIsAddPersonModalOpen(true)}
+          className="mt-4 sm:mt-0 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center"
+        >
           <Plus className="h-4 w-4 mr-2" />
           Add Person
         </button>
@@ -145,6 +154,13 @@ const PeoplePage = () => {
         <div className="text-center py-12">
           <p className="text-gray-500">No people found matching your criteria.</p>
         </div>
+      )}
+
+      {/* Add Person Modal */}
+      {isAddPersonModalOpen && (
+        <AddPersonModal 
+          onPersonAdded={handlePersonAdded}
+        />
       )}
     </div>
   );
