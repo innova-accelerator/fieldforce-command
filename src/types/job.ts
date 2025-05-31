@@ -2,7 +2,7 @@
 export interface Job {
   id: string;
   title: string; // Display title for the job
-  description?: string;
+  description: string; // Made required to match usage
   status: 'new' | 'in-progress' | 'completed' | 'cancelled';
   priority: 'low' | 'medium' | 'high' | 'urgent';
   startDate?: Date;

@@ -46,7 +46,7 @@ export const mockJobs: Job[] = [
   {
     id: 'job-1',
     title: 'Office HVAC Installation', 
-    description: 'Install new HVAC system in main office building',
+    description: 'Install new HVAC system in main office building with full ductwork and controls',
     status: 'in-progress',
     priority: 'high',
     startDate: new Date('2024-01-15'),
@@ -76,7 +76,7 @@ export const mockJobs: Job[] = [
   {
     id: 'job-2', 
     title: 'Warehouse Electrical Upgrade',
-    description: 'Upgrade electrical systems in warehouse facility',
+    description: 'Upgrade electrical systems in warehouse facility including new panels and wiring',
     status: 'new',
     priority: 'medium',
     startDate: new Date('2024-01-25'),

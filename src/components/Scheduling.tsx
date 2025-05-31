@@ -1,8 +1,8 @@
-
 import React, { useState } from 'react';
 import { Calendar, ChevronLeft, ChevronRight, MapPin, Clock, User } from 'lucide-react';
 import { mockJobs, mockAssociates } from '../data/mockData';
-import { Job, Associate } from '../types';
+import { Job } from '../types/job';
+import { Associate } from '../types';
 
 const Scheduling = () => {
   const [currentDate, setCurrentDate] = useState(new Date());

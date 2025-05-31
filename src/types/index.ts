@@ -13,24 +13,6 @@ export interface Customer {
   notes?: string;
 }
 
-export interface Job {
-  id: string;
-  title: string;
-  description: string;
-  customerId: string;
-  customerName: string;
-  location: string;
-  priority: 'low' | 'medium' | 'high' | 'urgent';
-  status: 'new' | 'scheduled' | 'in-progress' | 'completed' | 'cancelled';
-  assignedTo?: string;
-  assignedToName?: string;
-  scheduledDate?: Date;
-  completedDate?: Date;
-  createdAt: Date;
-  estimatedDuration: number; // in hours
-  tags: string[];
-}
-
 export interface Associate {
   id: string;
   name: string;

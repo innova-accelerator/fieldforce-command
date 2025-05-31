@@ -1,3 +1,4 @@
+
 import { supabase } from '@/integrations/supabase/client';
 import { Job, Task, TimelineEntry, Associate } from '@/types/job';
 
@@ -5,6 +6,7 @@ import { Job, Task, TimelineEntry, Associate } from '@/types/job';
 const mockJob: Job = {
   id: 'job-123',
   title: 'HVAC System Installation',
+  description: 'Complete HVAC system installation for commercial building including ductwork, units, and controls.',
   client: 'ABC Corporation',
   phase: 'In Progress',
   status: 'in-progress',
@@ -15,7 +17,6 @@ const mockJob: Job = {
   organizationId: 'org-1',
   createdAt: new Date('2024-01-10'),
   location: '123 Business Ave, Suite 100, City, State 12345',
-  description: 'Complete HVAC system installation for commercial building including ductwork, units, and controls.',
   isFavorite: false,
   assignedTechs: [
     { id: 'tech-1', name: 'John Smith', avatarUrl: '/placeholder.svg' },

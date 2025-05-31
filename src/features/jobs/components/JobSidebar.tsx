@@ -11,8 +11,9 @@ interface JobSidebarProps {
 }
 
 const JobSidebar: React.FC<JobSidebarProps> = ({ job }) => {
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+  const formatDate = (date: Date | string) => {
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return dateObj.toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
       year: 'numeric'
@@ -81,11 +82,11 @@ const JobSidebar: React.FC<JobSidebarProps> = ({ job }) => {
         <CardContent className="space-y-3">
           <div>
             <div className="text-sm font-medium text-gray-900">Start Date</div>
-            <div className="text-sm text-gray-600">{formatDate(job.startDate)}</div>
+            <div className="text-sm text-gray-600">{job.startDate ? formatDate(job.startDate) : 'Not set'}</div>
           </div>
           <div>
             <div className="text-sm font-medium text-gray-900">End Date</div>
-            <div className="text-sm text-gray-600">{formatDate(job.endDate)}</div>
+            <div className="text-sm text-gray-600">{job.endDate ? formatDate(job.endDate) : 'Not set'}</div>
           </div>
         </CardContent>
       </Card>

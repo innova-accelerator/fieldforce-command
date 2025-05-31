@@ -1,9 +1,8 @@
-
 import React, { useState } from 'react';
 import { Search, Plus, Calendar, User, MapPin, Clock, Filter } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { mockJobs } from '../data/mockData';
-import { Job } from '../types';
+import { Job } from '../types/job';
 
 const JobManagement = () => {
   const [jobs] = useState<Job[]>(mockJobs);

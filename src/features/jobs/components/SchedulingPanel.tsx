@@ -27,11 +27,17 @@ const SchedulingPanel: React.FC<SchedulingPanelProps> = ({
 }) => {
   const [showAssignModal, setShowAssignModal] = useState(false);
 
+  const formatDateForInput = (date: Date | undefined): string => {
+    if (!date) return '';
+    return date.toISOString().split('T')[0]; // YYYY-MM-DD format
+  };
+
   const updateDate = (field: 'startDate' | 'endDate', value: string) => {
-    onUpdate({ [field]: value });
+    const dateValue = value ? new Date(value) : undefined;
+    onUpdate({ [field]: dateValue });
     onTimelineUpdate({
       type: 'scheduling',
-      content: `${field === 'startDate' ? 'Start' : 'End'} date updated to ${new Date(value).toLocaleDateString()}`,
+      content: `${field === 'startDate' ? 'Start' : 'End'} date updated to ${value ? new Date(value).toLocaleDateString() : 'not set'}`,
       author: 'Current User'
     });
   };
@@ -80,7 +86,7 @@ const SchedulingPanel: React.FC<SchedulingPanelProps> = ({
             <Input
               id="startDate"
               type="date"
-              value={job.startDate}
+              value={formatDateForInput(job.startDate)}
               onChange={(e) => updateDate('startDate', e.target.value)}
               className="mt-1"
             />
@@ -93,7 +99,7 @@ const SchedulingPanel: React.FC<SchedulingPanelProps> = ({
             <Input
               id="endDate"
               type="date"
-              value={job.endDate}
+              value={formatDateForInput(job.endDate)}
               onChange={(e) => updateDate('endDate', e.target.value)}
               className="mt-1"
             />
