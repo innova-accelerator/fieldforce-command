@@ -1,15 +1,43 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Plus, Calendar, User, MapPin, Clock, Filter } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { mockJobs } from '../data/mockData';
+import { fetchAllJobs } from '../services/jobs';
 import { Job } from '../types/job';
 
 const JobManagement = () => {
-  const [jobs] = useState<Job[]>(mockJobs);
+  const [jobs, setJobs] = useState<Job[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [priorityFilter, setPriorityFilter] = useState<string>('all');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadJobs = async () => {
+      try {
+        // For now, using a placeholder user ID - in real app this would come from auth
+        const currentUser = { id: 'user-1' };
+        const jobsFromSupabase = await fetchAllJobs(currentUser.id);
+        setJobs(jobsFromSupabase);
+      } catch (error) {
+        console.error('Error loading jobs:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadJobs();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="p-6">
+        <div className="text-center py-12">
+          <p className="text-gray-500">Loading jobs...</p>
+        </div>
+      </div>
+    );
+  }
 
   const filteredJobs = jobs.filter(job => {
     const matchesSearch = job.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -88,7 +116,7 @@ const JobManagement = () => {
         </div>
 
         <div className="flex flex-wrap gap-1">
-          {job.tags.map((tag, index) => (
+          {job.tags?.map((tag, index) => (
             <span key={index} className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
               {tag}
             </span>

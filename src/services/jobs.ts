@@ -1,5 +1,33 @@
+
 import { supabase } from '@/integrations/supabase/client';
 import { Job, Task, TimelineEntry } from '@/types/job';
+
+export const fetchAllJobs = async (userId: string): Promise<Job[]> => {
+  const { data: jobs, error } = await supabase
+    .from('jobs')
+    .select(`
+      *,
+      tasks (*),
+      timeline_entries (*),
+      customers (name),
+      people (first_name, last_name)
+    `)
+    .eq('user_id', userId);
+
+  if (error) throw error;
+
+  // Transform the data to match our Job interface
+  return (jobs || []).map((job: any) => ({
+    ...job,
+    tasks: job.tasks?.map((task: any) => ({
+      ...task,
+      priority: task.priority === 'high' ? 'high' : task.priority === 'medium' ? 'medium' : 'low'
+    })) || [],
+    timeline: job.timeline_entries || [],
+    customerName: job.customers?.name,
+    assignedPersonName: job.people ? `${job.people.first_name} ${job.people.last_name}` : undefined,
+  }));
+};
 
 export const fetchJob = async (jobId: string): Promise<Job> => {
   const { data: job, error } = await supabase

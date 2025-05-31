@@ -1,16 +1,37 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Plus, Search, Filter, Calendar, User, MapPin, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useJobs } from '../hooks/useData';
+import { fetchAllJobs } from '../services/jobs';
+import { Job } from '../types/job';
 
 const JobsPage = () => {
-  const { data: jobs = [], isLoading, error } = useJobs();
+  const [jobs, setJobs] = useState<Job[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [priorityFilter, setPriorityFilter] = useState<string>('all');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  if (isLoading) {
+  useEffect(() => {
+    const loadJobs = async () => {
+      try {
+        // For now, using a placeholder user ID - in real app this would come from auth
+        const currentUser = { id: 'user-1' };
+        const jobsFromSupabase = await fetchAllJobs(currentUser.id);
+        setJobs(jobsFromSupabase);
+      } catch (err) {
+        console.error('Error loading jobs:', err);
+        setError('Error loading jobs');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadJobs();
+  }, []);
+
+  if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-lg">Loading jobs...</div>
@@ -57,7 +78,7 @@ const JobsPage = () => {
     }
   };
 
-  const JobCard = ({ job }: { job: any }) => (
+  const JobCard = ({ job }: { job: Job }) => (
     <Link to={`/jobs/${job.id}/overview`}>
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow cursor-pointer">
         <div className="flex items-start justify-between mb-4">
