@@ -1,13 +1,11 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import Layout from '../components/Layout';
 import CustomerManagement from '../components/CustomerManagement';
 
 const CustomersPage = () => {
-  const [currentPage, setCurrentPage] = useState('customers');
-
   return (
-    <Layout currentPage={currentPage} onNavigate={setCurrentPage}>
+    <Layout currentPage="customers" onNavigate={() => {}}>
       <CustomerManagement />
     </Layout>
   );

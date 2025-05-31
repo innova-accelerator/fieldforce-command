@@ -1,13 +1,11 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import Layout from '../components/Layout';
 import Settings from '../components/Settings';
 
 const SettingsPage = () => {
-  const [currentPage, setCurrentPage] = useState('settings');
-
   return (
-    <Layout currentPage={currentPage} onNavigate={setCurrentPage}>
+    <Layout currentPage="settings" onNavigate={() => {}}>
       <Settings />
     </Layout>
   );

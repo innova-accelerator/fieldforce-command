@@ -1,13 +1,11 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import Layout from '../components/Layout';
 import Dashboard from '../components/Dashboard';
 
 const DashboardPage = () => {
-  const [currentPage, setCurrentPage] = useState('dashboard');
-
   return (
-    <Layout currentPage={currentPage} onNavigate={setCurrentPage}>
+    <Layout currentPage="dashboard" onNavigate={() => {}}>
       <Dashboard />
     </Layout>
   );

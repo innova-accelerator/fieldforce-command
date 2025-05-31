@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Layout from '../components/Layout';
@@ -14,7 +15,6 @@ import AddOrganizationModal from '../components/modals/AddOrganizationModal';
 import AddPersonModal from '../components/modals/AddPersonModal';
 
 const JobsPage = () => {
-  const [currentPage, setCurrentPage] = useState('jobs');
   const { data: jobs = [], isLoading: jobsLoading, error: jobsError, refetch: refetchJobs } = useJobs();
   const { data: people = [], isLoading: peopleLoading, refetch: refetchPeople } = usePeople();
   const { data: organizations = [], refetch: refetchOrganizations } = useOrganizations();
@@ -29,7 +29,7 @@ const JobsPage = () => {
 
   if (jobsError) {
     return (
-      <Layout currentPage={currentPage} onNavigate={setCurrentPage}>
+      <Layout currentPage="jobs" onNavigate={() => {}}>
         <div className="p-6">
           <ErrorDisplay 
             message="Failed to load projects. Please try again."
@@ -41,7 +41,7 @@ const JobsPage = () => {
   }
 
   return (
-    <Layout currentPage={currentPage} onNavigate={setCurrentPage}>
+    <Layout currentPage="jobs" onNavigate={() => {}}>
       <div className="p-6">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
           <h1 className="text-2xl font-bold">Projects</h1>
