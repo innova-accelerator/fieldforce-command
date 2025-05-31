@@ -1,5 +1,7 @@
-
 import { Customer, Job, Associate, Activity, DashboardMetrics } from '../types';
+import { Organization } from '../types/organization';
+import { Person } from '../types/person';
+import { Job as NewJob } from '../types/job';
 
 export const mockCustomers: Customer[] = [
   {
@@ -181,4 +183,140 @@ export const mockMetrics: DashboardMetrics = {
   completedJobsThisMonth: 156,
   revenue: 45670,
   revenueGrowth: 12.5
+};
+
+export const mockOrganizations: Organization[] = [
+  {
+    id: 'org-1',
+    name: 'ABC Corporation',
+    relation: 'Client',
+    category: 'Technology',
+    email: 'contact@abccorp.com',
+    phone: '(555) 123-4567',
+    website: 'https://abccorp.com',
+    address: '123 Business Ave',
+    city: 'New York',
+    state: 'NY',
+    zipcode: '10001',
+    createdAt: new Date('2024-01-15')
+  },
+  {
+    id: 'org-2',
+    name: 'Wilson Industries',
+    relation: 'Partner',
+    category: 'Manufacturing',
+    email: 'info@wilsonindustries.com',
+    phone: '(555) 987-6543',
+    address: '456 Industrial Blvd',
+    city: 'Brooklyn',
+    state: 'NY',
+    zipcode: '11201',
+    createdAt: new Date('2024-02-10')
+  }
+];
+
+export const mockPeople: Person[] = [
+  {
+    id: 'person-1',
+    organizationId: 'org-1',
+    firstName: 'John',
+    lastName: 'Smith',
+    email: 'john.smith@abccorp.com',
+    title: 'Project Manager',
+    cellNumber: '(555) 111-2222',
+    createdAt: new Date('2024-01-20')
+  },
+  {
+    id: 'person-2',
+    organizationId: 'org-1',
+    firstName: 'Sarah',
+    lastName: 'Johnson',
+    email: 'sarah.johnson@abccorp.com',
+    title: 'Operations Director',
+    cellNumber: '(555) 333-4444',
+    createdAt: new Date('2024-01-25')
+  },
+  {
+    id: 'person-3',
+    organizationId: 'org-2',
+    firstName: 'Mike',
+    lastName: 'Wilson',
+    email: 'mike.wilson@wilsonindustries.com',
+    title: 'CEO',
+    cellNumber: '(555) 555-6666',
+    createdAt: new Date('2024-02-15')
+  }
+];
+
+export const mockNewJobs: NewJob[] = [
+  {
+    id: 'job-1',
+    name: 'HVAC System Installation',
+    description: 'Complete HVAC system installation for commercial building',
+    status: 'in-progress',
+    priority: 'high',
+    startDate: '2024-01-15',
+    endDate: '2024-01-30',
+    assignedPersonId: 'person-1',
+    organizationId: 'org-1',
+    createdAt: new Date('2024-01-10')
+  },
+  {
+    id: 'job-2',
+    name: 'Electrical Upgrade',
+    description: 'Upgrade electrical systems in manufacturing facility',
+    status: 'new',
+    priority: 'medium',
+    startDate: '2024-02-01',
+    endDate: '2024-02-15',
+    createdAt: new Date('2024-01-25')
+  }
+];
+
+// CRUD Functions
+export const createOrganization = (orgData: Omit<Organization, 'id' | 'createdAt'>): Organization => {
+  const newOrg: Organization = {
+    ...orgData,
+    id: `org-${Date.now()}`,
+    createdAt: new Date()
+  };
+  mockOrganizations.push(newOrg);
+  return newOrg;
+};
+
+export const createPerson = (personData: Omit<Person, 'id' | 'createdAt'>): Person => {
+  const newPerson: Person = {
+    ...personData,
+    id: `person-${Date.now()}`,
+    createdAt: new Date()
+  };
+  mockPeople.push(newPerson);
+  return newPerson;
+};
+
+export const createJob = (jobData: Omit<NewJob, 'id' | 'createdAt'>): NewJob => {
+  const newJob: NewJob = {
+    ...jobData,
+    id: `job-${Date.now()}`,
+    createdAt: new Date()
+  };
+  mockNewJobs.push(newJob);
+  return newJob;
+};
+
+export const assignPersonToJob = (jobId: string, personId: string): void => {
+  const job = mockNewJobs.find(j => j.id === jobId);
+  const person = mockPeople.find(p => p.id === personId);
+  if (job && person) {
+    job.assignedPersonId = personId;
+    job.organizationId = person.organizationId;
+  }
+};
+
+export const getOrganizationById = (id: string): Organization | undefined => {
+  return mockOrganizations.find(org => org.id === id);
+};
+
+export const getPersonById = (id: string): Person | undefined => {
+  return mockPeople.find(person => person.id === id);
 };

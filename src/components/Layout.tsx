@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Users, Calendar, UserCheck, Settings, Home, Menu, X } from 'lucide-react';
+import { Users, Calendar, UserCheck, Settings, Home, Menu, X, Building2, User, Briefcase } from 'lucide-react';
 import { useState } from 'react';
 
 interface LayoutProps {
@@ -14,12 +14,27 @@ const Layout = ({ children, currentPage, onNavigate }: LayoutProps) => {
 
   const navigation = [
     { name: 'Dashboard', href: 'dashboard', icon: Home },
+    { name: 'Organizations', href: 'organizations', icon: Building2 },
+    { name: 'People', href: 'people', icon: User },
+    { name: 'Jobs', href: 'jobs', icon: Briefcase },
     { name: 'Customers', href: 'customers', icon: Users },
-    { name: 'Jobs', href: 'jobs', icon: Calendar },
     { name: 'Associates', href: 'associates', icon: UserCheck },
     { name: 'Schedule', href: 'schedule', icon: Calendar },
     { name: 'Settings', href: 'settings', icon: Settings },
   ];
+
+  const handleNavigation = (href: string) => {
+    if (href === 'organizations') {
+      window.location.href = '/organizations';
+    } else if (href === 'people') {
+      window.location.href = '/people';
+    } else if (href === 'jobs') {
+      window.location.href = '/jobs';
+    } else {
+      onNavigate(href);
+    }
+    setSidebarOpen(false);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
@@ -52,10 +67,7 @@ const Layout = ({ children, currentPage, onNavigate }: LayoutProps) => {
             return (
               <button
                 key={item.name}
-                onClick={() => {
-                  onNavigate(item.href);
-                  setSidebarOpen(false);
-                }}
+                onClick={() => handleNavigation(item.href)}
                 className={`
                   w-full flex items-center px-3 py-2 mb-1 text-sm font-medium rounded-lg transition-colors duration-200
                   ${isActive 
