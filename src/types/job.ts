@@ -1,7 +1,6 @@
 
 export interface Job {
   id: string;
-  name: string;
   title: string; // Display title for the job
   description?: string;
   status: 'new' | 'in-progress' | 'completed' | 'cancelled';

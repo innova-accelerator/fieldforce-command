@@ -1,7 +1,7 @@
-import { Customer, Job, Associate, Activity, DashboardMetrics } from '../types';
+import { Customer, Associate, Activity, DashboardMetrics } from '../types';
 import { Organization } from '../types/organization';
 import { Person } from '../types/person';
-import { Job as NewJob } from '../types/job';
+import { Job } from '../types/job';
 
 export const mockCustomers: Customer[] = [
   {
@@ -49,8 +49,6 @@ export const mockJobs: Job[] = [
     description: 'Install new HVAC system in main office building',
     status: 'in-progress',
     priority: 'high',
-    startDate: '2024-01-15',
-    endDate: '2024-02-15',
     assignedPersonId: 'person-1',
     organizationId: 'org-1',
     createdAt: new Date('2024-01-10'),
@@ -74,8 +72,6 @@ export const mockJobs: Job[] = [
     description: 'Upgrade electrical systems in warehouse facility',
     status: 'new',
     priority: 'medium',
-    startDate: '2024-02-01',
-    endDate: '2024-03-01',
     assignedPersonId: 'person-2',
     organizationId: 'org-2',
     createdAt: new Date('2024-01-20'),
@@ -253,59 +249,6 @@ export const mockPeople: Person[] = [
   }
 ];
 
-export const mockNewJobs: NewJob[] = [
-  {
-    id: 'job-1',
-    name: 'HVAC System Installation',
-    title: 'HVAC System Installation',
-    description: 'Complete HVAC system installation for commercial building',
-    status: 'in-progress',
-    priority: 'high',
-    startDate: '2024-01-15',
-    endDate: '2024-01-30',
-    assignedPersonId: 'person-1',
-    organizationId: 'org-1',
-    createdAt: new Date('2024-01-10'),
-    client: 'ABC Corporation',
-    phase: 'Installation',
-    location: '123 Business Ave, New York, NY 10001',
-    isFavorite: false,
-    assignedTechs: [],
-    tasks: [],
-    notes: [],
-    timeline: [],
-    contactInfo: {
-      name: 'John Smith',
-      phone: '(555) 111-2222',
-      email: 'john.smith@abccorp.com'
-    }
-  },
-  {
-    id: 'job-2',
-    name: 'Electrical Upgrade',
-    title: 'Electrical Upgrade',
-    description: 'Upgrade electrical systems in manufacturing facility',
-    status: 'new',
-    priority: 'medium',
-    startDate: '2024-02-01',
-    endDate: '2024-02-15',
-    createdAt: new Date('2024-01-25'),
-    client: 'Wilson Industries',
-    phase: 'Planning',
-    location: '456 Industrial Blvd, Brooklyn, NY 11201',
-    isFavorite: false,
-    assignedTechs: [],
-    tasks: [],
-    notes: [],
-    timeline: [],
-    contactInfo: {
-      name: 'Mike Wilson',
-      phone: '(555) 555-6666',
-      email: 'mike.wilson@wilsonindustries.com'
-    }
-  }
-];
-
 // CRUD Functions
 export const createOrganization = (orgData: Omit<Organization, 'id' | 'createdAt'>): Organization => {
   const newOrg: Organization = {
@@ -327,18 +270,18 @@ export const createPerson = (personData: Omit<Person, 'id' | 'createdAt'>): Pers
   return newPerson;
 };
 
-export const createJob = (jobData: Omit<NewJob, 'id' | 'createdAt'>): NewJob => {
-  const newJob: NewJob = {
+export const createJob = (jobData: Omit<Job, 'id' | 'createdAt'>): Job => {
+  const newJob: Job = {
     ...jobData,
     id: `job-${Date.now()}`,
     createdAt: new Date()
   };
-  mockNewJobs.push(newJob);
+  mockJobs.push(newJob);
   return newJob;
 };
 
 export const assignPersonToJob = (jobId: string, personId: string): void => {
-  const job = mockNewJobs.find(j => j.id === jobId);
+  const job = mockJobs.find(j => j.id === jobId);
   const person = mockPeople.find(p => p.id === personId);
   if (job && person) {
     job.assignedPersonId = personId;
