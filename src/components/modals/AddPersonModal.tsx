@@ -128,45 +128,45 @@ const AddPersonModal: React.FC<AddPersonModalProps> = ({ onPersonAdded, defaultO
 
   return (
     <div 
-      className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 bg-black/50 dark:bg-black/70 flex items-center justify-center p-4"
       onClick={handleBackdropClick}
     >
       <div 
-        className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto"
+        className="bg-white dark:bg-gray-800 rounded-lg shadow-xl dark:shadow-2xl dark:shadow-black/50 w-full max-w-4xl max-h-[90vh] overflow-y-auto border border-gray-200 dark:border-gray-700"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="sticky top-0 bg-white border-b px-6 py-4 flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Add New Person</h2>
+        <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex items-center justify-between">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Add New Person</h2>
           <button
             onClick={handleClose}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
           >
-            <X className="h-5 w-5" />
+            <X className="h-5 w-5 text-gray-500 dark:text-gray-400" />
           </button>
         </div>
         
         <form onSubmit={handleSubmit} className="p-6">
           {errors.general && (
-            <div className="mb-4 p-3 text-sm text-red-800 bg-red-100 rounded-md">
+            <div className="mb-4 p-3 text-sm text-red-800 dark:text-red-200 bg-red-100 dark:bg-red-900/50 border border-red-200 dark:border-red-800 rounded-md">
               {errors.general}
             </div>
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="md:col-span-2">
-              <Label htmlFor="organizationId">Organization</Label>
+              <Label htmlFor="organizationId" className="text-gray-900 dark:text-gray-100">Organization</Label>
               <Select 
                 onValueChange={(value) => handleInputChange('organizationId', value === '—' ? null : value)}
                 defaultValue={defaultOrganizationId || '—'}
                 disabled={loadingOrgs}
               >
-                <SelectTrigger>
+                <SelectTrigger className="bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100">
                   <SelectValue placeholder={loadingOrgs ? "Loading..." : "Select organization"} />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="—">— No Organization —</SelectItem>
+                <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+                  <SelectItem value="—" className="text-gray-900 dark:text-gray-100">— No Organization —</SelectItem>
                   {organizations.map(org => (
-                    <SelectItem key={org.id} value={org.id}>
+                    <SelectItem key={org.id} value={org.id} className="text-gray-900 dark:text-gray-100">
                       {org.name}
                     </SelectItem>
                   ))}
@@ -175,180 +175,195 @@ const AddPersonModal: React.FC<AddPersonModalProps> = ({ onPersonAdded, defaultO
             </div>
             
             <div>
-              <Label htmlFor="firstName">First Name</Label>
+              <Label htmlFor="firstName" className="text-gray-900 dark:text-gray-100">First Name</Label>
               <Input
                 id="firstName"
                 value={formData.firstName}
                 onChange={(e) => handleInputChange('firstName', e.target.value)}
                 placeholder="First name"
+                className="bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400"
               />
             </div>
             
             <div>
-              <Label htmlFor="lastName">Last Name</Label>
+              <Label htmlFor="lastName" className="text-gray-900 dark:text-gray-100">Last Name</Label>
               <Input
                 id="lastName"
                 value={formData.lastName}
                 onChange={(e) => handleInputChange('lastName', e.target.value)}
                 placeholder="Last name"
+                className="bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400"
               />
             </div>
             
             <div>
-              <Label htmlFor="title">Title</Label>
+              <Label htmlFor="title" className="text-gray-900 dark:text-gray-100">Title</Label>
               <Input
                 id="title"
                 value={formData.title}
                 onChange={(e) => handleInputChange('title', e.target.value)}
                 placeholder="Job title"
+                className="bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400"
               />
             </div>
             
             <div>
-              <Label htmlFor="birthday">Birthday</Label>
+              <Label htmlFor="birthday" className="text-gray-900 dark:text-gray-100">Birthday</Label>
               <Input
                 id="birthday"
                 type="date"
                 value={formData.birthday}
                 onChange={(e) => handleInputChange('birthday', e.target.value)}
+                className="bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100"
               />
             </div>
             
             <div className="md:col-span-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-gray-900 dark:text-gray-100">Email</Label>
               <Input
                 id="email"
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
                 placeholder="person@example.com"
+                className="bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400"
               />
             </div>
             
             <div>
-              <Label htmlFor="officeNumber">Office Number</Label>
+              <Label htmlFor="officeNumber" className="text-gray-900 dark:text-gray-100">Office Number</Label>
               <Input
                 id="officeNumber"
                 type="tel"
                 value={formData.officeNumber}
                 onChange={(e) => handleInputChange('officeNumber', e.target.value)}
                 placeholder="(555) 123-4567"
+                className="bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400"
               />
             </div>
             
             <div>
-              <Label htmlFor="cellNumber">Cell Number</Label>
+              <Label htmlFor="cellNumber" className="text-gray-900 dark:text-gray-100">Cell Number</Label>
               <Input
                 id="cellNumber"
                 type="tel"
                 value={formData.cellNumber}
                 onChange={(e) => handleInputChange('cellNumber', e.target.value)}
                 placeholder="(555) 123-4567"
+                className="bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400"
               />
             </div>
             
             <div>
-              <Label htmlFor="phoneWithExtension">Phone w/ Extension</Label>
+              <Label htmlFor="phoneWithExtension" className="text-gray-900 dark:text-gray-100">Phone w/ Extension</Label>
               <Input
                 id="phoneWithExtension"
                 type="tel"
                 value={formData.phoneWithExtension}
                 onChange={(e) => handleInputChange('phoneWithExtension', e.target.value)}
                 placeholder="(555) 123-4567 ext 123"
+                className="bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400"
               />
             </div>
             
             <div>
-              <Label htmlFor="linkedin">LinkedIn</Label>
+              <Label htmlFor="linkedin" className="text-gray-900 dark:text-gray-100">LinkedIn</Label>
               <Input
                 id="linkedin"
                 value={formData.linkedin}
                 onChange={(e) => handleInputChange('linkedin', e.target.value)}
                 placeholder="https://linkedin.com/in/..."
+                className="bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400"
               />
             </div>
             
             <div>
-              <Label htmlFor="facebook">Facebook</Label>
+              <Label htmlFor="facebook" className="text-gray-900 dark:text-gray-100">Facebook</Label>
               <Input
                 id="facebook"
                 value={formData.facebook}
                 onChange={(e) => handleInputChange('facebook', e.target.value)}
                 placeholder="https://facebook.com/..."
+                className="bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400"
               />
             </div>
             
             <div>
-              <Label htmlFor="twitter">Twitter</Label>
+              <Label htmlFor="twitter" className="text-gray-900 dark:text-gray-100">Twitter</Label>
               <Input
                 id="twitter"
                 value={formData.twitter}
                 onChange={(e) => handleInputChange('twitter', e.target.value)}
                 placeholder="https://twitter.com/..."
+                className="bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400"
               />
             </div>
             
             <div className="md:col-span-2">
-              <Label htmlFor="additionalInfo">Additional Info</Label>
+              <Label htmlFor="additionalInfo" className="text-gray-900 dark:text-gray-100">Additional Info</Label>
               <Textarea
                 id="additionalInfo"
                 value={formData.additionalInfo}
                 onChange={(e) => handleInputChange('additionalInfo', e.target.value)}
                 placeholder="Additional information..."
                 rows={3}
+                className="bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400"
               />
             </div>
             
             <div className="md:col-span-2">
-              <Label htmlFor="address">Address</Label>
+              <Label htmlFor="address" className="text-gray-900 dark:text-gray-100">Address</Label>
               <Input
                 id="address"
                 value={formData.address}
                 onChange={(e) => handleInputChange('address', e.target.value)}
                 placeholder="Street address"
+                className="bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400"
               />
             </div>
             
             <div>
-              <Label htmlFor="city">City</Label>
+              <Label htmlFor="city" className="text-gray-900 dark:text-gray-100">City</Label>
               <Input
                 id="city"
                 value={formData.city}
                 onChange={(e) => handleInputChange('city', e.target.value)}
                 placeholder="City"
+                className="bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400"
               />
             </div>
             
             <div>
-              <Label htmlFor="state">State</Label>
+              <Label htmlFor="state" className="text-gray-900 dark:text-gray-100">State</Label>
               <Select onValueChange={(value) => handleInputChange('state', value)}>
-                <SelectTrigger>
+                <SelectTrigger className="bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100">
                   <SelectValue placeholder="Select state" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
                   {STATE_OPTIONS.map(state => (
-                    <SelectItem key={state} value={state}>{state}</SelectItem>
+                    <SelectItem key={state} value={state} className="text-gray-900 dark:text-gray-100">{state}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             
             <div>
-              <Label htmlFor="zipcode">Zip Code</Label>
+              <Label htmlFor="zipcode" className="text-gray-900 dark:text-gray-100">Zip Code</Label>
               <Input
                 id="zipcode"
                 value={formData.zipcode}
                 onChange={(e) => handleInputChange('zipcode', e.target.value)}
                 placeholder="12345"
+                className="bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400"
               />
             </div>
           </div>
           
-          <div className="flex gap-3 mt-6 pt-4 border-t">
-            <Button type="submit" disabled={loading}>
+          <div className="flex gap-3 mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+            <Button type="submit" disabled={loading} className="bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600">
               {loading ? 'Creating...' : 'Create Person'}
             </Button>
-            <Button type="button" variant="outline" onClick={handleClose}>
+            <Button type="button" variant="outline" onClick={handleClose} className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
               Cancel
             </Button>
           </div>
