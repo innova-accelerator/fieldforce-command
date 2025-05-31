@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import { Search, Plus, Calendar, User, MapPin, Clock, Filter } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { mockJobs } from '../data/mockData';
 import { Job } from '../types';
 
@@ -9,7 +10,6 @@ const JobManagement = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [priorityFilter, setPriorityFilter] = useState<string>('all');
-  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
 
   const filteredJobs = jobs.filter(job => {
     const matchesSearch = job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -43,151 +43,59 @@ const JobManagement = () => {
   };
 
   const JobCard = ({ job }: { job: Job }) => (
-    <div 
-      className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow cursor-pointer"
-      onClick={() => setSelectedJob(job)}
-    >
-      <div className="flex items-start justify-between mb-4">
-        <div className="flex-1">
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">{job.title}</h3>
-          <p className="text-gray-600 text-sm mb-3">{job.description}</p>
+    <Link to={`/jobs/${job.id}/overview`}>
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow cursor-pointer">
+        <div className="flex items-start justify-between mb-4">
+          <div className="flex-1">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">{job.title}</h3>
+            <p className="text-gray-600 text-sm mb-3">{job.description}</p>
+          </div>
+          <div className="flex flex-col items-end space-y-2 ml-4">
+            <span className={`px-3 py-1 text-xs font-medium rounded-full border ${getStatusColor(job.status)}`}>
+              {job.status.replace('-', ' ')}
+            </span>
+            <span className={`px-3 py-1 text-xs font-medium rounded-full border ${getPriorityColor(job.priority)}`}>
+              {job.priority}
+            </span>
+          </div>
         </div>
-        <div className="flex flex-col items-end space-y-2 ml-4">
-          <span className={`px-3 py-1 text-xs font-medium rounded-full border ${getStatusColor(job.status)}`}>
-            {job.status.replace('-', ' ')}
-          </span>
-          <span className={`px-3 py-1 text-xs font-medium rounded-full border ${getPriorityColor(job.priority)}`}>
-            {job.priority}
-          </span>
-        </div>
-      </div>
 
-      <div className="space-y-2 mb-4">
-        <div className="flex items-center text-sm text-gray-600">
-          <User className="h-4 w-4 mr-2" />
-          {job.customerName}
-        </div>
-        <div className="flex items-center text-sm text-gray-600">
-          <MapPin className="h-4 w-4 mr-2" />
-          {job.location}
-        </div>
-        {job.assignedToName && (
+        <div className="space-y-2 mb-4">
           <div className="flex items-center text-sm text-gray-600">
             <User className="h-4 w-4 mr-2" />
-            Assigned to: {job.assignedToName}
+            {job.customerName}
           </div>
-        )}
-        <div className="flex items-center text-sm text-gray-600">
-          <Clock className="h-4 w-4 mr-2" />
-          {job.estimatedDuration}h estimated
-        </div>
-        {job.scheduledDate && (
           <div className="flex items-center text-sm text-gray-600">
-            <Calendar className="h-4 w-4 mr-2" />
-            Scheduled: {job.scheduledDate.toLocaleDateString()}
+            <MapPin className="h-4 w-4 mr-2" />
+            {job.location}
           </div>
-        )}
-      </div>
-
-      <div className="flex flex-wrap gap-1">
-        {job.tags.map((tag, index) => (
-          <span key={index} className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
-            {tag}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-
-  const JobDetailsModal = ({ job, onClose }: { job: Job; onClose: () => void }) => (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-screen overflow-y-auto">
-        <div className="p-6 border-b border-gray-200">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold text-gray-900">Job Details</h2>
-            <button
-              onClick={onClose}
-              className="text-gray-400 hover:text-gray-600"
-            >
-              ×
-            </button>
+          {job.assignedToName && (
+            <div className="flex items-center text-sm text-gray-600">
+              <User className="h-4 w-4 mr-2" />
+              Assigned to: {job.assignedToName}
+            </div>
+          )}
+          <div className="flex items-center text-sm text-gray-600">
+            <Clock className="h-4 w-4 mr-2" />
+            {job.estimatedDuration}h estimated
           </div>
+          {job.scheduledDate && (
+            <div className="flex items-center text-sm text-gray-600">
+              <Calendar className="h-4 w-4 mr-2" />
+              Scheduled: {job.scheduledDate.toLocaleDateString()}
+            </div>
+          )}
         </div>
-        
-        <div className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Job Information</h3>
-              <div className="space-y-3">
-                <div>
-                  <label className="text-sm font-medium text-gray-500">Title</label>
-                  <p className="text-gray-900">{job.title}</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-500">Description</label>
-                  <p className="text-gray-900">{job.description}</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-500">Customer</label>
-                  <p className="text-gray-900">{job.customerName}</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-500">Location</label>
-                  <p className="text-gray-900">{job.location}</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-500">Assigned To</label>
-                  <p className="text-gray-900">{job.assignedToName || 'Unassigned'}</p>
-                </div>
-              </div>
-            </div>
-            
-            <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Status & Priority</h3>
-              <div className="space-y-3">
-                <div>
-                  <label className="text-sm font-medium text-gray-500">Status</label>
-                  <span className={`inline-block px-3 py-1 text-sm font-medium rounded-full border ${getStatusColor(job.status)}`}>
-                    {job.status.replace('-', ' ')}
-                  </span>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-500">Priority</label>
-                  <span className={`inline-block px-3 py-1 text-sm font-medium rounded-full border ${getPriorityColor(job.priority)}`}>
-                    {job.priority}
-                  </span>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-500">Estimated Duration</label>
-                  <p className="text-gray-900">{job.estimatedDuration} hours</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-500">Created</label>
-                  <p className="text-gray-900">{job.createdAt.toLocaleDateString()}</p>
-                </div>
-                {job.scheduledDate && (
-                  <div>
-                    <label className="text-sm font-medium text-gray-500">Scheduled Date</label>
-                    <p className="text-gray-900">{job.scheduledDate.toLocaleDateString()}</p>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-          
-          <div className="mt-6">
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Tags</h3>
-            <div className="flex flex-wrap gap-2">
-              {job.tags.map((tag, index) => (
-                <span key={index} className="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </div>
+
+        <div className="flex flex-wrap gap-1">
+          {job.tags.map((tag, index) => (
+            <span key={index} className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
+              {tag}
+            </span>
+          ))}
         </div>
       </div>
-    </div>
+    </Link>
   );
 
   return (
@@ -255,14 +163,6 @@ const JobManagement = () => {
         <div className="text-center py-12">
           <p className="text-gray-500">No jobs found matching your criteria.</p>
         </div>
-      )}
-
-      {/* Job Details Modal */}
-      {selectedJob && (
-        <JobDetailsModal
-          job={selectedJob}
-          onClose={() => setSelectedJob(null)}
-        />
       )}
     </div>
   );
