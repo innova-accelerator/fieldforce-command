@@ -24,15 +24,7 @@ const Layout = ({ children, currentPage, onNavigate }: LayoutProps) => {
   ];
 
   const handleNavigation = (href: string) => {
-    if (href === 'organizations') {
-      window.location.href = '/organizations';
-    } else if (href === 'people') {
-      window.location.href = '/people';
-    } else if (href === 'jobs') {
-      window.location.href = '/jobs';
-    } else {
-      onNavigate(href);
-    }
+    onNavigate(href);
     setSidebarOpen(false);
   };
 
