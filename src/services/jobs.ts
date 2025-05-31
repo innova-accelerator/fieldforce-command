@@ -1,18 +1,16 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { Job, Task, TimelineEntry, Associate } from '@/types/job';
 
 // Mock data for development - easily replaceable with real API calls
 const mockJob: Job = {
   id: 'job-123',
-  name: 'HVAC System Installation',
   title: 'HVAC System Installation',
   client: 'ABC Corporation',
   phase: 'In Progress',
   status: 'in-progress',
   priority: 'high',
-  startDate: '2024-01-15',
-  endDate: '2024-01-30',
+  startDate: new Date('2024-01-15'),
+  endDate: new Date('2024-01-30'),
   assignedPersonId: 'person-1',
   organizationId: 'org-1',
   createdAt: new Date('2024-01-10'),
@@ -70,7 +68,12 @@ const mockJob: Job = {
     name: 'Mike Wilson',
     phone: '(555) 123-4567',
     email: 'mike.wilson@abccorp.com'
-  }
+  },
+  customerId: '1',
+  customerName: 'ABC Corporation',
+  estimatedDuration: 8,
+  scheduledDate: new Date('2024-01-15'),
+  tags: ['HVAC', 'Installation']
 };
 
 export const fetchJob = async (jobId: string): Promise<Job> => {

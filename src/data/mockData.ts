@@ -49,6 +49,8 @@ export const mockJobs: Job[] = [
     description: 'Install new HVAC system in main office building',
     status: 'in-progress',
     priority: 'high',
+    startDate: new Date('2024-01-15'),
+    endDate: new Date('2024-01-30'),
     assignedPersonId: 'person-1',
     organizationId: 'org-1',
     createdAt: new Date('2024-01-10'),
@@ -64,7 +66,12 @@ export const mockJobs: Job[] = [
       name: 'John Doe',
       phone: '(555) 123-4567',
       email: 'john@techcorp.com'
-    }
+    },
+    customerId: '1',
+    customerName: 'TechCorp Inc',
+    estimatedDuration: 8,
+    scheduledDate: new Date('2024-01-15'),
+    tags: ['HVAC', 'Installation']
   },
   {
     id: 'job-2', 
@@ -72,6 +79,8 @@ export const mockJobs: Job[] = [
     description: 'Upgrade electrical systems in warehouse facility',
     status: 'new',
     priority: 'medium',
+    startDate: new Date('2024-01-25'),
+    endDate: new Date('2024-02-10'),
     assignedPersonId: 'person-2',
     organizationId: 'org-2',
     createdAt: new Date('2024-01-20'),
@@ -87,7 +96,12 @@ export const mockJobs: Job[] = [
       name: 'Jane Smith',
       phone: '(555) 987-6543',
       email: 'jane@buildcorp.com'
-    }
+    },
+    customerId: '2',
+    customerName: 'BuildCorp LLC',
+    estimatedDuration: 12,
+    scheduledDate: new Date('2024-01-25'),
+    tags: ['Electrical', 'Upgrade']
   }
 ];
 

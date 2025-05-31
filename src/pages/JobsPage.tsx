@@ -39,6 +39,8 @@ const JobsPage = () => {
     
     const jobData = {
       ...formData,
+      startDate: formData.startDate ? new Date(formData.startDate) : undefined,
+      endDate: formData.endDate ? new Date(formData.endDate) : undefined,
       client: assignedOrg?.name || 'Unknown Client',
       phase: 'Planning',
       location: assignedOrg?.address ? `${assignedOrg.address}, ${assignedOrg.city}, ${assignedOrg.state} ${assignedOrg.zipcode}` : 'TBD',
@@ -56,7 +58,12 @@ const JobsPage = () => {
         phone: '',
         email: ''
       },
-      organizationId: assignedPerson ? assignedPerson.organizationId : undefined
+      organizationId: assignedPerson ? assignedPerson.organizationId : undefined,
+      customerId: assignedPerson?.organizationId,
+      customerName: assignedOrg?.name || 'Unknown Client',
+      estimatedDuration: 8,
+      scheduledDate: formData.startDate ? new Date(formData.startDate) : undefined,
+      tags: []
     };
 
     createJob(jobData);
@@ -254,8 +261,8 @@ const JobsPage = () => {
                         {assignedPerson ? `${assignedPerson.firstName} ${assignedPerson.lastName}` : '-'}
                       </TableCell>
                       <TableCell>{organization?.name || '-'}</TableCell>
-                      <TableCell>{job.startDate || '-'}</TableCell>
-                      <TableCell>{job.endDate || '-'}</TableCell>
+                      <TableCell>{job.startDate ? job.startDate.toLocaleDateString() : '-'}</TableCell>
+                      <TableCell>{job.endDate ? job.endDate.toLocaleDateString() : '-'}</TableCell>
                       <TableCell>
                         <span className={`px-2 py-1 text-xs rounded-full ${
                           job.priority === 'urgent' ? 'bg-red-100 text-red-800' :
