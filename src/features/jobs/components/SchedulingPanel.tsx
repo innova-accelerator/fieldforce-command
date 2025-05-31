@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Calendar, Clock, User, Plus } from 'lucide-react';
 import { Button } from '../../../components/ui/button';
@@ -18,41 +17,17 @@ const availableAssociates: Associate[] = [
   { 
     id: 'tech-3', 
     name: 'Mike Davis', 
-    email: 'mike@company.com',
-    phone: '555-0304',
-    certifications: ['CCNA'],
-    availability: 'available',
-    location: { lat: 40.7128, lng: -74.0060, address: '123 Tech St' },
-    rating: 4.5,
-    completedJobs: 25,
-    joinedAt: new Date('2023-01-01'),
-    hourlyRate: 75
+    email: 'mike@company.com'
   },
   { 
     id: 'tech-4', 
     name: 'Lisa Chen', 
-    email: 'lisa@company.com',
-    phone: '555-0305',
-    certifications: ['Security+'],
-    availability: 'available',
-    location: { lat: 40.7589, lng: -73.9851, address: '456 Security Ave' },
-    rating: 4.8,
-    completedJobs: 32,
-    joinedAt: new Date('2023-02-01'),
-    hourlyRate: 80
+    email: 'lisa@company.com'
   },
   { 
     id: 'tech-5', 
     name: 'David Brown', 
-    email: 'david@company.com',
-    phone: '555-0306',
-    certifications: ['A+'],
-    availability: 'available',
-    location: { lat: 40.7505, lng: -73.9934, address: '789 Install Blvd' },
-    rating: 4.6,
-    completedJobs: 28,
-    joinedAt: new Date('2023-03-01'),
-    hourlyRate: 70
+    email: 'david@company.com'
   }
 ];
 
