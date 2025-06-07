@@ -1,8 +1,9 @@
+
 import React, { useState } from 'react';
 import { Calendar, Clock, User, MapPin, Phone, Mail, Plus } from 'lucide-react';
 import { mockJobs } from '../data/mockData';
 import { useAssociates } from '../hooks/useData';
-import ScheduleEventModal, { ScheduleEventData } from './ScheduleEventModal';
+import ScheduleEventModal, { ScheduleEventData } from './modals/ScheduleEventModal';
 import { useToast } from '../hooks/use-toast';
 
 const Scheduling = () => {
