@@ -3,12 +3,14 @@ import React, { useState } from 'react';
 import { Plus, Search, Filter, Building, Mail, Phone, Globe, MapPin } from 'lucide-react';
 import { useOrganizations } from '../hooks/useData';
 import AddUnifiedOrganizationModal from '../components/modals/AddUnifiedOrganizationModal';
+import EditOrganizationModal from '../components/modals/EditOrganizationModal';
 
 const OrganizationsPage = () => {
-  const { data: organizations = [], isLoading } = useOrganizations();
+  const { data: organizations = [], isLoading, refetch } = useOrganizations();
   const [searchTerm, setSearchTerm] = useState('');
   const [relationFilter, setRelationFilter] = useState<string>('all');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [selectedOrganizationForEdit, setSelectedOrganizationForEdit] = useState<any | null>(null);
 
   const filteredOrganizations = organizations.filter(org => {
     const matchesSearch = org.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -35,6 +37,20 @@ const OrganizationsPage = () => {
       case 'customer': return 'bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-500/20';
       default: return 'bg-muted text-muted-foreground border-border';
     }
+  };
+
+  const handleOrganizationAdded = () => {
+    refetch();
+    setIsAddModalOpen(false);
+  };
+
+  const handleOrganizationUpdated = () => {
+    refetch();
+    setSelectedOrganizationForEdit(null);
+  };
+
+  const handleEdit = (organization: any) => {
+    setSelectedOrganizationForEdit(organization);
   };
 
   if (isLoading) {
@@ -156,7 +172,10 @@ const OrganizationsPage = () => {
             </div>
 
             <div className="flex justify-end space-x-2">
-              <button className="px-3 py-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <button 
+                onClick={() => handleEdit(org)}
+                className="px-3 py-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
                 Edit
               </button>
               <button className="px-3 py-1 bg-primary text-primary-foreground text-sm rounded hover:bg-primary/90 transition-colors">
@@ -176,7 +195,16 @@ const OrganizationsPage = () => {
       <AddUnifiedOrganizationModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
+        onOrganizationAdded={handleOrganizationAdded}
       />
+
+      {selectedOrganizationForEdit && (
+        <EditOrganizationModal
+          organization={selectedOrganizationForEdit}
+          onClose={() => setSelectedOrganizationForEdit(null)}
+          onOrganizationUpdated={handleOrganizationUpdated}
+        />
+      )}
     </div>
   );
 };
