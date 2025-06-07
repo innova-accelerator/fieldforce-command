@@ -17,6 +17,7 @@ import OrganizationsPage from "./pages/OrganizationsPage";
 import PeoplePage from "./pages/PeoplePage";
 import JobsPage from "./pages/JobsPage";
 import MapPage from "./pages/MapPage";
+import TaskEnginePage from "./pages/TaskEnginePage";
 import NotFound from "./pages/NotFound";
 import { AuthProvider } from "./contexts/AuthContext";
 import AuthPage from "./pages/AuthPage";
