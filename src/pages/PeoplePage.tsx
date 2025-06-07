@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { Plus, Search, User, Mail, Phone, Building, MapPin } from 'lucide-react';
 import { usePeople, useOrganizations } from '../hooks/useData';
 import AddPersonModal from '../components/modals/AddPersonModal';
+import ViewPersonModal from '../components/modals/ViewPersonModal';
+import EditPersonModal from '../components/modals/EditPersonModal';
 
 const PeoplePage = () => {
   const { data: people = [], isLoading: peopleLoading, refetch } = usePeople();
@@ -10,6 +12,8 @@ const PeoplePage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [organizationFilter, setOrganizationFilter] = useState<string>('all');
   const [isAddPersonModalOpen, setIsAddPersonModalOpen] = useState(false);
+  const [selectedPersonForView, setSelectedPersonForView] = useState<any | null>(null);
+  const [selectedPersonForEdit, setSelectedPersonForEdit] = useState<any | null>(null);
 
   const filteredPeople = people.filter(person => {
     const fullName = `${person.first_name} ${person.last_name}`;
@@ -30,6 +34,26 @@ const PeoplePage = () => {
   const handlePersonAdded = () => {
     refetch();
     setIsAddPersonModalOpen(false);
+  };
+
+  const handlePersonUpdated = () => {
+    refetch();
+    setSelectedPersonForEdit(null);
+  };
+
+  const handleViewDetails = (person: any) => {
+    setSelectedPersonForView(person);
+  };
+
+  const handleEdit = (person: any) => {
+    setSelectedPersonForEdit(person);
+  };
+
+  const handleEditFromView = () => {
+    if (selectedPersonForView) {
+      setSelectedPersonForEdit(selectedPersonForView);
+      setSelectedPersonForView(null);
+    }
   };
 
   if (peopleLoading) {
@@ -140,10 +164,16 @@ const PeoplePage = () => {
             </div>
 
             <div className="flex justify-end space-x-2">
-              <button className="px-3 py-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <button 
+                onClick={() => handleEdit(person)}
+                className="px-3 py-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
                 Edit
               </button>
-              <button className="px-3 py-1 bg-primary text-primary-foreground text-sm rounded hover:bg-primary/90 transition-colors">
+              <button 
+                onClick={() => handleViewDetails(person)}
+                className="px-3 py-1 bg-primary text-primary-foreground text-sm rounded hover:bg-primary/90 transition-colors"
+              >
                 View Details
               </button>
             </div>
@@ -157,10 +187,26 @@ const PeoplePage = () => {
         </div>
       )}
 
-      {/* Add Person Modal */}
+      {/* Modals */}
       {isAddPersonModalOpen && (
         <AddPersonModal 
           onPersonAdded={handlePersonAdded}
+        />
+      )}
+
+      {selectedPersonForView && (
+        <ViewPersonModal
+          person={selectedPersonForView}
+          onClose={() => setSelectedPersonForView(null)}
+          onEdit={handleEditFromView}
+        />
+      )}
+
+      {selectedPersonForEdit && (
+        <EditPersonModal
+          person={selectedPersonForEdit}
+          onClose={() => setSelectedPersonForEdit(null)}
+          onPersonUpdated={handlePersonUpdated}
         />
       )}
     </div>
