@@ -1,9 +1,9 @@
-
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Textarea } from '../ui/textarea';
+import { Checkbox } from '../ui/checkbox';
 import {
   Select,
   SelectContent,
@@ -43,7 +43,8 @@ const EditPersonModal: React.FC<EditPersonModalProps> = ({ person, onClose, onPe
     address: person.address || '',
     city: person.city || '',
     state: person.state || '',
-    zipcode: person.zipcode || ''
+    zipcode: person.zipcode || '',
+    isTechnician: person.is_technician || false
   });
 
   useEffect(() => {
@@ -80,6 +81,15 @@ const EditPersonModal: React.FC<EditPersonModalProps> = ({ person, onClose, onPe
     }
   };
 
+  const getSelectedOrganization = () => {
+    return organizations.find(org => org.id === formData.organizationId);
+  };
+
+  const isAssociateOrganization = () => {
+    const selectedOrg = getSelectedOrganization();
+    return selectedOrg?.classification === 'associate';
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -110,7 +120,8 @@ const EditPersonModal: React.FC<EditPersonModalProps> = ({ person, onClose, onPe
           address: formData.address,
           city: formData.city,
           state: formData.state,
-          zipcode: formData.zipcode
+          zipcode: formData.zipcode,
+          is_technician: isAssociateOrganization() ? formData.isTechnician : false
         })
         .eq('id', person.id)
         .eq('user_id', user.id);
@@ -132,7 +143,7 @@ const EditPersonModal: React.FC<EditPersonModalProps> = ({ person, onClose, onPe
     }
   };
 
-  const handleInputChange = (field: string, value: string | null) => {
+  const handleInputChange = (field: string, value: string | null | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
@@ -186,12 +197,30 @@ const EditPersonModal: React.FC<EditPersonModalProps> = ({ person, onClose, onPe
                   <SelectItem value="—" className="text-gray-900 dark:text-gray-100">— No Organization —</SelectItem>
                   {organizations.map(org => (
                     <SelectItem key={org.id} value={org.id} className="text-gray-900 dark:text-gray-100">
-                      {org.name}
+                      {org.name} {org.classification === 'associate' ? '(Associate)' : ''}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
+
+            {isAssociateOrganization() && (
+              <div className="md:col-span-2">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="isTechnician"
+                    checked={formData.isTechnician}
+                    onCheckedChange={(checked) => handleInputChange('isTechnician', checked)}
+                  />
+                  <Label htmlFor="isTechnician" className="text-gray-900 dark:text-gray-100">
+                    Assign as Technician
+                  </Label>
+                </div>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                  Technicians can be assigned to jobs and will appear in technician selection lists.
+                </p>
+              </div>
+            )}
             
             <div>
               <Label htmlFor="firstName" className="text-gray-900 dark:text-gray-100">First Name</Label>

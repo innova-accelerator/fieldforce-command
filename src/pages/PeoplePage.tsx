@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { Plus, Search, User, Mail, Phone, Building, MapPin } from 'lucide-react';
+import { Plus, Search, User, Mail, Phone, Building, MapPin, Wrench } from 'lucide-react';
 import { usePeople, useOrganizations } from '../hooks/useData';
 import AddPersonModal from '../components/modals/AddPersonModal';
 import ViewPersonModal from '../components/modals/ViewPersonModal';
@@ -29,6 +28,12 @@ const PeoplePage = () => {
     if (!organizationId) return 'No Organization';
     const org = organizations.find(o => o.id === organizationId);
     return org?.name || 'Unknown Organization';
+  };
+
+  const getOrganizationClassification = (organizationId: string | null) => {
+    if (!organizationId) return null;
+    const org = organizations.find(o => o.id === organizationId);
+    return org?.classification || null;
   };
 
   const handlePersonAdded = () => {
@@ -127,9 +132,17 @@ const PeoplePage = () => {
                 <User className="h-6 w-6 text-primary-foreground" />
               </div>
               <div className="flex-1">
-                <h3 className="text-lg font-semibold text-card-foreground">
-                  {person.first_name} {person.last_name}
-                </h3>
+                <div className="flex items-center gap-2 mb-1">
+                  <h3 className="text-lg font-semibold text-card-foreground">
+                    {person.first_name} {person.last_name}
+                  </h3>
+                  {person.is_technician && (
+                    <div className="flex items-center gap-1 px-2 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 text-xs rounded-full">
+                      <Wrench className="h-3 w-3" />
+                      <span>Tech</span>
+                    </div>
+                  )}
+                </div>
                 <p className="text-muted-foreground text-sm">{person.title}</p>
               </div>
             </div>
@@ -159,7 +172,12 @@ const PeoplePage = () => {
               )}
               <div className="flex items-center text-sm text-muted-foreground">
                 <Building className="h-4 w-4 mr-2" />
-                {getOrganizationName(person.organization_id)}
+                <span>
+                  {getOrganizationName(person.organization_id)}
+                  {getOrganizationClassification(person.organization_id) === 'associate' && 
+                    <span className="text-blue-600 dark:text-blue-400 ml-1">(Associate)</span>
+                  }
+                </span>
               </div>
             </div>
 

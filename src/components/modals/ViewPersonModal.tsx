@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { X, User, Mail, Phone, Building, MapPin, Calendar, Globe, Facebook, Twitter, Linkedin } from 'lucide-react';
+import { X, User, Mail, Phone, Building, MapPin, Calendar, Globe, Facebook, Twitter, Linkedin, Wrench } from 'lucide-react';
 
 interface ViewPersonModalProps {
   person: any;
@@ -41,9 +41,17 @@ const ViewPersonModal: React.FC<ViewPersonModalProps> = ({ person, onClose, onEd
               <User className="h-8 w-8 text-primary-foreground" />
             </div>
             <div className="flex-1">
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                {person.first_name} {person.last_name}
-              </h3>
+              <div className="flex items-center gap-2 mb-1">
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                  {person.first_name} {person.last_name}
+                </h3>
+                {person.is_technician && (
+                  <div className="flex items-center gap-1 px-2 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 text-xs rounded-full">
+                    <Wrench className="h-3 w-3" />
+                    <span>Technician</span>
+                  </div>
+                )}
+              </div>
               {person.title && (
                 <p className="text-lg text-gray-600 dark:text-gray-400">{person.title}</p>
               )}
@@ -101,6 +109,12 @@ const ViewPersonModal: React.FC<ViewPersonModalProps> = ({ person, onClose, onEd
                   <div className="flex items-center">
                     <Building className="h-5 w-5 text-gray-400 mr-3" />
                     <span className="text-gray-600 dark:text-gray-400">{person.organizations.name}</span>
+                  </div>
+                )}
+                {person.is_technician && (
+                  <div className="flex items-center">
+                    <Wrench className="h-5 w-5 text-gray-400 mr-3" />
+                    <span className="text-gray-600 dark:text-gray-400">Available as Technician</span>
                   </div>
                 )}
               </div>

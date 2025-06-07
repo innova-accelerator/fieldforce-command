@@ -370,6 +370,7 @@ export type Database = {
           facebook: string | null
           first_name: string
           id: string
+          is_technician: boolean | null
           last_name: string
           linkedin: string | null
           office_number: string | null
@@ -393,6 +394,7 @@ export type Database = {
           facebook?: string | null
           first_name: string
           id?: string
+          is_technician?: boolean | null
           last_name: string
           linkedin?: string | null
           office_number?: string | null
@@ -416,6 +418,7 @@ export type Database = {
           facebook?: string | null
           first_name?: string
           id?: string
+          is_technician?: boolean | null
           last_name?: string
           linkedin?: string | null
           office_number?: string | null
