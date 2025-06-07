@@ -1,18 +1,46 @@
-
 import React, { useState } from 'react';
-import { Calendar, Clock, User, MapPin, Phone, Mail } from 'lucide-react';
+import { Calendar, Clock, User, MapPin, Phone, Mail, Plus } from 'lucide-react';
 import { mockJobs } from '../data/mockData';
 import { useAssociates } from '../hooks/useData';
+import ScheduleEventModal, { ScheduleEventData } from './ScheduleEventModal';
+import { useToast } from '../hooks/use-toast';
 
 const Scheduling = () => {
-  const [jobs] = useState(mockJobs);
+  const [jobs, setJobs] = useState(mockJobs);
   const { data: associates = [] } = useAssociates();
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedJob, setSelectedJob] = useState<string | null>(null);
+  const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
+  const { toast } = useToast();
 
   const scheduledJobs = jobs.filter(job => 
     job.scheduled_date && new Date(job.scheduled_date).toDateString() === selectedDate.toDateString()
   );
+
+  const handleScheduleEvent = (eventData: ScheduleEventData) => {
+    // Update the job with the new scheduled date and details
+    setJobs(prevJobs => 
+      prevJobs.map(job => 
+        job.id === eventData.jobId 
+          ? {
+              ...job,
+              scheduled_date: `${eventData.scheduledDate}T${eventData.startTime}:00Z`,
+              status: 'Scheduled' as const,
+              assigned_techs: eventData.assignedTechs,
+              priority: eventData.priority,
+              estimated_duration: eventData.endTime 
+                ? Math.round((new Date(`1970-01-01T${eventData.endTime}:00`) - new Date(`1970-01-01T${eventData.startTime}:00`)) / (1000 * 60 * 60))
+                : job.estimated_duration
+            }
+          : job
+      )
+    );
+
+    toast({
+      title: "Event Scheduled",
+      description: `${eventData.title} has been scheduled for ${new Date(eventData.scheduledDate).toLocaleDateString()}`,
+    });
+  };
 
   const formatTime = (dateString: string) => {
     return new Date(dateString).toLocaleTimeString('en-US', {
@@ -169,8 +197,19 @@ const Scheduling = () => {
   return (
     <div className="p-6 max-w-7xl mx-auto bg-background dark:bg-[#171717] min-h-screen">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Schedule Management</h1>
-        <p className="text-gray-600 dark:text-gray-400">Manage job schedules and assignments</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Schedule Management</h1>
+            <p className="text-gray-600 dark:text-gray-400">Manage job schedules and assignments</p>
+          </div>
+          <button
+            onClick={() => setIsScheduleModalOpen(true)}
+            className="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 text-white rounded-lg transition-colors"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Schedule Event
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -233,7 +272,10 @@ const Scheduling = () => {
               <div className="text-center py-8">
                 <Calendar className="h-12 w-12 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
                 <p className="text-gray-500 dark:text-gray-400">No jobs scheduled for this date</p>
-                <button className="mt-4 px-4 py-2 bg-blue-600 dark:bg-blue-700 text-white rounded hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors">
+                <button 
+                  onClick={() => setIsScheduleModalOpen(true)}
+                  className="mt-4 px-4 py-2 bg-blue-600 dark:bg-blue-700 text-white rounded hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
+                >
                   Schedule a Job
                 </button>
               </div>
@@ -306,6 +348,13 @@ const Scheduling = () => {
           </div>
         </div>
       </div>
+
+      {/* Schedule Event Modal */}
+      <ScheduleEventModal
+        isOpen={isScheduleModalOpen}
+        onClose={() => setIsScheduleModalOpen(false)}
+        onSchedule={handleScheduleEvent}
+      />
     </div>
   );
 };
