@@ -5,7 +5,8 @@ import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
 import { Label } from '../../../components/ui/label';
 import { Avatar, AvatarFallback, AvatarImage } from '../../../components/ui/avatar';
-import { Job, Associate, TimelineEntry } from '../../../types/job';
+import { Job, TimelineEntry } from '../../../types/job';
+import { usePeople } from '../../../hooks/useData';
 
 interface SchedulingPanelProps {
   job: Job;
@@ -13,31 +14,16 @@ interface SchedulingPanelProps {
   onTimelineUpdate: (entry: Omit<TimelineEntry, 'timestamp' | 'id' | 'job_id' | 'created_at'>) => void;
 }
 
-// Mock available associates - in real app, fetch from API
-const availableAssociates: Associate[] = [
-  { 
-    id: 'tech-3', 
-    name: 'Mike Davis', 
-    email: 'mike@company.com'
-  },
-  { 
-    id: 'tech-4', 
-    name: 'Lisa Chen', 
-    email: 'lisa@company.com'
-  },
-  { 
-    id: 'tech-5', 
-    name: 'David Brown', 
-    email: 'david@company.com'
-  }
-];
-
 const SchedulingPanel: React.FC<SchedulingPanelProps> = ({ 
   job, 
   onUpdate, 
   onTimelineUpdate 
 }) => {
   const [showAssignModal, setShowAssignModal] = useState(false);
+  const { data: people = [] } = usePeople();
+
+  // Filter people who are technicians
+  const availableTechnicians = people.filter(person => person.is_technician);
 
   const formatDateForInput = (date: Date | string | undefined): string => {
     if (!date) return '';
@@ -54,13 +40,14 @@ const SchedulingPanel: React.FC<SchedulingPanelProps> = ({
     });
   };
 
-  const assignTech = (associate: Associate) => {
-    if (!job.assigned_techs.find(techId => techId === associate.id)) {
-      const updatedTechs = [...job.assigned_techs, associate.id];
+  const assignTech = (personId: string) => {
+    if (!job.assigned_techs.find(techId => techId === personId)) {
+      const updatedTechs = [...job.assigned_techs, personId];
+      const person = people.find(p => p.id === personId);
       onUpdate({ assigned_techs: updatedTechs });
       onTimelineUpdate({
         type: 'assignment',
-        content: `${associate.name} assigned to job`,
+        content: `${person?.first_name} ${person?.last_name} assigned to job`,
         author_id: undefined // Should be set to current user's person ID
       });
     }
@@ -69,12 +56,23 @@ const SchedulingPanel: React.FC<SchedulingPanelProps> = ({
 
   const removeTech = (techId: string) => {
     const updatedTechs = job.assigned_techs.filter(id => id !== techId);
+    const person = people.find(p => p.id === techId);
     onUpdate({ assigned_techs: updatedTechs });
     onTimelineUpdate({
       type: 'assignment',
-      content: `Tech ${techId} removed from job`,
+      content: `${person?.first_name} ${person?.last_name} removed from job`,
       author_id: undefined // Should be set to current user's person ID
     });
+  };
+
+  const getTechName = (techId: string) => {
+    const person = people.find(p => p.id === techId);
+    return person ? `${person.first_name} ${person.last_name}` : `Tech ${techId}`;
+  };
+
+  const getTechInitials = (techId: string) => {
+    const person = people.find(p => p.id === techId);
+    return person ? `${person.first_name[0]}${person.last_name[0]}` : techId.slice(-2).toUpperCase();
   };
 
   return (
@@ -125,6 +123,7 @@ const SchedulingPanel: React.FC<SchedulingPanelProps> = ({
               size="sm"
               onClick={() => setShowAssignModal(true)}
               className="h-8 px-3"
+              disabled={availableTechnicians.length === 0}
             >
               <Plus className="h-3 w-3 mr-1" />
               Add
@@ -137,10 +136,10 @@ const SchedulingPanel: React.FC<SchedulingPanelProps> = ({
                 <div className="flex items-center gap-2">
                   <Avatar className="h-6 w-6">
                     <AvatarFallback className="text-xs bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300">
-                      {`T${techId.slice(-1)}`}
+                      {getTechInitials(techId)}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="text-sm font-medium text-gray-900 dark:text-gray-100">Tech {techId}</span>
+                  <span className="text-sm font-medium text-gray-900 dark:text-gray-100">{getTechName(techId)}</span>
                 </div>
                 <Button
                   variant="ghost"
@@ -191,20 +190,37 @@ const SchedulingPanel: React.FC<SchedulingPanelProps> = ({
             </div>
             
             <div className="space-y-2">
-              {availableAssociates.map((associate) => (
-                <button
-                  key={associate.id}
-                  onClick={() => assignTech(associate)}
-                  className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors"
-                >
-                  <Avatar className="h-8 w-8">
-                    <AvatarFallback className="bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300">
-                      {associate.name.split(' ').map(n => n[0]).join('')}
-                    </AvatarFallback>
-                  </Avatar>
-                  <span className="font-medium text-gray-900 dark:text-gray-100">{associate.name}</span>
-                </button>
-              ))}
+              {availableTechnicians.length === 0 ? (
+                <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-4">
+                  No technicians available. Please add people with technician role first.
+                </p>
+              ) : (
+                availableTechnicians.map((person) => (
+                  <button
+                    key={person.id}
+                    onClick={() => assignTech(person.id)}
+                    className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                    disabled={job.assigned_techs.includes(person.id)}
+                  >
+                    <Avatar className="h-8 w-8">
+                      <AvatarFallback className="bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300">
+                        {person.first_name[0]}{person.last_name[0]}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1">
+                      <span className="font-medium text-gray-900 dark:text-gray-100">
+                        {person.first_name} {person.last_name}
+                      </span>
+                      {person.title && (
+                        <p className="text-xs text-gray-500 dark:text-gray-400">{person.title}</p>
+                      )}
+                    </div>
+                    {job.assigned_techs.includes(person.id) && (
+                      <span className="text-xs text-green-600 dark:text-green-400">Assigned</span>
+                    )}
+                  </button>
+                ))
+              )}
             </div>
           </div>
         </div>
