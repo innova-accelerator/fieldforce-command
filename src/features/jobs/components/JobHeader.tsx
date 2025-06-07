@@ -12,9 +12,14 @@ interface JobHeaderProps {
 const JobHeader: React.FC<JobHeaderProps> = ({ job, onUpdate }) => {
   const [copied, setCopied] = useState(false);
 
+  // Debug logging to see what we're getting
+  console.log('JobHeader - job object:', job);
+  console.log('JobHeader - job.job_number:', job.job_number);
+  console.log('JobHeader - job.id:', job.id);
+
   const copyJobNumber = async () => {
     try {
-      const jobNumber = job.job_number || job.id;
+      const jobNumber = job.job_number || `Job ${job.id.slice(0, 8)}`;
       await navigator.clipboard.writeText(jobNumber);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
@@ -37,11 +42,14 @@ const JobHeader: React.FC<JobHeaderProps> = ({ job, onUpdate }) => {
     }
   };
 
+  // Display job number or fallback
+  const displayJobNumber = job.job_number || `Job ${job.id.slice(0, 8)}`;
+
   return (
     <div className="bg-card rounded-lg shadow-sm border p-4 sm:p-6">
       {/* Breadcrumb */}
       <nav className="text-xs sm:text-sm text-muted-foreground mb-3">
-        Dashboard &gt; Jobs &gt; {job.job_number || `Job ${job.id.slice(0, 8)}`}
+        Dashboard &gt; Jobs &gt; {displayJobNumber}
       </nav>
       
       {/* Main Header */}
@@ -77,7 +85,7 @@ const JobHeader: React.FC<JobHeaderProps> = ({ job, onUpdate }) => {
               onClick={copyJobNumber}
               className="flex items-center gap-1 text-sm text-primary hover:text-primary/80 transition-colors"
             >
-              <span>#{job.job_number || job.id.slice(0, 8)}</span>
+              <span className="font-mono">#{displayJobNumber}</span>
               <Copy className="h-3 w-3" />
               {copied && <span className="text-green-600 text-xs">Copied!</span>}
             </button>
