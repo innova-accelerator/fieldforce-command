@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Users, Calendar, UserCheck, Settings, Home, Menu, X, Building2, User, Briefcase, Map } from 'lucide-react';
+import { Users, Calendar, UserCheck, Settings, Home, Menu, X, Building2, User, Briefcase, Map, CheckSquare } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ThemeToggle } from './ui/theme-toggle';
@@ -25,13 +24,19 @@ const Layout = ({ children, currentPage, onNavigate }: LayoutProps) => {
     { name: 'Associates', href: 'associates', icon: UserCheck, isSubItem: true },
     { name: 'People', href: 'people', icon: User },
     { name: 'Jobs', href: 'jobs', icon: Briefcase },
+    { name: 'Task Engine', href: 'task-engine', icon: CheckSquare },
     { name: 'Map', href: 'map', icon: Map },
     { name: 'Schedule', href: 'schedule', icon: Calendar },
     { name: 'Settings', href: 'settings', icon: Settings },
   ];
 
   const handleNavigation = (href: string) => {
-    navigate(`/${href}`);
+    if (href === 'task-engine') {
+      // For now, navigate to a default job ID - in a real app, this would be dynamic
+      navigate('/task-engine/sample-job-id');
+    } else {
+      navigate(`/${href}`);
+    }
     setSidebarOpen(false);
   };
 

@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -33,6 +32,7 @@ const AppContent = () => {
   const getCurrentPage = (pathname: string) => {
     if (pathname === '/') return 'home';
     if (pathname.startsWith('/jobs/') && pathname.includes('/overview')) return 'jobs';
+    if (pathname.startsWith('/task-engine')) return 'task-engine';
     return pathname.slice(1) || 'home';
   };
 
@@ -106,6 +106,13 @@ const AppContent = () => {
         <ProtectedRoute>
           <Layout currentPage="jobs" onNavigate={handleNavigate}>
             <JobOverview />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/task-engine/:jobId" element={
+        <ProtectedRoute>
+          <Layout currentPage="task-engine" onNavigate={handleNavigate}>
+            <TaskEnginePage />
           </Layout>
         </ProtectedRoute>
       } />
