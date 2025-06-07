@@ -7,15 +7,15 @@ import { TimelineEntry } from '../../../types/job';
 const getEntryColor = (type: TimelineEntry['type']): string => {
   switch (type) {
     case 'note':
-      return 'border-blue-400';
+      return 'border-blue-400 dark:border-blue-600';
     case 'status':
-      return 'border-green-400';
+      return 'border-green-400 dark:border-green-600';
     case 'assignment':
-      return 'border-purple-400';
+      return 'border-purple-400 dark:border-purple-600';
     case 'scheduling':
-      return 'border-yellow-400';
+      return 'border-yellow-400 dark:border-yellow-600';
     default:
-      return 'border-gray-200';
+      return 'border-border';
   }
 };
 
@@ -36,10 +36,10 @@ const TimelineFeed: React.FC<TimelineFeedProps> = ({ timeline }) => {
   // Add no entries fallback
   if (filteredTimeline.length === 0) {
     return (
-      <div className="bg-white rounded-lg shadow-sm border p-4 sm:p-6">
+      <div className="bg-card rounded-lg shadow-sm border p-4 sm:p-6">
         <div className="flex items-center gap-2 mb-4">
-          <Clock className="h-5 w-5 text-blue-600" />
-          <h2 className="text-lg font-semibold text-gray-900">Activity Timeline</h2>
+          <Clock className="h-5 w-5 text-primary" />
+          <h2 className="text-lg font-semibold text-foreground">Activity Timeline</h2>
         </div>
         
         {/* Filter Tabs */}
@@ -57,7 +57,7 @@ const TimelineFeed: React.FC<TimelineFeedProps> = ({ timeline }) => {
           ))}
         </div>
         
-        <div className="text-center text-gray-500 py-6">
+        <div className="text-center text-muted-foreground py-6">
           No timeline activity to display.
         </div>
       </div>
@@ -100,10 +100,10 @@ const TimelineFeed: React.FC<TimelineFeedProps> = ({ timeline }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border p-4 sm:p-6">
+    <div className="bg-card rounded-lg shadow-sm border p-4 sm:p-6">
       <div className="flex items-center gap-2 mb-4">
-        <Clock className="h-5 w-5 text-blue-600" />
-        <h2 className="text-lg font-semibold text-gray-900">Activity Timeline</h2>
+        <Clock className="h-5 w-5 text-primary" />
+        <h2 className="text-lg font-semibold text-foreground">Activity Timeline</h2>
       </div>
       
       {/* Filter Tabs */}
@@ -131,20 +131,20 @@ const TimelineFeed: React.FC<TimelineFeedProps> = ({ timeline }) => {
             <div className="flex items-start justify-between gap-2 mb-1">
               <div className="flex items-center gap-2">
                 <span className="text-sm">{getEntryIcon(entry.type)}</span>
-                <span className="text-xs font-medium text-gray-600 capitalize">
+                <span className="text-xs font-medium text-muted-foreground capitalize">
                   {entry.type}
                 </span>
               </div>
               <div className="text-right">
-                <div className="text-xs text-gray-500">
+                <div className="text-xs text-muted-foreground">
                   {formatTimestamp(entry.timestamp)}
                 </div>
-                <div className="text-xs text-gray-600 font-medium">
+                <div className="text-xs text-muted-foreground font-medium">
                   {entry.author_id || 'System'}
                 </div>
               </div>
             </div>
-            <p className="text-sm text-gray-800 leading-relaxed">
+            <p className="text-sm text-foreground leading-relaxed">
               {entry.content}
             </p>
           </div>
@@ -167,7 +167,7 @@ const TimelineFeed: React.FC<TimelineFeedProps> = ({ timeline }) => {
       {/* Summary */}
       {timeline.length > 0 && (
         <div className="mt-4 pt-4 border-t">
-          <div className="text-xs text-gray-500 text-center">
+          <div className="text-xs text-muted-foreground text-center">
             {timeline.length} total activities • Last updated {formatTimestamp(timeline[0]?.timestamp)}
           </div>
         </div>

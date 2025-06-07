@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Star, Edit, Copy } from 'lucide-react';
 import { Button } from '../../../components/ui/button';
@@ -27,18 +28,18 @@ const JobHeader: React.FC<JobHeaderProps> = ({ job, onUpdate }) => {
 
   const getPhaseColor = (phase: string) => {
     switch (phase.toLowerCase()) {
-      case 'proposal': return 'bg-yellow-100 text-yellow-800';
-      case 'planning': return 'bg-blue-100 text-blue-800';
-      case 'in progress': return 'bg-purple-100 text-purple-800';
-      case 'completed': return 'bg-green-100 text-green-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'proposal': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
+      case 'planning': return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
+      case 'in progress': return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300';
+      case 'completed': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
+      default: return 'bg-muted text-muted-foreground';
     }
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border p-4 sm:p-6">
+    <div className="bg-card rounded-lg shadow-sm border p-4 sm:p-6">
       {/* Breadcrumb */}
-      <nav className="text-xs sm:text-sm text-gray-500 mb-3">
+      <nav className="text-xs sm:text-sm text-muted-foreground mb-3">
         Dashboard &gt; Jobs &gt; {job.name}
       </nav>
       
@@ -46,7 +47,7 @@ const JobHeader: React.FC<JobHeaderProps> = ({ job, onUpdate }) => {
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-3 mb-2">
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 truncate">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground truncate">
               {job.name} – {job.customerName}
             </h1>
             <Button
@@ -57,12 +58,12 @@ const JobHeader: React.FC<JobHeaderProps> = ({ job, onUpdate }) => {
             >
               <Star 
                 className={`h-5 w-5 ${
-                  job.is_favorite ? 'fill-yellow-400 text-yellow-400' : 'text-gray-400'
+                  job.is_favorite ? 'fill-yellow-400 text-yellow-400' : 'text-muted-foreground'
                 }`} 
               />
             </Button>
             <Button variant="ghost" size="icon" className="flex-shrink-0">
-              <Edit className="h-5 w-5 text-gray-400" />
+              <Edit className="h-5 w-5 text-muted-foreground" />
             </Button>
           </div>
           
@@ -73,7 +74,7 @@ const JobHeader: React.FC<JobHeaderProps> = ({ job, onUpdate }) => {
             
             <button
               onClick={copyJobId}
-              className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800 transition-colors"
+              className="flex items-center gap-1 text-sm text-primary hover:text-primary/80 transition-colors"
             >
               <span>ID: {job.id}</span>
               <Copy className="h-3 w-3" />
@@ -81,7 +82,7 @@ const JobHeader: React.FC<JobHeaderProps> = ({ job, onUpdate }) => {
             </button>
           </div>
           
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-muted-foreground">
             <span>Assigned: {job.assigned_techs.map(techId => `Tech ${techId}`).join(', ') || 'Unassigned'}</span>
           </div>
         </div>

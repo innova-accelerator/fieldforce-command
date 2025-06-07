@@ -33,15 +33,15 @@ const NotesSection: React.FC<NotesSectionProps> = ({ onAddNote }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border p-4 sm:p-6">
+    <div className="bg-card rounded-lg shadow-sm border p-4 sm:p-6">
       <div className="flex items-center gap-2 mb-4">
-        <MessageSquare className="h-5 w-5 text-blue-600" />
-        <h2 className="text-lg font-semibold text-gray-900">Add Note</h2>
+        <MessageSquare className="h-5 w-5 text-primary" />
+        <h2 className="text-lg font-semibold text-foreground">Add Note</h2>
       </div>
       
       <div className="space-y-3">
         <div>
-          <Label htmlFor="noteContent" className="text-sm font-medium text-gray-700">
+          <Label htmlFor="noteContent" className="text-sm font-medium text-foreground">
             Internal Note or Comment
           </Label>
           <Textarea
@@ -56,7 +56,7 @@ const NotesSection: React.FC<NotesSectionProps> = ({ onAddNote }) => {
         </div>
         
         <div className="flex items-center justify-between">
-          <div className="text-xs text-gray-500">
+          <div className="text-xs text-muted-foreground">
             Tip: Use Cmd/Ctrl + Enter to quickly submit
           </div>
           <Button 
