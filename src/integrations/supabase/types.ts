@@ -441,6 +441,27 @@ export type Database = {
           },
         ]
       }
+      permissions: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          name: Database["public"]["Enums"]["permission_type"]
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name: Database["public"]["Enums"]["permission_type"]
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: Database["public"]["Enums"]["permission_type"]
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string | null
@@ -470,6 +491,35 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      role_permissions: {
+        Row: {
+          created_at: string | null
+          id: string
+          permission_id: string | null
+          role: Database["public"]["Enums"]["app_role"]
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          permission_id?: string | null
+          role: Database["public"]["Enums"]["app_role"]
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          permission_id?: string | null
+          role?: Database["public"]["Enums"]["app_role"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "role_permissions_permission_id_fkey"
+            columns: ["permission_id"]
+            isOneToOne: false
+            referencedRelation: "permissions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       tasks: {
         Row: {
@@ -557,6 +607,36 @@ export type Database = {
           },
         ]
       }
+      user_roles: {
+        Row: {
+          assigned_at: string | null
+          assigned_by: string | null
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          assigned_at?: string | null
+          assigned_by?: string | null
+          created_at?: string | null
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          assigned_at?: string | null
+          assigned_by?: string | null
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       users: {
         Row: {
           created_at: string | null
@@ -592,6 +672,20 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      has_permission: {
+        Args: {
+          _user_id: string
+          _permission: Database["public"]["Enums"]["permission_type"]
+        }
+        Returns: boolean
+      }
+      has_role: {
+        Args: {
+          _user_id: string
+          _role: Database["public"]["Enums"]["app_role"]
+        }
+        Returns: boolean
+      }
       is_admin: {
         Args: Record<PropertyKey, never>
         Returns: boolean
@@ -599,6 +693,7 @@ export type Database = {
     }
     Enums: {
       activity_type: "note" | "call" | "email" | "job_completed" | "job_created"
+      app_role: "admin" | "manager" | "technician" | "user"
       associate_availability: "available" | "busy" | "offline"
       customer_status: "active" | "inactive"
       job_priority: "Low" | "Medium" | "High" | "Urgent"
@@ -609,6 +704,27 @@ export type Database = {
         | "Completed"
         | "Cancelled"
       organization_relation: "Unknown" | "Vendor" | "Partner" | "Other"
+      permission_type:
+        | "users_read"
+        | "users_write"
+        | "users_delete"
+        | "jobs_read"
+        | "jobs_write"
+        | "jobs_delete"
+        | "jobs_assign"
+        | "customers_read"
+        | "customers_write"
+        | "customers_delete"
+        | "organizations_read"
+        | "organizations_write"
+        | "organizations_delete"
+        | "associates_read"
+        | "associates_write"
+        | "associates_delete"
+        | "settings_read"
+        | "settings_write"
+        | "reports_read"
+        | "reports_generate"
       timeline_type: "note" | "status" | "assignment" | "scheduling"
     }
     CompositeTypes: {
@@ -726,11 +842,34 @@ export const Constants = {
   public: {
     Enums: {
       activity_type: ["note", "call", "email", "job_completed", "job_created"],
+      app_role: ["admin", "manager", "technician", "user"],
       associate_availability: ["available", "busy", "offline"],
       customer_status: ["active", "inactive"],
       job_priority: ["Low", "Medium", "High", "Urgent"],
       job_status: ["New", "Scheduled", "In Progress", "Completed", "Cancelled"],
       organization_relation: ["Unknown", "Vendor", "Partner", "Other"],
+      permission_type: [
+        "users_read",
+        "users_write",
+        "users_delete",
+        "jobs_read",
+        "jobs_write",
+        "jobs_delete",
+        "jobs_assign",
+        "customers_read",
+        "customers_write",
+        "customers_delete",
+        "organizations_read",
+        "organizations_write",
+        "organizations_delete",
+        "associates_read",
+        "associates_write",
+        "associates_delete",
+        "settings_read",
+        "settings_write",
+        "reports_read",
+        "reports_generate",
+      ],
       timeline_type: ["note", "status", "assignment", "scheduling"],
     },
   },
