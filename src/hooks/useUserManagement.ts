@@ -6,6 +6,7 @@ import { Tables } from '@/integrations/supabase/types';
 type UserRole = Tables<'user_roles'>;
 type Permission = Tables<'permissions'>;
 type RolePermission = Tables<'role_permissions'>;
+type AppRole = 'admin' | 'manager' | 'technician' | 'user';
 
 export interface UserWithRoles {
   id: string;
@@ -80,12 +81,12 @@ export const useAssignRole = () => {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: async ({ userId, role }: { userId: string; role: string }) => {
+    mutationFn: async ({ userId, role }: { userId: string; role: AppRole }) => {
       const { data, error } = await supabase
         .from('user_roles')
         .insert({
           user_id: userId,
-          role: role as any,
+          role: role,
           assigned_by: (await supabase.auth.getUser()).data.user?.id
         });
       
@@ -102,7 +103,7 @@ export const useRemoveRole = () => {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: async ({ userId, role }: { userId: string; role: string }) => {
+    mutationFn: async ({ userId, role }: { userId: string; role: AppRole }) => {
       const { error } = await supabase
         .from('user_roles')
         .delete()

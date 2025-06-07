@@ -28,6 +28,7 @@ import {
 } from '../ui/dialog';
 
 const AVAILABLE_ROLES = ['admin', 'manager', 'technician', 'user'] as const;
+type AppRole = typeof AVAILABLE_ROLES[number];
 
 const UserManagement = () => {
   const { data: users = [], isLoading } = useUsers();
@@ -43,7 +44,7 @@ const UserManagement = () => {
     try {
       await assignRole.mutateAsync({
         userId: selectedUserId,
-        role: selectedRole
+        role: selectedRole as AppRole
       });
       setIsAssignDialogOpen(false);
       setSelectedUserId('');
@@ -55,7 +56,7 @@ const UserManagement = () => {
 
   const handleRemoveRole = async (userId: string, role: string) => {
     try {
-      await removeRole.mutateAsync({ userId, role });
+      await removeRole.mutateAsync({ userId, role: role as AppRole });
     } catch (error) {
       console.error('Failed to remove role:', error);
     }
