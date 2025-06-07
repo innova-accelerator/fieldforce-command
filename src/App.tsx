@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -15,6 +16,7 @@ import JobOverview from "./pages/JobOverview";
 import OrganizationsPage from "./pages/OrganizationsPage";
 import PeoplePage from "./pages/PeoplePage";
 import JobsPage from "./pages/JobsPage";
+import MapPage from "./pages/MapPage";
 import NotFound from "./pages/NotFound";
 import { AuthProvider } from "./contexts/AuthContext";
 import AuthPage from "./pages/AuthPage";
@@ -103,6 +105,13 @@ const AppContent = () => {
         <ProtectedRoute>
           <Layout currentPage="jobs" onNavigate={handleNavigate}>
             <JobOverview />
+          </Layout>
+        </ProtectedRoute>
+      } />
+      <Route path="/map" element={
+        <ProtectedRoute>
+          <Layout currentPage="map" onNavigate={handleNavigate}>
+            <MapPage />
           </Layout>
         </ProtectedRoute>
       } />

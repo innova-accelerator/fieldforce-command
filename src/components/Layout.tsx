@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Users, Calendar, UserCheck, Settings, Home, Menu, X, Building2, User, Briefcase } from 'lucide-react';
+import { Users, Calendar, UserCheck, Settings, Home, Menu, X, Building2, User, Briefcase, Map } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ThemeToggle } from './ui/theme-toggle';
@@ -25,6 +25,7 @@ const Layout = ({ children, currentPage, onNavigate }: LayoutProps) => {
     { name: 'Associates', href: 'associates', icon: UserCheck, isSubItem: true },
     { name: 'People', href: 'people', icon: User },
     { name: 'Jobs', href: 'jobs', icon: Briefcase },
+    { name: 'Map', href: 'map', icon: Map },
     { name: 'Schedule', href: 'schedule', icon: Calendar },
     { name: 'Settings', href: 'settings', icon: Settings },
   ];
