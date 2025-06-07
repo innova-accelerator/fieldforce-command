@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Users, Calendar, UserCheck, Settings, Home, Menu, X, Building2, User, Briefcase, Map, CheckSquare } from 'lucide-react';
 import { useState } from 'react';
@@ -50,7 +51,7 @@ const Layout = ({ children, currentPage, onNavigate }: LayoutProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-[#171717] flex">
+    <div className="min-h-screen bg-background flex">
       {/* Mobile sidebar backdrop */}
       {sidebarOpen && (
         <div 
@@ -61,14 +62,14 @@ const Layout = ({ children, currentPage, onNavigate }: LayoutProps) => {
 
       {/* Sidebar */}
       <div className={`
-        fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-[#212121] shadow-lg dark:shadow-none border-r dark:border-[#303030] transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0
+        fixed inset-y-0 left-0 z-50 w-64 bg-card shadow-lg border-r border-border transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
-        <div className="flex items-center justify-between h-16 px-6 border-b border-gray-200 dark:border-[#303030]">
-          <h1 className="text-xl font-bold text-blue-900 dark:text-blue-400">FieldForce</h1>
+        <div className="flex items-center justify-between h-16 px-6 border-b border-border">
+          <h1 className="text-xl font-bold text-primary">FieldForce</h1>
           <button
             onClick={() => setSidebarOpen(false)}
-            className="lg:hidden text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
+            className="lg:hidden text-muted-foreground hover:text-foreground"
           >
             <X className="h-6 w-6" />
           </button>
@@ -85,8 +86,8 @@ const Layout = ({ children, currentPage, onNavigate }: LayoutProps) => {
                   w-full flex items-center px-3 py-2 mb-1 text-sm font-medium rounded-lg transition-colors duration-200
                   ${item.isSubItem ? 'ml-4 pl-6' : ''}
                   ${isActive 
-                    ? 'bg-blue-100 dark:bg-blue-900 text-blue-900 dark:text-blue-100 border-r-2 border-blue-600 dark:border-blue-400' 
-                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#303030] hover:text-gray-900 dark:hover:text-gray-100'
+                    ? 'bg-primary/10 text-primary border-r-2 border-primary' 
+                    : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
                   }
                 `}
               >
@@ -101,16 +102,16 @@ const Layout = ({ children, currentPage, onNavigate }: LayoutProps) => {
       {/* Main content */}
       <div className="flex-1 flex flex-col lg:ml-0">
         {/* Top header */}
-        <header className="bg-white dark:bg-[#212121] shadow-sm border-b border-gray-200 dark:border-[#303030] lg:static">
+        <header className="bg-card shadow-sm border-b border-border lg:static">
           <div className="flex items-center justify-between h-16 px-4 sm:px-6">
             <div className="flex items-center">
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="lg:hidden text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 mr-4"
+                className="lg:hidden text-muted-foreground hover:text-foreground mr-4"
               >
                 <Menu className="h-6 w-6" />
               </button>
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 capitalize">
+              <h2 className="text-lg font-semibold text-foreground capitalize">
                 {currentPage.replace('-', ' ')}
               </h2>
             </div>
@@ -118,12 +119,12 @@ const Layout = ({ children, currentPage, onNavigate }: LayoutProps) => {
             <div className="flex items-center space-x-4">
               <ThemeToggle />
               <div className="flex items-center space-x-2">
-                <div className="text-sm text-gray-500 dark:text-gray-400">
+                <div className="text-sm text-muted-foreground">
                   Welcome back, {user?.email?.split('@')[0] || 'User'}
                 </div>
                 <button
                   onClick={handleSignOut}
-                  className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
+                  className="text-muted-foreground hover:text-foreground"
                   title="Sign out"
                 >
                   <LogOut className="h-5 w-5" />
@@ -134,7 +135,7 @@ const Layout = ({ children, currentPage, onNavigate }: LayoutProps) => {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-auto bg-gray-50 dark:bg-[#171717]">
+        <main className="flex-1 overflow-auto bg-background">
           {children}
         </main>
       </div>

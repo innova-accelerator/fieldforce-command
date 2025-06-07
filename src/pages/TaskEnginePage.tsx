@@ -185,9 +185,9 @@ const TaskEnginePage: React.FC = () => {
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-lg flex items-center gap-2">
-              <CheckSquare className="h-5 w-5 text-blue-600" />
+              <CheckSquare className="h-5 w-5 text-primary" />
               Tasks
-              <span className="text-sm font-normal text-gray-500">
+              <span className="text-sm font-normal text-muted-foreground">
                 ({completedTasks}/{totalTasks} completed)
               </span>
             </CardTitle>
@@ -197,9 +197,9 @@ const TaskEnginePage: React.FC = () => {
           {/* Progress Bar */}
           {totalTasks > 0 && (
             <div className="mb-6">
-              <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="w-full bg-muted rounded-full h-2">
                 <div 
-                  className="bg-green-500 h-2 rounded-full transition-all duration-300"
+                  className="bg-primary h-2 rounded-full transition-all duration-300"
                   style={{ width: `${(completedTasks / totalTasks) * 100}%` }}
                 />
               </div>
@@ -233,8 +233,8 @@ const TaskEnginePage: React.FC = () => {
               </Droppable>
             </DragDropContext>
           ) : (
-            <div className="text-center py-12 text-gray-500 mb-6">
-              <CheckSquare className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+            <div className="text-center py-12 text-muted-foreground mb-6">
+              <CheckSquare className="h-12 w-12 mx-auto mb-4 text-muted" />
               <p className="text-lg font-medium mb-2">No tasks yet</p>
               <p>Create your first task to get started!</p>
             </div>

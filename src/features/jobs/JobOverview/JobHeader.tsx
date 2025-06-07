@@ -10,7 +10,7 @@ interface JobHeaderProps {
 
 const JobHeader: React.FC<JobHeaderProps> = ({ job }) => {
   return (
-    <div className="bg-card rounded-lg shadow-sm dark:shadow-none border border-border p-4 sm:p-6">
+    <div className="bg-card rounded-lg shadow-sm border border-border p-4 sm:p-6">
       {/* Breadcrumb - responsive text */}
       <nav className="text-xs sm:text-sm text-muted-foreground mb-2">
         Jobs &gt; {job.customerName} &gt; Overview
@@ -43,9 +43,9 @@ const JobHeader: React.FC<JobHeaderProps> = ({ job }) => {
         {/* Status badge */}
         <div className="flex-shrink-0">
           <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-            job.priority === 'High' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' :
-            job.priority === 'Medium' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
-            'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+            job.priority === 'High' ? 'bg-destructive/10 text-destructive' :
+            job.priority === 'Medium' ? 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400' :
+            'bg-green-500/10 text-green-600 dark:text-green-400'
           }`}>
             {job.priority} priority
           </span>

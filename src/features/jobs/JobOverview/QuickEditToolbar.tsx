@@ -12,13 +12,13 @@ interface QuickEditToolbarProps {
 
 const QuickEditToolbar: React.FC<QuickEditToolbarProps> = ({ job, className }) => {
   return (
-    <div className={cn("bg-card rounded-lg shadow-sm dark:shadow-none border border-border p-4", className)}>
+    <div className={cn("bg-card rounded-lg shadow-sm border border-border p-4", className)}>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         
         {/* Color picker */}
         <div className="flex items-center gap-2">
           <label className="text-sm font-medium text-foreground">Color:</label>
-          <div className="w-8 h-8 bg-blue-500 rounded border border-border cursor-pointer"></div>
+          <div className="w-8 h-8 bg-primary rounded border border-border cursor-pointer"></div>
         </div>
         
         {/* Job ID */}
