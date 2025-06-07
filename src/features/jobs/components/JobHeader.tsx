@@ -12,13 +12,14 @@ interface JobHeaderProps {
 const JobHeader: React.FC<JobHeaderProps> = ({ job, onUpdate }) => {
   const [copied, setCopied] = useState(false);
 
-  const copyJobId = async () => {
+  const copyJobNumber = async () => {
     try {
-      await navigator.clipboard.writeText(job.id);
+      const jobNumber = job.job_number || job.id;
+      await navigator.clipboard.writeText(jobNumber);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error('Failed to copy job ID:', err);
+      console.error('Failed to copy job number:', err);
     }
   };
 
@@ -40,7 +41,7 @@ const JobHeader: React.FC<JobHeaderProps> = ({ job, onUpdate }) => {
     <div className="bg-card rounded-lg shadow-sm border p-4 sm:p-6">
       {/* Breadcrumb */}
       <nav className="text-xs sm:text-sm text-muted-foreground mb-3">
-        Dashboard &gt; Jobs &gt; {job.name}
+        Dashboard &gt; Jobs &gt; {job.job_number || `Job ${job.id.slice(0, 8)}`}
       </nav>
       
       {/* Main Header */}
@@ -73,10 +74,10 @@ const JobHeader: React.FC<JobHeaderProps> = ({ job, onUpdate }) => {
             </span>
             
             <button
-              onClick={copyJobId}
+              onClick={copyJobNumber}
               className="flex items-center gap-1 text-sm text-primary hover:text-primary/80 transition-colors"
             >
-              <span>ID: {job.id}</span>
+              <span>#{job.job_number || job.id.slice(0, 8)}</span>
               <Copy className="h-3 w-3" />
               {copied && <span className="text-green-600 text-xs">Copied!</span>}
             </button>
