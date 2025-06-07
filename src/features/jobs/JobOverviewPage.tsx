@@ -13,28 +13,56 @@ import { fetchJob, updateJob } from '../../services/jobs';
 import { Job, Task, TimelineEntry } from '../../types/job';
 
 const JobOverviewPage: React.FC = () => {
+  console.log('🏠 JobOverviewPage - Component mounted');
+  
   const { jobId } = useParams<{ jobId: string }>();
+  console.log('🆔 JobOverviewPage - jobId from params:', jobId);
+  
   const queryClient = useQueryClient();
 
   const { data: job, isLoading, error } = useQuery({
     queryKey: ['job', jobId],
-    queryFn: () => fetchJob(jobId!),
+    queryFn: () => {
+      console.log('🔍 JobOverviewPage - Query function called for jobId:', jobId);
+      return fetchJob(jobId!);
+    },
     enabled: !!jobId,
   });
 
+  console.log('📊 JobOverviewPage - Query state:', {
+    isLoading,
+    hasError: !!error,
+    hasJob: !!job,
+    jobId: job?.id,
+    jobName: job?.name,
+    jobNumber: job?.job_number
+  });
+
   const updateJobMutation = useMutation({
-    mutationFn: (updates: Partial<Job>) => updateJob(jobId!, updates),
+    mutationFn: (updates: Partial<Job>) => {
+      console.log('🔄 JobOverviewPage - updateJobMutation called with updates:', updates);
+      return updateJob(jobId!, updates);
+    },
     onSuccess: (updatedJob) => {
+      console.log('✅ JobOverviewPage - Job update successful:', updatedJob);
       queryClient.setQueryData(['job', jobId], updatedJob);
     },
+    onError: (error) => {
+      console.error('❌ JobOverviewPage - Job update failed:', error);
+    }
   });
 
   const handleUpdateJob = (updates: Partial<Job>) => {
+    console.log('🎯 JobOverviewPage - handleUpdateJob called with:', updates);
     updateJobMutation.mutate(updates);
   };
 
   const addTimelineEntry = (entry: Omit<TimelineEntry, 'timestamp' | 'id' | 'job_id' | 'created_at'>) => {
-    if (!job) return;
+    console.log('📝 JobOverviewPage - addTimelineEntry called with:', entry);
+    if (!job) {
+      console.warn('⚠️ JobOverviewPage - Cannot add timeline entry, no job available');
+      return;
+    }
     
     const newEntry: TimelineEntry = {
       ...entry,
@@ -49,7 +77,11 @@ const JobOverviewPage: React.FC = () => {
   };
 
   const addNote = (content: string) => {
-    if (!job) return;
+    console.log('📝 JobOverviewPage - addNote called with content:', content);
+    if (!job) {
+      console.warn('⚠️ JobOverviewPage - Cannot add note, no job available');
+      return;
+    }
     
     const newEntry: TimelineEntry = {
       id: `timeline-${Date.now()}`,
@@ -71,6 +103,7 @@ const JobOverviewPage: React.FC = () => {
   };
 
   if (isLoading) {
+    console.log('⏳ JobOverviewPage - Showing loading state');
     return (
       <div className="flex items-center justify-center min-h-screen bg-background">
         <div className="text-lg text-foreground">Loading job details...</div>
@@ -79,6 +112,7 @@ const JobOverviewPage: React.FC = () => {
   }
 
   if (error) {
+    console.error('❌ JobOverviewPage - Showing error state:', error);
     return (
       <div className="flex items-center justify-center min-h-screen bg-background">
         <div className="text-lg text-destructive">Error loading job details</div>
@@ -87,12 +121,20 @@ const JobOverviewPage: React.FC = () => {
   }
 
   if (!job) {
+    console.warn('⚠️ JobOverviewPage - Showing not found state');
     return (
       <div className="flex items-center justify-center min-h-screen bg-background">
         <div className="text-lg text-muted-foreground">Job not found</div>
       </div>
     );
   }
+
+  console.log('🎨 JobOverviewPage - Rendering job overview for:', {
+    id: job.id,
+    name: job.name,
+    job_number: job.job_number,
+    customerName: job.customerName
+  });
 
   return (
     <div className="min-h-screen bg-background">

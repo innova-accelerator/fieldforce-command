@@ -3,7 +3,16 @@ import { Job, Task, TimelineEntry } from '@/types/job';
 import { JobQueryResult, JobUpdateData } from './types';
 
 export const transformJobFromDatabase = (job: JobQueryResult): Job => {
-  return {
+  console.log('🔄 transformJobFromDatabase - Starting transformation for job:', job.id);
+  console.log('📊 transformJobFromDatabase - Input job_number:', {
+    value: job.job_number,
+    type: typeof job.job_number,
+    isNull: job.job_number === null,
+    isUndefined: job.job_number === undefined,
+    isEmpty: job.job_number === ''
+  });
+
+  const transformed = {
     id: job.id,
     job_number: job.job_number,
     name: job.name,
@@ -55,13 +64,44 @@ export const transformJobFromDatabase = (job: JobQueryResult): Job => {
     customerName: job.customers?.name || '',
     assignedPersonName: job.people ? `${job.people.first_name} ${job.people.last_name}` : '',
   };
+
+  console.log('✅ transformJobFromDatabase - Output job_number:', {
+    value: transformed.job_number,
+    type: typeof transformed.job_number,
+    isNull: transformed.job_number === null,
+    isUndefined: transformed.job_number === undefined,
+    isEmpty: transformed.job_number === ''
+  });
+
+  console.log('🎯 transformJobFromDatabase - Complete transformed job:', {
+    id: transformed.id,
+    name: transformed.name,
+    job_number: transformed.job_number,
+    customerName: transformed.customerName,
+    assignedPersonName: transformed.assignedPersonName
+  });
+
+  return transformed;
 };
 
 export const prepareJobForDatabase = (job: Partial<Job>): JobUpdateData => {
+  console.log('🔄 prepareJobForDatabase - Starting preparation');
+  console.log('📊 prepareJobForDatabase - Input job_number:', {
+    value: job.job_number,
+    type: typeof job.job_number
+  });
+
   const { tasks, timeline, customerName, assignedPersonName, job_number, ...dbJob } = job;
   
-  return {
+  const prepared = {
     ...dbJob,
     job_number,
   };
+
+  console.log('✅ prepareJobForDatabase - Output job_number:', {
+    value: prepared.job_number,
+    type: typeof prepared.job_number
+  });
+
+  return prepared;
 };

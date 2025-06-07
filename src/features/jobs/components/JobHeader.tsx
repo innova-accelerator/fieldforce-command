@@ -10,24 +10,37 @@ interface JobHeaderProps {
 }
 
 const JobHeader: React.FC<JobHeaderProps> = ({ job, onUpdate }) => {
+  console.log('🎨 JobHeader - Component rendered with job:', {
+    id: job.id,
+    name: job.name,
+    job_number: job.job_number,
+    job_number_type: typeof job.job_number,
+    customerName: job.customerName
+  });
+
   const [copied, setCopied] = useState(false);
 
   const copyJobNumber = async () => {
+    console.log('📋 JobHeader - copyJobNumber called');
     try {
       const jobNumber = job.job_number || `Job ${job.id.slice(0, 8)}`;
+      console.log('📋 JobHeader - Copying job number:', jobNumber);
       await navigator.clipboard.writeText(jobNumber);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+      console.log('✅ JobHeader - Job number copied successfully');
     } catch (err) {
-      console.error('Failed to copy job number:', err);
+      console.error('❌ JobHeader - Failed to copy job number:', err);
     }
   };
 
   const toggleFavorite = () => {
+    console.log('⭐ JobHeader - toggleFavorite called, current state:', job.is_favorite);
     onUpdate({ is_favorite: !job.is_favorite });
   };
 
   const getPhaseColor = (phase: string) => {
+    console.log('🎨 JobHeader - getPhaseColor called for phase:', phase);
     switch (phase.toLowerCase()) {
       case 'proposal': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
       case 'planning': return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
@@ -39,6 +52,12 @@ const JobHeader: React.FC<JobHeaderProps> = ({ job, onUpdate }) => {
 
   // Display job number or fallback
   const displayJobNumber = job.job_number || `Job ${job.id.slice(0, 8)}`;
+  console.log('🎯 JobHeader - displayJobNumber calculated:', {
+    displayJobNumber,
+    job_number: job.job_number,
+    fallback: `Job ${job.id.slice(0, 8)}`,
+    usingFallback: !job.job_number
+  });
 
   return (
     <div className="bg-card rounded-lg shadow-sm border p-4 sm:p-6">
