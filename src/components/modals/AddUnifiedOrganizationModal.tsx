@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
@@ -7,9 +6,10 @@ import { useQueryClient } from '@tanstack/react-query';
 interface AddUnifiedOrganizationModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onOrganizationAdded: () => void;
 }
 
-const AddUnifiedOrganizationModal = ({ isOpen, onClose }: AddUnifiedOrganizationModalProps) => {
+const AddUnifiedOrganizationModal = ({ isOpen, onClose, onOrganizationAdded }: AddUnifiedOrganizationModalProps) => {
   const [formData, setFormData] = useState({
     name: '',
     classification: '',
@@ -65,7 +65,7 @@ const AddUnifiedOrganizationModal = ({ isOpen, onClose }: AddUnifiedOrganization
       queryClient.invalidateQueries({ queryKey: ['associates'] });
       queryClient.invalidateQueries({ queryKey: ['customers'] });
 
-      onClose();
+      onOrganizationAdded();
       setFormData({
         name: '',
         classification: '',
