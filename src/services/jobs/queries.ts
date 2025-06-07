@@ -23,20 +23,12 @@ export const fetchAllJobs = async (): Promise<Job[]> => {
 
   if (error) throw error;
 
-  console.log('fetchAllJobs - raw jobs from database:', jobs);
-
-  return (jobs || []).map((job: JobQueryResult) => {
-    const transformedJob = transformJobFromDatabase(job);
-    console.log('fetchAllJobs - transformed job:', transformedJob);
-    return transformedJob;
-  });
+  return (jobs || []).map((job: JobQueryResult) => transformJobFromDatabase(job));
 };
 
 export const fetchJob = async (jobId: string): Promise<Job> => {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error('User not authenticated');
-
-  console.log('fetchJob - fetching job with ID:', jobId);
 
   const { data: job, error } = await supabase
     .from('jobs')
@@ -45,15 +37,7 @@ export const fetchJob = async (jobId: string): Promise<Job> => {
     .eq('user_id', user.id)
     .single();
 
-  if (error) {
-    console.error('fetchJob - error:', error);
-    throw error;
-  }
-
-  console.log('fetchJob - raw job from database:', job);
+  if (error) throw error;
   
-  const transformedJob = transformJobFromDatabase(job);
-  console.log('fetchJob - transformed job:', transformedJob);
-  
-  return transformedJob;
+  return transformJobFromDatabase(job);
 };

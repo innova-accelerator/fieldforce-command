@@ -203,6 +203,7 @@ export type Database = {
           estimated_duration: number | null
           id: string
           is_favorite: boolean | null
+          job_number: string | null
           location: string | null
           name: string
           notes: string[] | null
@@ -229,6 +230,7 @@ export type Database = {
           estimated_duration?: number | null
           id?: string
           is_favorite?: boolean | null
+          job_number?: string | null
           location?: string | null
           name: string
           notes?: string[] | null
@@ -255,6 +257,7 @@ export type Database = {
           estimated_duration?: number | null
           id?: string
           is_favorite?: boolean | null
+          job_number?: string | null
           location?: string | null
           name?: string
           notes?: string[] | null

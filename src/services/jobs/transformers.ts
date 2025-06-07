@@ -3,12 +3,9 @@ import { Job, Task, TimelineEntry } from '@/types/job';
 import { JobQueryResult, JobUpdateData } from './types';
 
 export const transformJobFromDatabase = (job: JobQueryResult): Job => {
-  console.log('transformJobFromDatabase - input job:', job);
-  console.log('transformJobFromDatabase - job.job_number:', job.job_number);
-  
-  const transformedJob = {
+  return {
     id: job.id,
-    job_number: job.job_number, // Ensure this is properly included
+    job_number: job.job_number,
     name: job.name,
     description: job.description,
     customer_id: job.customer_id,
@@ -58,9 +55,6 @@ export const transformJobFromDatabase = (job: JobQueryResult): Job => {
     customerName: job.customers?.name || '',
     assignedPersonName: job.people ? `${job.people.first_name} ${job.people.last_name}` : '',
   };
-
-  console.log('transformJobFromDatabase - output job:', transformedJob);
-  return transformedJob;
 };
 
 export const prepareJobForDatabase = (job: Partial<Job>): JobUpdateData => {
@@ -68,6 +62,6 @@ export const prepareJobForDatabase = (job: Partial<Job>): JobUpdateData => {
   
   return {
     ...dbJob,
-    job_number, // Include job_number for database operations
+    job_number,
   };
 };

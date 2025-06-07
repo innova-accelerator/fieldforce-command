@@ -12,11 +12,6 @@ interface JobHeaderProps {
 const JobHeader: React.FC<JobHeaderProps> = ({ job, onUpdate }) => {
   const [copied, setCopied] = useState(false);
 
-  // Debug logging to see what we're getting
-  console.log('JobHeader - job object:', job);
-  console.log('JobHeader - job.job_number:', job.job_number);
-  console.log('JobHeader - job.id:', job.id);
-
   const copyJobNumber = async () => {
     try {
       const jobNumber = job.job_number || `Job ${job.id.slice(0, 8)}`;
