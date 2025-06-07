@@ -97,7 +97,7 @@ const JobOverviewPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-background">
         <div className="text-lg text-foreground">Loading job details...</div>
       </div>
     );
@@ -105,7 +105,7 @@ const JobOverviewPage: React.FC = () => {
 
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-background">
         <div className="text-lg text-destructive">Error loading job details</div>
       </div>
     );
@@ -113,7 +113,7 @@ const JobOverviewPage: React.FC = () => {
 
   if (!job) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-background">
         <div className="text-lg text-muted-foreground">Job not found</div>
       </div>
     );

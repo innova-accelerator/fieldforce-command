@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
@@ -19,14 +20,14 @@ const NextActions: React.FC<NextActionsProps> = ({ job }) => {
         {/* Last meeting */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-foreground mb-1">
               Last Meeting
             </label>
             <Input type="date" className="w-full" />
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-foreground mb-1">
               Due Date
             </label>
             <Input type="datetime-local" className="w-full" />
@@ -35,7 +36,7 @@ const NextActions: React.FC<NextActionsProps> = ({ job }) => {
         
         {/* Next action */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             Next Action
           </label>
           <Input 
@@ -46,11 +47,11 @@ const NextActions: React.FC<NextActionsProps> = ({ job }) => {
         
         {/* Description */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             Description
           </label>
           <textarea 
-            className="w-full min-h-20 px-3 py-2 border border-gray-300 rounded-md text-sm"
+            className="w-full min-h-20 px-3 py-2 border border-input bg-background text-foreground rounded-md text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             placeholder="Additional details..."
           />
         </div>
@@ -58,7 +59,7 @@ const NextActions: React.FC<NextActionsProps> = ({ job }) => {
         {/* Hibernate date */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-foreground mb-1">
               Hibernate Date
             </label>
             <Input type="date" className="w-full" />

@@ -61,21 +61,21 @@ const HistoryFeed: React.FC<HistoryFeedProps> = ({ jobId }) => {
         {/* History entries */}
         <div className="space-y-3">
           {mockHistory.map((entry) => (
-            <div key={entry.id} className="border-l-2 border-gray-200 pl-3 pb-3">
+            <div key={entry.id} className="border-l-2 border-border pl-3 pb-3">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-muted-foreground">
                   {entry.timestamp.toLocaleDateString()} {entry.timestamp.toLocaleTimeString()}
                 </span>
-                <span className="text-xs font-medium text-gray-600">
+                <span className="text-xs font-medium text-foreground">
                   {entry.author}
                 </span>
               </div>
-              <p className="text-sm text-gray-800 mt-1">{entry.message}</p>
+              <p className="text-sm text-foreground mt-1">{entry.message}</p>
               <span className={`inline-block text-xs px-2 py-1 rounded mt-1 ${
-                entry.type === 'status' ? 'bg-blue-100 text-blue-800' :
-                entry.type === 'note' ? 'bg-green-100 text-green-800' :
-                entry.type === 'email' ? 'bg-purple-100 text-purple-800' :
-                'bg-gray-100 text-gray-800'
+                entry.type === 'status' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' :
+                entry.type === 'note' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
+                entry.type === 'email' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200' :
+                'bg-muted text-muted-foreground'
               }`}>
                 {entry.type}
               </span>
