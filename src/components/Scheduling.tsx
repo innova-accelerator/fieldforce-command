@@ -18,6 +18,18 @@ const Scheduling = () => {
   );
 
   const handleScheduleEvent = (eventData: ScheduleEventData) => {
+    // Calculate duration if both start and end times are provided
+    let calculatedDuration = undefined;
+    if (eventData.endTime && eventData.startTime) {
+      const [startHours, startMinutes] = eventData.startTime.split(':').map(Number);
+      const [endHours, endMinutes] = eventData.endTime.split(':').map(Number);
+      
+      const startTotalMinutes = startHours * 60 + startMinutes;
+      const endTotalMinutes = endHours * 60 + endMinutes;
+      
+      calculatedDuration = Math.round((endTotalMinutes - startTotalMinutes) / 60);
+    }
+
     // Update the job with the new scheduled date and details
     setJobs(prevJobs => 
       prevJobs.map(job => 
@@ -28,9 +40,7 @@ const Scheduling = () => {
               status: 'Scheduled' as const,
               assigned_techs: eventData.assignedTechs,
               priority: eventData.priority,
-              estimated_duration: eventData.endTime 
-                ? Math.round((new Date(`1970-01-01T${eventData.endTime}:00`) - new Date(`1970-01-01T${eventData.startTime}:00`)) / (1000 * 60 * 60))
-                : job.estimated_duration
+              estimated_duration: calculatedDuration || job.estimated_duration
             }
           : job
       )
