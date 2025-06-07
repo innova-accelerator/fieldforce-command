@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
@@ -7,12 +8,13 @@ interface AddUnifiedOrganizationModalProps {
   isOpen: boolean;
   onClose: () => void;
   onOrganizationAdded: () => void;
+  defaultClassification?: 'customer' | 'associate';
 }
 
-const AddUnifiedOrganizationModal = ({ isOpen, onClose, onOrganizationAdded }: AddUnifiedOrganizationModalProps) => {
+const AddUnifiedOrganizationModal = ({ isOpen, onClose, onOrganizationAdded, defaultClassification }: AddUnifiedOrganizationModalProps) => {
   const [formData, setFormData] = useState({
     name: '',
-    classification: '',
+    classification: defaultClassification || '',
     category: '',
     email: '',
     phone: '',
@@ -68,7 +70,7 @@ const AddUnifiedOrganizationModal = ({ isOpen, onClose, onOrganizationAdded }: A
       onOrganizationAdded();
       setFormData({
         name: '',
-        classification: '',
+        classification: defaultClassification || '',
         category: '',
         email: '',
         phone: '',
@@ -96,7 +98,9 @@ const AddUnifiedOrganizationModal = ({ isOpen, onClose, onOrganizationAdded }: A
       <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-screen overflow-y-auto">
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold text-gray-900">Add Organization</h2>
+            <h2 className="text-xl font-semibold text-gray-900">
+              Add {formData.classification || 'Organization'}
+            </h2>
             <button
               onClick={onClose}
               className="text-gray-400 hover:text-gray-600"
@@ -130,6 +134,7 @@ const AddUnifiedOrganizationModal = ({ isOpen, onClose, onOrganizationAdded }: A
                 value={formData.classification}
                 onChange={(e) => setFormData({ ...formData, classification: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                disabled={!!defaultClassification}
               >
                 <option value="">Select Classification</option>
                 <option value="associate">Associate</option>
@@ -295,7 +300,7 @@ const AddUnifiedOrganizationModal = ({ isOpen, onClose, onOrganizationAdded }: A
               disabled={isSubmitting}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
             >
-              {isSubmitting ? 'Creating...' : 'Create Organization'}
+              {isSubmitting ? 'Creating...' : `Create ${formData.classification || 'Organization'}`}
             </button>
           </div>
         </form>

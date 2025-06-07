@@ -1,3 +1,4 @@
+
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { 
@@ -23,31 +24,33 @@ export const useCustomers = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('User not authenticated');
 
-      const { data: customers, error } = await supabase
-        .from('customers')
+      // Fetch organizations with classification = 'customer'
+      const { data: organizations, error } = await supabase
+        .from('organizations')
         .select('*')
-        .eq('user_id', user.id);
+        .eq('user_id', user.id)
+        .eq('classification', 'customer');
 
       if (error) {
-        console.error('Failed to fetch customers:', error);
+        console.error('Failed to fetch customer organizations:', error);
         throw error;
       }
 
-      console.log('Customers fetched from useData hook:', customers);
+      console.log('Customer organizations fetched from useData hook:', organizations);
 
       // Transform the data to match our Customer interface
-      return (customers || []).map(customer => ({
-        id: customer.id,
-        name: customer.name,
-        email: customer.email || '',
-        phone: customer.phone || '',
-        address: customer.address || '',
-        company: customer.company,
-        createdAt: new Date(customer.created_at),
-        lastContact: customer.last_contact ? new Date(customer.last_contact) : undefined,
-        totalJobs: customer.total_jobs || 0,
-        status: customer.status as 'active' | 'inactive',
-        notes: customer.notes
+      return (organizations || []).map(org => ({
+        id: org.id,
+        name: org.name,
+        email: org.email || '',
+        phone: org.phone || '',
+        address: [org.address, org.city, org.state, org.zipcode].filter(Boolean).join(', '),
+        company: org.name,
+        createdAt: new Date(org.created_at),
+        lastContact: undefined,
+        totalJobs: 0,
+        status: 'active' as 'active' | 'inactive',
+        notes: org.additional_info
       }));
     },
   });
@@ -175,16 +178,51 @@ export const useAssociates = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('User not authenticated');
 
-      const { data: associates, error } = await supabase
-        .from('associates')
+      // Fetch organizations with classification = 'associate' and join with associates table
+      const { data: organizations, error } = await supabase
+        .from('organizations')
         .select(`
           *,
-          organizations (name)
+          associates (
+            id,
+            availability,
+            hourly_rate,
+            rating,
+            completed_jobs,
+            skills,
+            certifications,
+            location_lat,
+            location_lng,
+            joined_at
+          )
         `)
-        .eq('user_id', user.id);
+        .eq('user_id', user.id)
+        .eq('classification', 'associate');
 
       if (error) throw error;
-      return associates;
+
+      // Transform to match associate interface
+      return (organizations || []).map(org => {
+        const associate = org.associates?.[0] || {};
+        return {
+          id: associate.id || org.id,
+          name: org.name,
+          email: org.email,
+          phone: org.phone,
+          location_address: [org.address, org.city, org.state, org.zipcode].filter(Boolean).join(', '),
+          availability: associate.availability || 'available',
+          hourly_rate: associate.hourly_rate || 0,
+          rating: associate.rating || 0,
+          completed_jobs: associate.completed_jobs || 0,
+          skills: associate.skills || [],
+          certifications: associate.certifications || [],
+          organizations: { name: org.name },
+          organization_id: org.id,
+          user_id: org.user_id,
+          created_at: org.created_at,
+          updated_at: org.updated_at
+        };
+      });
     },
   });
 };

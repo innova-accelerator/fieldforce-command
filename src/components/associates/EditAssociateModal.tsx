@@ -18,7 +18,10 @@ const EditAssociateModal: React.FC<EditAssociateModalProps> = ({
     name: '',
     email: '',
     phone: '',
-    location_address: '',
+    address: '',
+    city: '',
+    state: '',
+    zipcode: '',
     availability: 'available',
     hourly_rate: '',
     skills: [] as string[],
@@ -31,11 +34,15 @@ const EditAssociateModal: React.FC<EditAssociateModalProps> = ({
 
   useEffect(() => {
     if (associate) {
+      const addressParts = associate.location_address?.split(', ') || [];
       setFormData({
         name: associate.name || '',
         email: associate.email || '',
         phone: associate.phone || '',
-        location_address: associate.location_address || '',
+        address: addressParts[0] || '',
+        city: addressParts[1] || '',
+        state: addressParts[2] || '',
+        zipcode: addressParts[3] || '',
         availability: associate.availability || 'available',
         hourly_rate: associate.hourly_rate?.toString() || '',
         skills: associate.skills || [],
@@ -50,17 +57,36 @@ const EditAssociateModal: React.FC<EditAssociateModalProps> = ({
     setError(null);
 
     try {
+      // Update organization record (this will trigger the database function to update associates)
+      const { error: orgError } = await supabase
+        .from('organizations')
+        .update({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          address: formData.address,
+          city: formData.city,
+          state: formData.state,
+          zipcode: formData.zipcode
+        })
+        .eq('id', associate.organization_id);
+
+      if (orgError) throw orgError;
+
+      // Update associate-specific fields
       const updateData = {
-        ...formData,
-        hourly_rate: formData.hourly_rate ? parseFloat(formData.hourly_rate) : null
+        availability: formData.availability,
+        hourly_rate: formData.hourly_rate ? parseFloat(formData.hourly_rate) : null,
+        skills: formData.skills,
+        certifications: formData.certifications
       };
 
-      const { error: updateError } = await supabase
+      const { error: associateError } = await supabase
         .from('associates')
         .update(updateData)
-        .eq('id', associate.id);
+        .eq('organization_id', associate.organization_id);
 
-      if (updateError) throw updateError;
+      if (associateError) throw associateError;
 
       onAssociateUpdated();
     } catch (err: any) {
@@ -170,11 +196,41 @@ const EditAssociateModal: React.FC<EditAssociateModalProps> = ({
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-foreground mb-2">Location Address</label>
+              <label className="block text-sm font-medium text-foreground mb-2">Address</label>
               <input
                 type="text"
-                value={formData.location_address}
-                onChange={(e) => setFormData({ ...formData, location_address: e.target.value })}
+                value={formData.address}
+                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-transparent"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">City</label>
+              <input
+                type="text"
+                value={formData.city}
+                onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-transparent"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">State</label>
+              <input
+                type="text"
+                value={formData.state}
+                onChange={(e) => setFormData({ ...formData, state: e.target.value })}
+                className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-transparent"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">ZIP Code</label>
+              <input
+                type="text"
+                value={formData.zipcode}
+                onChange={(e) => setFormData({ ...formData, zipcode: e.target.value })}
                 className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-transparent"
               />
             </div>

@@ -5,24 +5,14 @@ import { useCustomers, useOrganizations } from '../hooks/useData';
 import { supabase } from '../integrations/supabase/client';
 import { useAuth } from '../contexts/AuthContext';
 import EditCustomerModal from './modals/EditCustomerModal';
+import AddUnifiedOrganizationModal from './modals/AddUnifiedOrganizationModal';
 
 const CustomerManagement = () => {
   const { data: customers = [], isLoading, refetch } = useCustomers();
-  const { data: organizations = [] } = useOrganizations();
   const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [selectedCustomerForEdit, setSelectedCustomerForEdit] = useState<any | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
-
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    company: '',
-    address: ''
-  });
 
   const filteredCustomers = customers.filter(customer =>
     customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -30,35 +20,9 @@ const CustomerManagement = () => {
     (customer.company && customer.company.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setError(null);
-
-    try {
-      const { error: insertError } = await supabase
-        .from('customers')
-        .insert({
-          user_id: user?.id,
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          company: formData.company,
-          address: formData.address,
-          status: 'active'
-        });
-
-      if (insertError) throw insertError;
-
-      // Reset form and close modal
-      setFormData({ name: '', email: '', phone: '', company: '', address: '' });
-      setShowModal(false);
-      refetch();
-    } catch (err: any) {
-      setError(err.message || 'Failed to create customer');
-    } finally {
-      setIsSubmitting(false);
-    }
+  const handleOrganizationAdded = () => {
+    refetch();
+    setShowModal(false);
   };
 
   const handleCustomerUpdated = () => {
@@ -157,94 +121,12 @@ const CustomerManagement = () => {
       )}
 
       {/* Add Customer Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-background rounded-lg shadow-xl border max-w-md w-full">
-            <div className="p-6 border-b border-border">
-              <h2 className="text-xl font-semibold text-foreground">Add New Customer</h2>
-            </div>
-            
-            <form onSubmit={handleSubmit} className="p-6">
-              {error && (
-                <div className="mb-4 p-3 bg-destructive/10 border border-destructive/20 rounded-lg text-destructive text-sm">
-                  {error}
-                </div>
-              )}
-              
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Name</label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-3 py-2 border border-input bg-background text-foreground rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Email</label>
-                  <input
-                    type="email"
-                    required
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-3 py-2 border border-input bg-background text-foreground rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Phone</label>
-                  <input
-                    type="tel"
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full px-3 py-2 border border-input bg-background text-foreground rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Company</label>
-                  <input
-                    type="text"
-                    value={formData.company}
-                    onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                    className="w-full px-3 py-2 border border-input bg-background text-foreground rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Address</label>
-                  <input
-                    type="text"
-                    value={formData.address}
-                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                    className="w-full px-3 py-2 border border-input bg-background text-foreground rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent"
-                  />
-                </div>
-              </div>
-              
-              <div className="mt-6 flex justify-end space-x-3">
-                <button
-                  type="button"
-                  onClick={() => setShowModal(false)}
-                  className="px-4 py-2 text-muted-foreground bg-muted hover:bg-muted/80 rounded-lg transition-colors border"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isSubmitting ? 'Adding...' : 'Add Customer'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <AddUnifiedOrganizationModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        onOrganizationAdded={handleOrganizationAdded}
+        defaultClassification="customer"
+      />
 
       {/* Edit Customer Modal */}
       {selectedCustomerForEdit && (
