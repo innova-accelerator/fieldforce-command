@@ -21,10 +21,10 @@ const Layout = ({ children, currentPage, onNavigate }: LayoutProps) => {
   const navigation = [
     { name: 'Dashboard', href: 'dashboard', icon: Home },
     { name: 'Organizations', href: 'organizations', icon: Building2 },
+    { name: 'Customers', href: 'customers', icon: Users, isSubItem: true },
+    { name: 'Associates', href: 'associates', icon: UserCheck, isSubItem: true },
     { name: 'People', href: 'people', icon: User },
     { name: 'Jobs', href: 'jobs', icon: Briefcase },
-    { name: 'Customers', href: 'customers', icon: Users },
-    { name: 'Associates', href: 'associates', icon: UserCheck },
     { name: 'Schedule', href: 'schedule', icon: Calendar },
     { name: 'Settings', href: 'settings', icon: Settings },
   ];
@@ -77,6 +77,7 @@ const Layout = ({ children, currentPage, onNavigate }: LayoutProps) => {
                 onClick={() => handleNavigation(item.href)}
                 className={`
                   w-full flex items-center px-3 py-2 mb-1 text-sm font-medium rounded-lg transition-colors duration-200
+                  ${item.isSubItem ? 'ml-4 pl-6' : ''}
                   ${isActive 
                     ? 'bg-blue-100 dark:bg-blue-900 text-blue-900 dark:text-blue-100 border-r-2 border-blue-600 dark:border-blue-400' 
                     : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#303030] hover:text-gray-900 dark:hover:text-gray-100'
