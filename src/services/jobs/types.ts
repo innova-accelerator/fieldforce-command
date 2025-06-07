@@ -3,6 +3,7 @@ import { Job, Task, TimelineEntry } from '@/types/job';
 
 export interface JobQueryResult {
   id: string;
+  job_number?: string; // Add job_number field
   name: string;
   description: string;
   customer_id: string;
@@ -38,5 +39,6 @@ export interface JobUpdateData {
   customerName?: string;
   assignedPersonName?: string;
   user_id?: string;
+  job_number?: string; // Add job_number field
   [key: string]: any;
 }

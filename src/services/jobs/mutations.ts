@@ -3,6 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Job, Task, TimelineEntry } from '@/types/job';
 import { JobUpdateData } from './types';
 import { transformJobFromDatabase, prepareJobForDatabase } from './transformers';
+import { generateJobNumber } from './jobNumberGenerator';
 
 const JOB_SELECT_QUERY = `
   *,
@@ -80,11 +81,15 @@ export const createJob = async (jobData: Partial<Job>): Promise<Job> => {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error('User not authenticated');
 
+  // Generate the job number
+  const jobNumber = await generateJobNumber();
+
   const dbData = prepareJobForDatabase(jobData);
 
   // Ensure required fields are present and priority is valid
   const insertData = {
     ...dbData,
+    job_number: jobNumber, // Add the generated job number
     name: dbData.name || 'Untitled Job',
     priority: (dbData.priority as 'Low' | 'Medium' | 'High' | 'Urgent') || 'Medium',
     user_id: user.id

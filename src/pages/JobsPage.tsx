@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Plus, Search, Filter, Calendar, User, MapPin, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -57,7 +58,8 @@ const JobsPage = () => {
   const filteredJobs = jobs.filter(job => {
     const matchesSearch = job.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          job.customerName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         job.description?.toLowerCase().includes(searchTerm.toLowerCase());
+                         job.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         job.job_number?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'all' || job.status === statusFilter;
     const matchesPriority = priorityFilter === 'all' || job.priority === priorityFilter;
     
@@ -90,7 +92,14 @@ const JobsPage = () => {
       <div className="bg-white dark:bg-[#212121] rounded-lg shadow-sm dark:shadow-none border border-gray-200 dark:border-[#303030] p-6 hover:shadow-md dark:hover:bg-[#303030] transition-shadow cursor-pointer">
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{job.name}</h3>
+            <div className="flex items-center gap-2 mb-2">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{job.name}</h3>
+              {job.job_number && (
+                <span className="text-xs font-mono text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-[#303030] px-2 py-1 rounded">
+                  {job.job_number}
+                </span>
+              )}
+            </div>
             <p className="text-gray-600 dark:text-gray-400 text-sm mb-3">{job.description}</p>
           </div>
           <div className="flex flex-col items-end space-y-2 ml-4">
@@ -162,7 +171,7 @@ const JobsPage = () => {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 h-4 w-4" />
             <input
               type="text"
-              placeholder="Search jobs..."
+              placeholder="Search jobs by name, customer, description, or job number..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-[#303030] bg-white dark:bg-[#212121] text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"

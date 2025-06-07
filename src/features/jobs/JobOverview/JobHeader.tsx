@@ -23,6 +23,11 @@ const JobHeader: React.FC<JobHeaderProps> = ({ job }) => {
             <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground truncate">
               {job.name}
             </h1>
+            {job.job_number && (
+              <span className="text-sm font-mono text-muted-foreground bg-muted px-2 py-1 rounded">
+                {job.job_number}
+              </span>
+            )}
             <Button variant="ghost" size="icon" className="flex-shrink-0">
               <Star className="h-4 w-4" />
             </Button>

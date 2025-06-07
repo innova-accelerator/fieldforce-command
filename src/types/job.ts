@@ -1,6 +1,7 @@
 
 export interface Job {
   id: string;
+  job_number?: string; // New human-readable job ID
   name: string;
   description: string;
   customer_id: string;

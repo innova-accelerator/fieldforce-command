@@ -203,7 +203,7 @@ export const useAssociates = () => {
 
       // Transform to match associate interface
       return (organizations || []).map(org => {
-        const associate = org.associates?.[0] || {};
+        const associate = Array.isArray(org.associates) ? org.associates[0] : org.associates || {};
         return {
           id: associate.id || org.id,
           name: org.name,
