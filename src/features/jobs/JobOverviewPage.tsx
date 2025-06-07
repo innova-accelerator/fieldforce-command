@@ -5,7 +5,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import JobHeader from './components/JobHeader';
 import JobSidebar from './components/JobSidebar';
 import SchedulingPanel from './components/SchedulingPanel';
-import Checklist from './components/Checklist';
+import TaskEngine from './components/TaskEngine/TaskEngine';
 import NotesSection from './components/NotesSection';
 import TimelineFeed from './components/TimelineFeed';
 import JobDetailsTabs from './components/JobDetailsTabs';
@@ -33,53 +33,6 @@ const JobOverviewPage: React.FC = () => {
     updateJobMutation.mutate(updates);
   };
 
-  const addTask = (task: Omit<Task, 'id'>) => {
-    if (!job) return;
-    
-    const newTask: Task = {
-      ...task,
-      id: `task-${Date.now()}`,
-      job_id: job.id,
-      complete: false,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    };
-    
-    const updatedTasks = [...(job.tasks || []), newTask];
-    handleUpdateJob({ tasks: updatedTasks });
-  };
-
-  const updateTask = (taskId: string, updates: Partial<Task>) => {
-    if (!job) return;
-    
-    const updatedTasks = (job.tasks || []).map(task => 
-      task.id === taskId ? { ...task, ...updates } : task
-    );
-    handleUpdateJob({ tasks: updatedTasks });
-  };
-
-  const addNote = (content: string) => {
-    if (!job) return;
-    
-    const newEntry: TimelineEntry = {
-      id: `timeline-${Date.now()}`,
-      job_id: job.id,
-      timestamp: new Date().toISOString(),
-      type: 'note',
-      content,
-      author_id: undefined, // Should be set to current user's person ID
-      created_at: new Date().toISOString()
-    };
-    
-    const updatedNotes = [...(job.notes || []), content];
-    const updatedTimeline = [newEntry, ...(job.timeline || [])];
-    
-    handleUpdateJob({ 
-      notes: updatedNotes, 
-      timeline: updatedTimeline 
-    });
-  };
-
   const addTimelineEntry = (entry: Omit<TimelineEntry, 'timestamp' | 'id' | 'job_id' | 'created_at'>) => {
     if (!job) return;
     
@@ -93,6 +46,28 @@ const JobOverviewPage: React.FC = () => {
     
     const updatedTimeline = [newEntry, ...(job.timeline || [])];
     handleUpdateJob({ timeline: updatedTimeline });
+  };
+
+  const addNote = (content: string) => {
+    if (!job) return;
+    
+    const newEntry: TimelineEntry = {
+      id: `timeline-${Date.now()}`,
+      job_id: job.id,
+      timestamp: new Date().toISOString(),
+      type: 'note',
+      content,
+      author_id: undefined,
+      created_at: new Date().toISOString()
+    };
+    
+    const updatedNotes = [...(job.notes || []), content];
+    const updatedTimeline = [newEntry, ...(job.timeline || [])];
+    
+    handleUpdateJob({ 
+      notes: updatedNotes, 
+      timeline: updatedTimeline 
+    });
   };
 
   if (isLoading) {
@@ -139,11 +114,10 @@ const JobOverviewPage: React.FC = () => {
               onTimelineUpdate={addTimelineEntry}
             />
             
-            {/* Task Checklist */}
-            <Checklist 
-              tasks={job.tasks || []}
-              onAddTask={addTask}
-              onUpdateTask={updateTask}
+            {/* Task Engine */}
+            <TaskEngine 
+              job={job}
+              onUpdate={handleUpdateJob}
               onTimelineUpdate={addTimelineEntry}
             />
             
